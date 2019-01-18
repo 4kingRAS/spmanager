@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- test spring boot -->
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta id="viewport" content="width=device-width, user-scalable=yes,initial-scale=1" name="viewport" />
+    <script>
+        var detectBrowser = function (name) {
+            if (navigator.userAgent.toLowerCase().indexOf(name) > -1) {
+                return true;
+            } else {
+                return false;
+            }
+        };
+        var width = parseInt(window.screen.width);
+        var scale = width / 720;  // 根据设计稿尺寸进行相应修改：640=>?
+        var userScalable = 'yes';
+        document.getElementById('viewport').setAttribute(
+            'content', 'target-densitydpi=device-dpi,width=720,user-scalable=' + userScalable + ',initial-scale=' + scale); 
+    </script>
+
+    <title>注册页面</title>
+
+    <link rel="stylesheet" href="./css/font-awesome.min.css">
+
+<style>
+    .center {
+        margin-left: auto;
+        margin-right: auto;
+        text-align: center;
+    }
+
+    .mailer {
+        color: #666;
+        height: 10px;
+        text-align: center;
+        font-family: "Segoe UI";
+        font-size: 11px;
+    }
+
+    .info {
+        color: #666;
+        height: 30px;
+        text-align: center;
+        font-family: "Segoe UI";
+        font-size: 13px;
+    }
+
+    p.head {
+        color: #555555;
+        text-align: center;
+        font-size: 25px;
+        font-family: "Georgia";
+    }
+
+    p.text {
+        color: #666666;
+        text-align: center;
+        font-size: 20px;
+        font-family: "Georgia";
+    }
+</style>
+
+</head>
+
+<body>
+
+<p class="head">spring boot<br><span th:text="${key}"></span></p>
+<form action="/add" method="post">
+    <p class="text">Name: <input type="text" name="name" value="Mickey"></p>
+    <p class="text">Email: <input type="text" name="email" value="default@abc.com"></p>
+    <p class="text">Password: <input type="password" name="password" value="Mouse"></p>
+    <div style = "text-align:center;"><input type="submit" value=" submit "></div>
+</form>
+
+</body>
+
+</html>
