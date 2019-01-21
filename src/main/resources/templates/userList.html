@@ -1,0 +1,68 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<head>
+    <script type="text/javascript" th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
+    <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/default.css}" rel="stylesheet"/>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon"/>
+    <meta charset="UTF-8"/>
+    <title>用户列表</title>
+</head>
+
+<body>
+
+<style>
+    p.head {
+        color: #555555;
+        text-align: center;
+        font-size: 25px;
+        font-family: "Georgia";
+    }
+
+    p.text {
+        color: #666666;
+        text-align: center;
+        font-size: 20px;
+        font-family: "Georgia";
+    }
+</style>
+
+<div class="contentDiv">
+
+    <h5>Spring boot + thymeleaf + bootstrap</h5>
+
+    <table class="table table-hover table-condensed">
+        <legend>
+            <strong><p class="text">用户列表</p></strong>
+        </legend>
+        <thead>
+        <tr>
+            <th>用户编号</th>
+            <th>用户名</th>
+            <th>密码</th>
+            <th>所在公司</th>
+            <th>用户群组</th>
+            <th>是否在线</th>
+            <th>最后登录时间</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user : ${userList}">
+            <th scope="row" th:text="${user.id}"></th>
+            <td th:text="${user.name}"></td>
+            <td th:text="${user.password}"></td>
+            <td th:text="${user.corpname}"></td>
+            <td th:text="${user.group}"></td>
+            <td><div th:if="${user.isOnline} eq '1'">是</div></td>
+            <td th:text="${user.lastLogin}"></td>
+            <!--<td><a class="btn btn-danger" th:href="@{/users/delete/{userId}(userId=${user.id})}">删除</a></td>-->
+        </tr>
+        </tbody>
+    </table>
+
+    <div><a class="btn btn-primary" href="/user/reg" role="button">添加用户</a></div>
+</div>
+
+</body>
+</html>

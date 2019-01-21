@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+    <head>
+        <script type="text/javascript" th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
+        <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+        <link th:href="@{/css/default.css}" rel="stylesheet"/>
+        <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon"/>
+        <meta charset="UTF-8"/>
+        <title>用户注册</title>
+    </head>
+
+    <style>
+        p.head {
+            color: #555555;
+            text-align: center;
+            font-size: 25px;
+            font-family: "Georgia";
+        }
+    
+        p.text {
+            color: #666666;
+            text-align: center;
+            font-size: 20px;
+            font-family: "Georgia";
+        }
+    </style>
+    
+    <body>
+        <div style = "text-align:center;" class="contentDiv">
+            <h5>Spring boot + thymeleaf + bootstrap</h5>
+
+            <legend>
+                <strong>
+                    <p class="text">用户注册</p>
+                </strong>
+            </legend>
+
+            <div style = "text-align:center;">
+                <form style = "text-align:left" th:action="@{/user/{action}(action=${action})}" method="post" class="form-horizontal">
+
+                <input type="hidden" name="id" th:value="${user.id}"/>
+
+                <div class="form-group">
+                    <label for="user_name" class="col-sm-2 control-label">用户名:</label>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control" id="user_name" name="name" th:value="${user.name}" th:field="*{user.name}" />
+                    </div>
+                    <label class="col-sm-2 control-label text-danger" th:if="${#fields.hasErrors('user.name')}" th:errors="*{user.name}">用户名有误!</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="user_psw" class="col-sm-2 control-label">密码:</label>
+                    <div class="col-xs-4">
+                        <input type="password" class="form-control" id="user_psw" name="psw" th:value="${user.password}" th:field="*{user.password}" />
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="user_corp" class="col-sm-2 control-label">公司名:</label>
+                    <div class="col-xs-4">
+                        <input type="text" class="form-control" id="user_corp" name="corp" th:value="${user.corpname}" th:field="*{user.corpname}"/>
+                    </div>
+                    <label class="col-sm-2 control-label text-danger" th:if="${#fields.hasErrors('user.corpname')}" th:errors="*{user.corpname}">输入有误!</label>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input class="btn btn-primary" type="submit" value="提交"/>&nbsp;&nbsp;
+                        <input class="btn" type="button" value="返回" onclick="history.back()"/>
+                    </div>
+                </div>
+                </form>
+            </div>
+        </div>
+    </body>
+</html>
+
+
+<!-- <p class="head">spring boot<br><span th:text="${key}"></span></p>
+<form th:action="@{/login/{action}(action=${action})}" method="post" class="form-horizontal">
+    <p class="text">Name: <input type="text" name="name" value="Mickey"></p>
+    <p class="text">Email: <input type="text" name="email" value="default@abc.com"></p>
+    <p class="text">Password: <input type="password" name="password" value="Mouse"></p>
+    <div style = "text-align:center;"><input type="submit" value=" submit "></div>
+</form> -->
+
+</body>
+
+</html>
