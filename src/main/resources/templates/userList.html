@@ -1,6 +1,6 @@
 
 <!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.springframework.org/schema/data/jaxb">
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
 <head>
     <script type="text/javascript" th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
     <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
@@ -50,11 +50,13 @@
         <tbody>
         <tr th:each="user : ${userList}">
             <th scope="row" th:text="${user.id}"></th>
-            <td th:text="${user.name}"></td>
+            <td th:text="${user.username}"></td>
             <td th:text="${user.password}"></td>
             <td th:text="${user.corpname}"></td>
             <td th:text="${user.group}"></td>
-            <td><div th:if="${user.isOnline} eq '1'">是</div></td>
+            <td><div th:if="${user.isOnline} eq '1'">是</div>
+                <div th:if="${user.isOnline} eq '0'">否</div>
+            </td>
             <td th:text="${user.lastLogin}"></td>
             <!--<td><a class="btn btn-danger" th:href="@{/users/delete/{userId}(userId=${user.id})}">删除</a></td>-->
         </tr>

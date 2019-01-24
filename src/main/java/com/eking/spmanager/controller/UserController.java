@@ -6,6 +6,7 @@ package com.eking.spmanager.controller;
  * @Description
  **/
 
+import com.eking.spmanager.Utils.Utils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -28,6 +29,8 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    Utils utils;
+
     /**
      *  获取用户列表
      */
@@ -40,8 +43,8 @@ public class UserController {
     /**
      * 显示创建用户表单
      *
-     * @param map
-     * @return
+     * @param map 添加属性
+     * @return 成功页面 在html中
      */
     @RequestMapping(value = "/reg", method = RequestMethod.GET)
     public String createUserForm(ModelMap map) {
@@ -57,7 +60,7 @@ public class UserController {
      *    通过 @ModelAttribute 绑定参数，也通过 @RequestParam 从页面中传递参数
      */
     @RequestMapping(value = "/reg", method = RequestMethod.POST)
-    public String postUser(ModelMap map,
+    public String postUserForm(ModelMap map,
                            @ModelAttribute @Valid User user,
                            BindingResult bindingResult) {
 
@@ -66,16 +69,28 @@ public class UserController {
             return "regForm";
         }
 
-        Date d = new Date();
-        Timestamp t = new Timestamp(d.getTime());
+        try {
+            Date d = new Date();
+            Timestamp t = new Timestamp(d.getTime());
 
-        user.setGroup(1);
-        user.setIsOnline("1");
-        user.setLastLogin(t);
-        user.setIsActived("1");
+            user.setGroup(1);
+            user.setIsOnline("1");
+            user.setLastLogin(t);
+            user.setIsActived("1");
 
-        userService.addSingleUser(user);
+            userService.addSingleUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         return "redirect:/user/";
+    }
+
+    @RequestMapping(value = "/check", method = RequestMethod.GET)
+    public String check() {
+        User user = userService.findByUserName("Mickey");
+        System.out.println(user.getUsername());
+        return user.getUsername();
     }
 
 }

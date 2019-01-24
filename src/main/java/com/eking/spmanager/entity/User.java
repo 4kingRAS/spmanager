@@ -4,10 +4,9 @@ package com.eking.spmanager.entity;
  * @Author Yulin.Wang
  * @Date 2019-01-21
  * @Description 更新bean 注解boolean用 char（1）
+ * GenerationType.IDENTITY 每个实体独立自增
+ * AUTO 关联自增
  **/
-
-import org.hibernate.annotations.Generated;
-import org.hibernate.annotations.GenerationTime;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -17,16 +16,16 @@ import java.util.Date;
 @Entity // This tells Hibernate to make a table out of this class
 public class User implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     private Integer id;
 
-    @NotEmpty(message = "invalid name") // 表单验证
+    @NotEmpty(message = "invalid username") // 表单验证
     @Column(name = "user_name", length = 20, nullable = false) // 字段长度
-    private String name;
+    private String username;
 
     @NotEmpty(message = "invalid psw")
-    @Column(name = "user_psw", length = 20, nullable = false)
+    @Column(name = "user_password", length = 20, nullable = false)
     private String password;
 
     @Column(name = "user_corp", length = 50)
@@ -53,12 +52,12 @@ public class User implements Serializable {
         this.id = id;
     }
 
-    public String getName() {
-        return name;
+    public String getUsername() {
+        return username;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public String getPassword() {
@@ -108,4 +107,15 @@ public class User implements Serializable {
     public void setIsActived(String isActived) {
         this.isActived = isActived;
     }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id.toString() +
+                ", username=" + username +
+                ", ac=" + isActived +
+                ", online=" + isOnline +
+                '}';
+    }
+
 }

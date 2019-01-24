@@ -1,0 +1,136 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/all.js}"></script>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/all.css}" />
+    <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            padding-top: 50px;
+        }
+        .starter-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+    </style>
+    <style>
+        p.head {
+            color: #555555;
+            text-align: center;
+            font-size: 25px;
+            font-family: "Georgia";
+        }
+
+        p.text {
+            color: #666666;
+            text-align: center;
+            font-size: 20px;
+            font-family: "Georgia";
+        }
+    </style>
+    <title>登录页面</title>
+</head>
+<body>
+
+<div class="top">
+    <div class="logo"></div>
+    <!-- <div class="m_tit">元数据信息列表 <i class="d_arrow m_l10"></i></div> -->
+    <div class="t_aciton">
+        <ul>
+            <li><a>控制台</a></li>
+            <li><a><i class="icon20 ask_icon m_r5"></i>帮助</a></li>
+            <li><i class="u_pic m_r10"><img src="images/HNA.jpg"></i>000</li>
+        </ul>
+    </div>
+    <div class="meau_btn icon20" id="meau_btn"></div>
+</div>
+<div class="m_left" id="m_left">
+    <div class="meau" id="meau">
+        <ul>
+            <li data-tit="1"><a class="on" data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m01"></i>总览</a></li>
+            <li data-tit="1">
+                <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m02"></i>订单管理</a>
+                <div class="sub_meau" data-role="tree_action" data-con="1">
+                    <dl>
+                        <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>全部订单</a></dd>
+                        <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>已完成</a></dd>
+                        <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>已取消</a></dd>
+                    </dl>
+                </div>
+            </li>
+            <li data-tit="1">
+                <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m03"></i>仓库管理</a>
+                <div class="sub_meau" data-role="tree_action" data-con="1">
+                    <dl>
+                        <dd data-tit="2">
+                            <a data-role="root" data-level="2"><em class="s_arrow"></em>出入库记录</a>
+                        </dd>
+                    </dl>
+                </div>
+            </li>
+            <li data-tit="1">
+                <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m04"></i>用户管理</a>
+                <div class="sub_meau" data-role="tree_action" data-con="1">
+                    <dl>
+                        <dd data-tit="2">
+                            <a data-role="root" data-level="2"><em class="s_arrow"></em>用户列表</a>
+                        </dd>
+                    </dl>
+                </div>
+            </li>
+            <li data-tit="1">
+                <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m05"></i>系统管理</a>
+                <div class="sub_meau" data-role="tree_action" data-con="1">
+                    <dl>
+                        <dd data-tit="2">
+                            <a data-role="root" data-level="2"><em class="s_arrow"></em>系统管理</a>
+                        </dd>
+                    </dl>
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
+<div class="main sub_main">
+
+    <div class="contentDiv">
+
+        <h5>Spring boot + thymeleaf + bootstrap</h5>
+
+        <table class="table table-hover table-condensed">
+        <legend>
+            <strong><p class="text">群组列表</p></strong>
+        </legend>
+        <thead>
+        <tr>
+            <th>群组编号</th>
+            <th>群组名</th>
+            <th>群组人数</th>
+            <th>是否我司员工</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="userGroup : ${groupList}">
+            <th scope="row" th:text="${userGroup.id}"></th>
+            <td th:text="${userGroup.name}"></td>
+            <td th:text="${userGroup.count}"></td>
+            <td><div th:if="${userGroup.isAgent} eq '1'">是</div>
+                <div th:if="${userGroup.isAgent} eq '0'">否</div>
+            </td>
+            <!--<td><a class="btn btn-danger" th:href="@{/users/delete/{userId}(userId=${user.id})}">删除</a></td>-->
+        </tr>
+        </tbody>
+    </table>
+
+        <div><a class="btn btn-primary" href="/manager/add" role="button">添加群组</a></div>
+    </div>
+
+</div>
+
+</body>
+
+</html>

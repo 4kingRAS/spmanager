@@ -1,4 +1,6 @@
-package com.eking.spmanager.service;
+package com.eking.spmanager.Utils;
+
+import java.util.function.Consumer;
 
 /**
  * @Author Yulin.Wang
@@ -8,4 +10,6 @@ package com.eking.spmanager.service;
 
 public interface Utils {
     //public String showIsActived;
+
+
 }

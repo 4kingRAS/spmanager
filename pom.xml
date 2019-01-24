@@ -11,7 +11,7 @@
     <groupId>com.eking</groupId>
     <artifactId>spmanager</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>spmanager</name>
+    <username>spmanager</username>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -32,14 +32,17 @@
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.thymeleaf.extras</groupId>
+            <artifactId>thymeleaf-extras-springsecurity4</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
         <dependency>
-            <groupId>org.springframework.session</groupId>
-            <artifactId>spring-session-core</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <script type="text/javascript" th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
+    <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link th:href="@{/css/default.css}" rel="stylesheet"/>
+    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon"/>
+    <meta charset="UTF-8"/>
+    <title>群组管理</title>
+
+    <style>
+    p.head {
+        color: #555555;
+        text-align: center;
+        font-size: 25px;
+        font-family: "Georgia";
+    }
+
+    p.text {
+        color: #666666;
+        text-align: center;
+        font-size: 20px;
+        font-family: "Georgia";
+    }
+    </style>
+</head>
+
+<body>
+<div style = "text-align:center;" class="contentDiv">
+    <h5>Spring boot + thymeleaf + bootstrap</h5>
+
+    <legend>
+        <strong>
+            <p class="text">添加群组</p>
+        </strong>
+    </legend>
+
+
+        <form style = "text-align:left" th:action="@{/manager/{action}(action=${action})}" method="POST" class="form-horizontal">
+
+            <input type="hidden" name="id" th:value="${userGroup.id}"/>
+
+            <div class="form-group">
+                <label for="username" class="col-sm-2 control-label">群组名:</label>
+                <div class="col-xs-4">
+                    <input type="text" class="form-control" id="username" name="username" th:value="${userGroup.name}" th:field="*{userGroup.name}" />
+                </div>
+                <label class="col-sm-2 control-label text-danger" th:if="${#fields.hasErrors('userGroup.name')}" th:errors="*{userGroup.name}">群组名有误!</label>
+            </div>
+
+            <div class="form-group">
+
+                <label>
+                    <div class="col-xs-4">
+                        <input type="checkbox" name="isagent" id="isagent" th:value=checked th:field="*{userGroup.isAgent}">
+                    属于员工</div>
+                </label>
+            </div>
+
+            <div class="form-group">
+                <div class="col-sm-offset-2 col-sm-10">
+                    <input class="btn btn-primary" type="submit" value="提交"/>&nbsp;&nbsp;
+                    <input class="btn" type="button" value="返回" onclick="history.back()"/>
+                </div>
+            </div>
+        </form>
+
+</div>
+</body>
+</html>
