@@ -55,8 +55,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/images/*").permitAll()
                 .antMatchers("/js/**").permitAll()
-                .antMatchers("/user/reg").permitAll()
-                .antMatchers("/manager/**").permitAll()
+                .antMatchers("/user/**").hasRole("HNA")
+                .antMatchers("/manager/**").hasRole("HNA")
+                .antMatchers("/refresh").hasRole("HNA")
                 .anyRequest().authenticated() //任何请求,登录后可以访问
                 .and()
                 .formLogin()

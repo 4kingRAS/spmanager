@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import com.eking.spmanager.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.security.Principal;
 import java.util.List;
 
 @Controller         // Controller ,could ignore the notation - ResponseBody
@@ -25,6 +26,16 @@ public class MainController {
     @RequestMapping(method = RequestMethod.GET)
     public String index() {
         return "index";
+    }
+
+    @RequestMapping(value = "info", method = RequestMethod.GET)
+    public String getUserInfo(Principal principal) {
+        return principal.getName();
+    }
+
+    @RequestMapping("refresh")
+    public String testReload() {
+        return "redirect:/manager/"; //刷新要记得redirect 而不是返回页面
     }
 
     @RequestMapping(value = "/login")

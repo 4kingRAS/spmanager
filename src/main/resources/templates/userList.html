@@ -54,8 +54,8 @@
             <td th:text="${user.password}"></td>
             <td th:text="${user.corpname}"></td>
             <td th:text="${user.group}"></td>
-            <td><div th:if="${user.isOnline} eq '1'">是</div>
-                <div th:if="${user.isOnline} eq '0'">否</div>
+            <td>
+                <span th:text="${user.isOnline eq '1' ? '是' : '否'}"></span>
             </td>
             <td th:text="${user.lastLogin}"></td>
             <!--<td><a class="btn btn-danger" th:href="@{/users/delete/{userId}(userId=${user.id})}">删除</a></td>-->

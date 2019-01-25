@@ -7,6 +7,12 @@
     <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/all.js}"></script>
     <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <script>
+        function localRefresh(url) {
+            // 装载局部刷新返回的页面
+            $('#refresh').load(url);
+        }
+    </script>
     <title>登录页面</title>
 </head>
 <body>
@@ -51,7 +57,9 @@
                 <div class="sub_meau" data-role="tree_action" data-con="1">
                     <dl>
                         <dd data-tit="2">
-                            <a data-role="root" data-level="2"><em class="s_arrow"></em>用户列表</a>
+                            <a data-role="root" data-level="2"><em class="s_arrow"></em>
+                                <input type="button" th:onclick="|javascript:localRefresh('/refresh')|" value="用户管理" style="background-color: transparent; border: 0;"/>
+                            </a>
                         </dd>
                     </dl>
                 </div>
@@ -71,19 +79,16 @@
 </div>
 <div class="main sub_main">
 
-        <h5>Spring boot + thymeleaf + bootstrap</h5>
-
-        <div>
-            <h1 th:text="首页"></h1>
-
-            <p class="bg-primary" th:text="测试权限"></p>
-            <iframe class="" unselectable="on" src="/user/reg" ></iframe>
-            <div class="mainContainer" id="main"></div>
-            <form th:action="@{/logout}" method="post">
-                <input type="submit" class="btn btn-primary" value="注销"/>
-            </form>
+    <p class="bg-primary">Springboot + thymeleaf + bootstrap + hibernate</p>
+    <div id="refresh" th:fragment="refresh">
 
     </div>
+    <!--<td class="text" th:text="ooo" ></td>-->
+    <!--<input type="button" th:onclick="|javascript:localRefresh('/refresh')|" value="用户管理" />-->
+    <form th:action="@{/logout}" method="post">
+        <input type="submit" class="btn btn-primary" value="注销"/>
+    </form>
+            <!--<button onClick="localRefresh('/manager')">点击刷新表格</button>-->
 </div>
 
 </body>
