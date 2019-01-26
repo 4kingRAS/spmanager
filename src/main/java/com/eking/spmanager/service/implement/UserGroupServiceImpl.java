@@ -44,5 +44,13 @@ public class UserGroupServiceImpl implements UserGroupService {
         return userGroupDAO.findById(id).get();//容器对象，加个get()
     }
 
+    @Override
+    public UserGroup deleteById(Integer id) {
+        UserGroup ug = userGroupDAO.findById(id).get();
+        userGroupDAO.delete(ug);
+
+        LOGGER.info("DELETE：" + ug.toString());
+        return ug;
+    }
 
 }

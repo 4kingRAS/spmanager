@@ -24,7 +24,8 @@ import java.util.List;
 public class MainController {
 
     @RequestMapping(method = RequestMethod.GET)
-    public String index() {
+    public String index(ModelMap map, Principal principal) {
+        map.addAttribute("username", principal.getName());
         return "index";
     }
 
@@ -33,7 +34,7 @@ public class MainController {
         return principal.getName();
     }
 
-    @RequestMapping("refresh")
+    @RequestMapping("tomanager")
     public String testReload() {
         return "redirect:/manager/"; //刷新要记得redirect 而不是返回页面
     }

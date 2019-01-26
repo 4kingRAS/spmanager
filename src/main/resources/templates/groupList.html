@@ -1,27 +1,87 @@
 <div class="contentDiv">
+
     <table class="table table-hover table-condensed">
-        <legend>
-            <strong><p class="text">群组列表</p></strong>
-        </legend>
-        <thead>
-            <tr>
-                <th>群组编号</th>
-                <th>群组名</th>
-                <th>群组人数</th>
-                <th>是否我司员工</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr th:each="userGroup : ${groupList}">
-                <th scope="row" th:text="${userGroup.id}"></th>
-                <td th:text="${userGroup.name}"></td>
-                <td th:text="${userGroup.count}"></td>
-                <td>
-                    <span th:text="${userGroup.isAgent eq '0' ? '是' : '否'}"></span>
-                </td>
-                <!--<td><a class="btn btn-danger" th:href="@{/users/delete/{userId}(userId=${user.id})}">删除</a></td>-->
-            </tr>
-        </tbody>
+        <tr>
+            <th>群组名</th>
+            <th>数量</th>
+            <th>Action</th>
+        </tr>
+        <tr>
+            <input type="hidden" id="gid" name="id" th:value="@{userGroup.id}"/>
+            <td><input type="text" id="gname" th:value="@{userGroup.name}"/></td>
+            <td><input type="text" id="gagent" th:value="@{userGroup.isAgent}"/></td>
+            <td><input class="btn btn-primary" type="submit" value="添加群组" onclick="refreshGroupList()" /></td>
+        </tr>
     </table>
-    <div><a class="btn btn-primary" href="/manager/add" role="button">添加群组</a></div>
+
+    <div id="grouptb" th:fragment="grouptb">
+        <table class="table table-hover table-condensed">
+            <legend>
+                <strong><p class="text">群组列表</p></strong>
+            </legend>
+
+            <thead>
+                <tr>
+                    <th>群组编号</th>
+                    <th>群组名</th>
+                    <th>群组人数</th>
+                    <th>是否我司员工</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="userGroup : ${groupList}">
+                    <th scope="row"  th:text="${userGroup.id}"></th>
+                    <td th:text="${userGroup.name}"></td>
+                    <td th:text="${userGroup.count}"></td>
+                    <td>
+                        <span th:text="${userGroup.isAgent eq '0' ? '是' : '否'}"></span>
+                    </td>
+                    <td>
+                        <!--<a class="btn btn-danger" th:href="@{/manager/delete/{gId}(gId=${userGroup.id})}">-->
+                            <!--删除-->
+                        <input class="btn btn-danger" value="删除" th:onclick="'javascript:deleteGroup('+${userGroup.id}+')'">
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+
+        /*<![CDATA[*/
+        function refreshGroupList(){
+            // 装载局部刷新返回的页面
+            var gName = $("#gname").val();
+            var ga = $("#gagent").val();
+
+            $.ajax({
+                url: [[@{/manager?add}]],
+                type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({name : gName,isagent : ga}),
+                    async: false
+                // TRUE 异步 FALSE 同步
+            });
+
+            $('#grouptb').load("/manager/fresh");
+        }
+
+        function deleteGroup(gid){
+
+            $.ajax({
+                url: [[@{/manager?delete}]],
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id : gid}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+
+            $('#grouptb').load("/manager/fresh");
+        }
+
+        /*]]>*/
+    </script>
 </div>

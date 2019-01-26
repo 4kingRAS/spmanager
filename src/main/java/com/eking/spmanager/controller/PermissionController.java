@@ -9,10 +9,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.sql.Timestamp;
 import java.util.Date;
@@ -41,45 +40,58 @@ public class PermissionController {
         return "groupList";
     }
 
-    /**
-     * 显示创建用户表单
-     *
-     * @param map 添加属性
-     * @return 成功页面 在html中
-     */
-    @RequestMapping(value = "/add", method = RequestMethod.GET)
-    public String createUserGroupForm(ModelMap map) {
-        UserGroup userGroup = new UserGroup();
-        map.addAttribute("isagent", value);
-        map.addAttribute("userGroup", userGroup);
-        map.addAttribute("action", "add");
-        return "addGroup";
+    @RequestMapping(value = "/fresh", method = RequestMethod.GET)
+    public String freshList(ModelMap map) {
+        map.addAttribute("groupList", ugService.findAllGroup());
+        return "groupList::grouptb";
     }
+
+//    @RequestMapping(value = "/add", method = RequestMethod.GET)
+//    public String createUserGroupForm(ModelMap map) {
+//        UserGroup userGroup = new UserGroup();
+//        map.addAttribute("isagent", value);
+//        map.addAttribute("userGroup", userGroup);
+//
+//        return "addGroup";
+//    }
 
     /**
      *  创建用户
-     *    处理 "/users" 的 POST 请求，用来获取用户列表
+     *    处理 "/manager" 的 POST 请求，用来获取用户列表
      *    通过 @ModelAttribute 绑定参数，也通过 @RequestParam 从页面中传递参数
      */
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public String postGroupForm(ModelMap map,
-                           @ModelAttribute @Valid UserGroup group,
-                           BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            map.addAttribute("action", "add");
-            return "addGroup";
-        }
+    @ResponseBody
+    @RequestMapping(params = "add", method = RequestMethod.POST)
+    public String postGroupForm(@RequestBody UserGroup group)
+                                throws Exception {
+        //if (bindingResult.hasErrors()) {
+            //map.addAttribute("action", "add");
+            //return "redirect:/manager/";
 
         if (group.getIsAgent() != null) {
-            group.setIsAgent("1");
-        }
-        else{
             group.setIsAgent("0");
+        }
+        else {
+            group.setIsAgent("1");
         }
 
         group.setCount(1);
         ugService.addGroup(group);
-        return "redirect:/manager/";
+
+        return "add Success";
     }
+
+    /**
+     * 显示创建用户表单
+     *
+     * @return 成功页面 在html中
+     */
+    @ResponseBody
+    @RequestMapping(params = "delete", method = RequestMethod.POST)
+    public String deleteUser(@RequestBody UserGroup group)
+                            throws Exception{
+        ugService.deleteById(group.getId());
+        return "delete Success";
+    }
+
 }
