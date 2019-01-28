@@ -34,23 +34,26 @@ public class UserGroupServiceImpl implements UserGroupService {
     @Override
     public List<UserGroup> findAllGroup() {
         // TODO Auto-generated method stub
-        LOGGER.info("\n EKlog: find all: ");
+        LOGGER.info("\n EKlog: FIND ALL - ");
         return (List<UserGroup>) userGroupDAO.findAll();
     }
 
     @Override
     public UserGroup findById(Integer id) {
-        LOGGER.info("\n EKlog: find by id: " + id);
+        LOGGER.info("\n EKlog: FINDbyId - " + id);
         return userGroupDAO.findById(id).get();//容器对象，加个get()
     }
 
     @Override
-    public UserGroup deleteById(Integer id) {
-        UserGroup ug = userGroupDAO.findById(id).get();
-        userGroupDAO.delete(ug);
+    public void delete(UserGroup userGroup) {
+        userGroupDAO.delete(userGroup);
+        LOGGER.info("\n EKlog: DELETE - " + userGroup.toString());
+    }
 
-        LOGGER.info("DELETE：" + ug.toString());
-        return ug;
+    @Override
+    public void update(UserGroup userGroup) {
+        userGroupDAO.save(userGroup);
+        LOGGER.info("\n EKlog: UPDATE - " + userGroup.toString());
     }
 
 }

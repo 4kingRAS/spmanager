@@ -4,13 +4,15 @@
         <tr>
             <th>群组名</th>
             <th>数量</th>
-            <th>Action</th>
+            <th>操作</th>
         </tr>
         <tr>
             <input type="hidden" id="gid" name="id" th:value="@{userGroup.id}"/>
-            <td><input type="text" id="gname" th:value="@{userGroup.name}"/></td>
-            <td><input type="text" id="gagent" th:value="@{userGroup.isAgent}"/></td>
-            <td><input class="btn btn-primary" type="submit" value="添加群组" onclick="refreshGroupList()" /></td>
+            <td><input type="text" id="gname" placeholder="群组名"/></td>
+            <td><input type="checkbox" id="gagent"  th:value="checked"/></td>
+            <td>
+                <input class="btn btn-primary" type="submit" value="添加群组" onclick="addGroup()" />
+            </td>
         </tr>
     </table>
 
@@ -37,10 +39,57 @@
                     <td>
                         <span th:text="${userGroup.isAgent eq '0' ? '是' : '否'}"></span>
                     </td>
-                    <td>
+                    <td class="col-lg-2">
                         <!--<a class="btn btn-danger" th:href="@{/manager/delete/{gId}(gId=${userGroup.id})}">-->
                             <!--删除-->
-                        <input class="btn btn-danger" value="删除" th:onclick="'javascript:deleteGroup('+${userGroup.id}+')'">
+                        <div class="btn-group">
+                            <button class="btn btn-primary" data-toggle="modal" th:href="'#'+${userGroup.id}">修改</button>
+                            <button class="btn btn-danger" th:onclick="'javascript:deleteGroup('+${userGroup.id}+')'">删除</button>
+                        </div>
+                        <!-- MODAL -->
+                        <div class="modal fade" th:id="${userGroup.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">修改群组</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-hover table-condensed">
+                                            <legend>
+                                                <strong>
+                                                    <span th:text="'群组ID：'+${userGroup.id}"></span>
+                                                </strong>
+                                            </legend>
+                                            <thead>
+                                            <tr>
+                                                <th>群组名</th>
+                                                <th>是否我司员工</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <input type="hidden" th:id="'ug'+${userGroup.id}" th:value="${userGroup.id}"/>
+                                                    <td>
+                                                        <input type="text" th:id="'ugn'+${userGroup.id}" th:value="${userGroup.name}"/>
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" th:id="'uga'+${userGroup.id}" th:value="${userGroup.isAgent}" th:filed="*{userGroup.isAgent}">
+                                                        属于我司
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                            <button type="button" class="btn btn-primary" th:onclick="'javascript:updateGroup('+${userGroup.id}+')'">
+                                                提交更改
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
                     </td>
                 </tr>
             </tbody>
@@ -49,7 +98,7 @@
     <script type="text/javascript" th:inline="javascript">
 
         /*<![CDATA[*/
-        function refreshGroupList(){
+        function addGroup(){
             // 装载局部刷新返回的页面
             var gName = $("#gname").val();
             var ga = $("#gagent").val();
@@ -59,7 +108,7 @@
                 type: 'post',
                     dataType: 'json',
                     contentType: 'application/json',
-                    data: JSON.stringify({name : gName,isagent : ga}),
+                    data: JSON.stringify({name: gName, isagent: ga}),
                     async: false
                 // TRUE 异步 FALSE 同步
             });
@@ -74,7 +123,7 @@
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
-                data: JSON.stringify({id : gid}),
+                data: JSON.stringify({id: gid}),
                 async: false
                 // TRUE 异步 FALSE 同步
             });
@@ -82,6 +131,26 @@
             $('#grouptb').load("/manager/fresh");
         }
 
+        function updateGroup(gi){
+
+            var gid = $("#ug"+gi).val();
+            var gname = $("#ugn"+gi).val();
+            var gag = $("#uga"+gi).val();
+
+            $.ajax({
+                url: [[@{/manager?update}]],
+                type: 'post',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    data: JSON.stringify({id: gid, name: gname, isagent: gag}),
+                    async: false
+                // TRUE 异步 FALSE 同步
+            });
+            $("#"+gi).on('hidden.bs.modal', function (e) {
+                $('#grouptb').load("/manager/fresh");
+            });
+            $("#"+gi).modal('hide');
+        }
         /*]]>*/
     </script>
 </div>

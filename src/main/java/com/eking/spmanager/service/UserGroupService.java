@@ -1,5 +1,6 @@
 package com.eking.spmanager.service;
 
+import com.eking.spmanager.entity.User;
 import com.eking.spmanager.entity.UserGroup;
 
 import java.util.List;
@@ -12,7 +13,8 @@ import java.util.List;
 
 public interface UserGroupService {
     public void addGroup(UserGroup userGroup);
-    public UserGroup deleteById(Integer id);
+    public void delete(UserGroup userGroup);
+    public void update(UserGroup userGroup);
     public UserGroup findById(Integer id);
     public List<UserGroup> findAllGroup();
 }

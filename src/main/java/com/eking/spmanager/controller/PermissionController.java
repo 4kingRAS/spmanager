@@ -46,27 +46,19 @@ public class PermissionController {
         return "groupList::grouptb";
     }
 
-//    @RequestMapping(value = "/add", method = RequestMethod.GET)
-//    public String createUserGroupForm(ModelMap map) {
-//        UserGroup userGroup = new UserGroup();
-//        map.addAttribute("isagent", value);
-//        map.addAttribute("userGroup", userGroup);
-//
-//        return "addGroup";
-//    }
-
     /**
-     *  创建用户
-     *    处理 "/manager" 的 POST 请求，用来获取用户列表
-     *    通过 @ModelAttribute 绑定参数，也通过 @RequestParam 从页面中传递参数
+     *  add usergroup
+     *  通过 ajax POST 请求得到json，注解ResponseBody，从而不用返回页面
+     *  通过 @ModelAttribute 绑定参数，也可以通过 Param 从页面中传递参数
      */
     @ResponseBody
     @RequestMapping(params = "add", method = RequestMethod.POST)
-    public String postGroupForm(@RequestBody UserGroup group)
+    public String postGroupForm(@RequestBody @Valid UserGroup group,
+                                BindingResult bindingResult)
                                 throws Exception {
-        //if (bindingResult.hasErrors()) {
-            //map.addAttribute("action", "add");
-            //return "redirect:/manager/";
+        if (bindingResult.hasErrors()) {
+            return "ERROR";
+        }
 
         if (group.getIsAgent() != null) {
             group.setIsAgent("0");
@@ -78,20 +70,46 @@ public class PermissionController {
         group.setCount(1);
         ugService.addGroup(group);
 
-        return "add Success";
+        return "add " + group.toString() + " Success";
     }
 
     /**
-     * 显示创建用户表单
-     *
-     * @return 成功页面 在html中
+     * delete userGroup
      */
     @ResponseBody
     @RequestMapping(params = "delete", method = RequestMethod.POST)
-    public String deleteUser(@RequestBody UserGroup group)
-                            throws Exception{
-        ugService.deleteById(group.getId());
+    public String deleteUser(@RequestBody UserGroup group,
+                             BindingResult bindingResult)
+                             throws Exception {
+        if (bindingResult.hasErrors()) {
+            return "DELETE ERROR";
+        }
+        ugService.delete(ugService.findById(group.getId()));
         return "delete Success";
+    }
+
+    /**
+     * update userGroup
+     */
+    @ResponseBody
+    @RequestMapping(params = "update", method = RequestMethod.POST)
+    public String updateUser(@RequestBody @Valid UserGroup group,
+                             BindingResult bindingResult)
+            throws Exception {
+        if (bindingResult.hasErrors()) {
+            return "UPDATE ERROR";
+        }
+
+        if (group.getIsAgent() != null) {
+            group.setIsAgent("0");
+        }
+        else {
+            group.setIsAgent("1");
+        }
+
+        group.setCount(1);
+        ugService.update(group);
+        return "update " + group.toString() + " Success";
     }
 
 }

@@ -6,6 +6,7 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/all.css}" />
     <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/all.js}"></script>
+    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
     <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
     <script>
         function localRefresh(url) {
@@ -23,7 +24,7 @@
         <ul>
             <li>
                 <a>
-                    <form th:action="@{/logout}" method="post">
+                    <form th:action="@{/logout}" method="POST">
                         <input type="submit" class="btn btn-primary" value="注销"/>
                     </form>
                 </a>
@@ -37,7 +38,7 @@
     </div>
     <div class="meau_btn icon20" id="meau_btn"></div>
 </div>
-<div class="m_left off" id="m_left">
+<div class="m_left" id="m_left">
     <div class="meau" id="meau">
         <ul>
             <li data-tit="1"><a class="on" data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m01"></i>总览</a></li>
@@ -91,14 +92,12 @@
     </div>
 </div>
 <div class="main sub_main">
-
-    <p class="bg-primary">Springboot + thymeleaf + bootstrap + hibernate</p>
+    <h4>
+        <p class="bg-primary">技术栈：Springboot + hibernate + thymeleaf + bootstrap</p>
+    </h4>
     <div id="refresh" th:fragment="refresh">
-
+        <!--content-->
     </div>
-    <!--<td class="text" th:text="ooo" ></td>-->
-    <!--<input type="button" th:onclick="|javascript:localRefresh('/refresh')|" value="用户管理" />-->
-    <!--<button onClick="localRefresh('/manager')">点击刷新表格</button>-->
 </div>
 
 </body>

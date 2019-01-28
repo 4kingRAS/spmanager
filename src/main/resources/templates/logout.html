@@ -16,7 +16,7 @@
             text-align: center;
         }
     </style>
-    <title>登录页面</title>
+    <title>已注销</title>
 </head>
 <body>
 <div class="top">
@@ -31,10 +31,10 @@
     </div>
     <div class="meau_btn icon20" id="meau_btn"></div>
 </div>
-<div class="main on sub_main">
+<div class="main sub_main">
     <div class="contentDiv">
         <div class="starter-template">
-            <p th:if="${param.logout}" class="bg-warning">已成功注销</p>
+            <p class="bg-warning">已成功注销</p>
             <p th:if="${param.error}" class="bg-danger">有错误，请重试</p> <!-- 2 -->
             <legend>
                 <strong>

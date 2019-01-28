@@ -44,4 +44,9 @@ public class MainController {
         return "login";
     }
 
+    @RequestMapping(value = "/logout")
+    public String logout() {
+        return "logout";
+    }
+
 }

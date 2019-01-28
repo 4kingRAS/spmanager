@@ -58,16 +58,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/user/**").hasRole("HNA")
                 .antMatchers("/manager/**").hasRole("HNA")
                 .antMatchers("/refresh").hasRole("HNA")
-                .anyRequest().authenticated() //任何请求,登录后可以访问
+                .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login?error")
                 .permitAll() //登录页面用户任意访问
                 .and()
-                .logout().permitAll();
+                .logout().logoutUrl("/logout").permitAll();
         http.csrf().disable();
-        http.headers().frameOptions().disable();
+        //http.headers().frameOptions().disable();
     }
 
 }
