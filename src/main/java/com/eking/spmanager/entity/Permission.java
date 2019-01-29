@@ -16,7 +16,7 @@ public class Permission implements Serializable {
     @Column(name = "gp_id")
     private Integer id;
 
-    @Column(name = "group_id", nullable = false)
+    @Column(name="group_id", nullable = false)
     private Integer groupid;
 
     @Column(name = "role_id", nullable = false)
@@ -45,4 +45,14 @@ public class Permission implements Serializable {
     public void setRoleid(Integer roleid) {
         this.roleid = roleid;
     }
+
+    @Override
+    public String toString() {
+        return "PTABLE{" +
+                "id=" + id.toString() +
+                ", ROLE=" + roleid.toString() +
+                ", GROUP=" + groupid.toString() +
+                '}';
+    }
+
 }

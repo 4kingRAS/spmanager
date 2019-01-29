@@ -1,5 +1,6 @@
 package com.eking.spmanager.service;
 
+import com.eking.spmanager.entity.Role;
 import com.eking.spmanager.entity.User;
 import com.eking.spmanager.entity.UserGroup;
 
@@ -17,4 +18,5 @@ public interface UserGroupService {
     public void update(UserGroup userGroup);
     public UserGroup findById(Integer id);
     public List<UserGroup> findAllGroup();
+    public UserGroup findByName(String name);
 }

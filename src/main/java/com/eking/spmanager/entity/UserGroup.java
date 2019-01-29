@@ -19,8 +19,9 @@ public class UserGroup implements Serializable {
     @Column(name = "group_id")
     private Integer id;
 
+
     @NotEmpty(message = "invalid UserGroup Name")
-    @Column(name = "group_name", length = 20, nullable = false)
+    @Column(name = "group_name", length = 20, nullable = false, unique = true)
     private String name;
 
     @Column(name = "group_isAgent", columnDefinition = "char(1) default '1'")

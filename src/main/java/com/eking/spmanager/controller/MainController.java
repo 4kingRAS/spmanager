@@ -26,7 +26,7 @@ public class MainController {
     @RequestMapping(method = RequestMethod.GET)
     public String index(ModelMap map, Principal principal) {
         map.addAttribute("username", principal.getName());
-        return "index";
+        return "/index";
     }
 
     @RequestMapping(value = "info", method = RequestMethod.GET)

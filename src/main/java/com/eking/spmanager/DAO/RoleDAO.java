@@ -1,5 +1,6 @@
-package com.eking.spmanager.entity;
+package com.eking.spmanager.DAO;
 
+import com.eking.spmanager.entity.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
@@ -9,5 +10,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 
 public interface RoleDAO extends JpaRepository<Role, Integer> {
-    public Role findByName(String name);
 }

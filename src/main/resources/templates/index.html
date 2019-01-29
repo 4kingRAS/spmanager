@@ -14,7 +14,7 @@
             $('#refresh').load(url);
         }
     </script>
-    <title>登录页面</title>
+    <title>首页</title>
 </head>
 <body>
 <div class="top">
@@ -37,6 +37,9 @@
         </ul>
     </div>
     <div class="meau_btn icon20" id="meau_btn"></div>
+    <div>
+        time:<span th:text="${#dates.format(date, 'yyyy-MM-dd HH:mm:ss')}"></span><br>
+    </div>
 </div>
 <div class="m_left" id="m_left">
     <div class="meau" id="meau">

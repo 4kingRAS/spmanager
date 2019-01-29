@@ -7,14 +7,12 @@ package com.eking.spmanager.Config;
  *              适合小项目，大项目还是自己实现安全好。
  **/
 
-import com.eking.spmanager.service.DefUserDetail;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -52,12 +50,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                /**
+                 * access("hasRole('ADMIN') and hasRole('USER')")  与的效果
+                 * 用于组合权限
+                 */
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/images/*").permitAll()
                 .antMatchers("/js/**").permitAll()
-                .antMatchers("/user/**").hasRole("HNA")
+                .antMatchers("/user/reg").permitAll()
                 .antMatchers("/manager/**").hasRole("HNA")
-                .antMatchers("/refresh").hasRole("HNA")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

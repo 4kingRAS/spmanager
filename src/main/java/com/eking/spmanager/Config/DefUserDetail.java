@@ -1,8 +1,13 @@
-package com.eking.spmanager.service;
+package com.eking.spmanager.Config;
 
+import com.eking.spmanager.entity.Role;
 import com.eking.spmanager.entity.UserGroup;
 import com.eking.spmanager.entity.User;
 
+import com.eking.spmanager.service.PmsService;
+import com.eking.spmanager.service.RoleService;
+import com.eking.spmanager.service.UserGroupService;
+import com.eking.spmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +34,12 @@ public class DefUserDetail implements UserDetailsService {
     @Autowired
     UserGroupService userGroupService;
 
+    @Autowired
+    PmsService permissionService;
+
+    @Autowired
+    RoleService roleService;
+
     public UserDetails loadUserByUsername(String username) { //重写loadUserByUsername 方法获得 userdetails 类型用户
 
         User user = userService.findByUserName(username);
@@ -42,13 +53,13 @@ public class DefUserDetail implements UserDetailsService {
         }
 
         try {
-            UserGroup userGroup = userGroupService.findById(user.getGroup());
+            Integer rid = permissionService.findByGroupid(user.getGroup()).getRoleid();
+            Role role = roleService.findById(rid);
             List<SimpleGrantedAuthority> authorities = new ArrayList<>();
 
             //用于添加用户的权限。只要把用户权限添加到authorities。
 
-            authorities.add(new SimpleGrantedAuthority(userGroup.getName()));
-            System.out.println(userGroup.getName());
+            authorities.add(new SimpleGrantedAuthority(role.getName()));
 
             return new org.springframework.security.core.userdetails.User(user.getUsername(),
                     user.getPassword(), authorities);

@@ -21,7 +21,7 @@ public class User implements Serializable {
     private Integer id;
 
     @NotEmpty(message = "invalid username") // 表单验证
-    @Column(name = "user_name", length = 20, nullable = false) // 字段长度
+    @Column(name = "user_name", length = 20, nullable = false, unique = true) // 字段长度
     private String username;
 
     @NotEmpty(message = "invalid psw")

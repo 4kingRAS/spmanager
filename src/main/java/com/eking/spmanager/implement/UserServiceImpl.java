@@ -1,6 +1,6 @@
-package com.eking.spmanager.service.implement;
+package com.eking.spmanager.implement;
 
-import com.eking.spmanager.entity.UserDAO;
+import com.eking.spmanager.DAO.UserDAO;
 import com.eking.spmanager.entity.User;
 import com.eking.spmanager.service.UserService;
 import org.slf4j.Logger;
@@ -29,20 +29,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void addSingleUser(User user) {
         userDAO.save(user);
-        LOGGER.info("\n EKlog: new user: " + user.toString());
+        LOGGER.info("\n EKlog|| USER | NEW - " + user.toString());
     }
 
-    @Transactional
     @Override
     public User findByUserName(String username) {
-        LOGGER.info("\n EKlog: find user: " + username);
+        LOGGER.info("\n EKlog|| USER | FIND BY NAME - " + username);
         return userDAO.findByUsername(username);
     }
 
     @Override
     public List<User> findAllUser() {
         // TODO Auto-generated method stub
-        LOGGER.info("\n EKlog: find all: ");
+        LOGGER.info("\n EKlog|| USER | FIND ALL |");
         return (List<User>) userDAO.findAll();
 
     }

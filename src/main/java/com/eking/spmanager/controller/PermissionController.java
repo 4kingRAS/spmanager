@@ -1,20 +1,21 @@
 package com.eking.spmanager.controller;
 
 import com.eking.spmanager.Utils.Utils;
-import com.eking.spmanager.entity.User;
+import com.eking.spmanager.Utils.UtilsImpl;
+import com.eking.spmanager.entity.Permission;
 import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.service.PmsService;
+import com.eking.spmanager.service.RoleService;
 import com.eking.spmanager.service.UserGroupService;
-import com.eking.spmanager.service.UserService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import java.sql.Timestamp;
-import java.util.Date;
 
 /**
  * @Author Yulin.Wang
@@ -29,20 +30,26 @@ public class PermissionController {
     @Autowired
     UserGroupService ugService;
 
-    String value;
+    @Autowired
+    PmsService permissionService;
+
+    @Autowired
+    Utils utils;
 
     /**
      *  获取群组列表
      */
     @RequestMapping(method = RequestMethod.GET)
     public String getUserList(ModelMap map) {
-        map.addAttribute("groupList", ugService.findAllGroup());
+        UserGroup ug = new UserGroup();
+        map.addAttribute("ugmodel", ug);
+        map.addAttribute("groupList", utils.findAllGPRole());
         return "groupList";
     }
 
     @RequestMapping(value = "/fresh", method = RequestMethod.GET)
     public String freshList(ModelMap map) {
-        map.addAttribute("groupList", ugService.findAllGroup());
+        map.addAttribute("groupList", utils.findAllGPRole());
         return "groupList::grouptb";
     }
 
@@ -53,23 +60,26 @@ public class PermissionController {
      */
     @ResponseBody
     @RequestMapping(params = "add", method = RequestMethod.POST)
-    public String postGroupForm(@RequestBody @Valid UserGroup group,
+    public String postGroupForm(@RequestBody String str,
                                 BindingResult bindingResult)
                                 throws Exception {
         if (bindingResult.hasErrors()) {
             return "ERROR";
         }
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode node = mapper.readTree(str);
 
-        if (group.getIsAgent() != null) {
-            group.setIsAgent("0");
-        }
-        else {
-            group.setIsAgent("1");
-        }
+        UserGroup group = mapper.convertValue(node.get("UserGroup"), UserGroup.class);
+        Integer rid = mapper.convertValue(node.get("role"), Integer.class);
 
         group.setCount(1);
         ugService.addGroup(group);
+        Integer gid = ugService.findByName(group.getName()).getId();
 
+        Permission pms = new Permission();
+        pms.setRoleid(rid);
+        pms.setGroupid(gid);
+        permissionService.addPermission(pms);
         return "add " + group.toString() + " Success";
     }
 
@@ -98,13 +108,6 @@ public class PermissionController {
             throws Exception {
         if (bindingResult.hasErrors()) {
             return "UPDATE ERROR";
-        }
-
-        if (group.getIsAgent() != null) {
-            group.setIsAgent("0");
-        }
-        else {
-            group.setIsAgent("1");
         }
 
         group.setCount(1);

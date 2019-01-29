@@ -1,5 +1,6 @@
 package com.eking.spmanager.Utils;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -10,6 +11,5 @@ import java.util.function.Consumer;
 
 public interface Utils {
     //public String showIsActived;
-
-
+    public List<UtilsImpl.idx> findAllGPRole();
 }
