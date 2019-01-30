@@ -9,5 +9,5 @@ import com.eking.spmanager.entity.Role;
  **/
 
 public interface RoleService {
-    public Role findById(Integer id);
+    Role findById(Integer id);
 }

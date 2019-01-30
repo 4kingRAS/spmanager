@@ -6,21 +6,22 @@ package com.eking.spmanager.controller;
  * @Description
  **/
 
-import com.eking.spmanager.Utils.Utils;
+import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
+import com.eking.spmanager.Utils.Utils;
+import com.eking.spmanager.Utils.UtilsImpl;
 import com.eking.spmanager.entity.User;
 import com.eking.spmanager.service.UserService;
 
 import javax.validation.Valid;
 import java.sql.Timestamp;
-import java.util.Date;
+import java.util.*;
 
 @Controller
 @RequestMapping(value = "/user")
@@ -29,6 +30,10 @@ public class UserController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserGroupService ugService;
+
+    @Autowired
     Utils utils;
 
     /**
@@ -36,16 +41,54 @@ public class UserController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String getUserList(ModelMap map) {
-        map.addAttribute("userList", userService.findAllUser());
+        List<User> ulist = userService.findAllUser();
+        List<UtilsImpl.Combox> clist = new ArrayList<>();
+        for (User x: ulist) {
+            String gname = ugService.findById(x.getGroup()).getName();
+            clist.add(utils.combineList(x, gname));
+        }
+
+        map.addAttribute("groupList", ugService.findAllGroup());
+        map.addAttribute("userList", clist);
         return "userList";
     }
 
+    @RequestMapping(value = "/fresh", method = RequestMethod.GET)
+    public String freshList(ModelMap map) {
+        List<User> ulist = userService.findAllUser();
+        List<UtilsImpl.Combox> clist = new ArrayList<>();
+        for (User x: ulist) {
+            String gname = ugService.findById(x.getGroup()).getName();
+            clist.add(utils.combineList(x, gname));
+        }
+        map.addAttribute("userList", clist);
+        return "userList::userTable";
+    }
+
     /**
-     * 显示创建用户表单
-     *
-     * @param map 添加属性
-     * @return 成功页面 在html中
+     * 创建用户
      */
+    @ResponseBody
+    @RequestMapping(params = "add", method = RequestMethod.POST)
+    public String postGroupForm(@RequestBody @Valid User user,
+                                BindingResult bindingResult)
+            throws Exception {
+        if (bindingResult.hasErrors()) {
+            return "ERROR";
+        }
+
+        try {
+            user.setIsOnline("0");
+            user.setIsActived("1");
+            userService.addSingleUser(user);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR: CREATE USER FAILED!";
+        }
+
+        return "add " + user.toString() + " Success";
+    }
+
     @RequestMapping(value = "/reg", method = RequestMethod.GET)
     public String createUserForm(ModelMap map) {
         User user = new User();
@@ -84,13 +127,6 @@ public class UserController {
         }
 
         return "redirect:/user/";
-    }
-
-    @RequestMapping(value = "/check", method = RequestMethod.GET)
-    public String check() {
-        User user = userService.findByUserName("Mickey");
-        System.out.println(user.getUsername());
-        return user.getUsername();
     }
 
 }

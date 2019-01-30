@@ -1,70 +1,118 @@
-
-<!DOCTYPE html>
-<html lang="zh-CN" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <script type="text/javascript" th:src="@{https://cdn.bootcss.com/jquery/3.2.1/jquery.min.js}"></script>
-    <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
-    <link th:href="@{/css/default.css}" rel="stylesheet"/>
-    <link rel="icon" th:href="@{/images/favicon.ico}" type="image/x-icon"/>
-    <meta charset="UTF-8"/>
-    <title>用户列表</title>
-</head>
-
-<body>
-
-<style>
-    p.head {
-        color: #555555;
-        text-align: center;
-        font-size: 25px;
-        font-family: "Georgia";
-    }
-
-    p.text {
-        color: #666666;
-        text-align: center;
-        font-size: 20px;
-        font-family: "Georgia";
-    }
-</style>
-
 <div class="contentDiv">
+    <div id="userTable" th:fragment="userTable">
+        <table class="table table-hover table-condensed">
+            <legend>
+                <strong>总览</strong>
+            </legend>
 
-    <h5>Spring boot + thymeleaf + bootstrap</h5>
+            <button style="margin-right: 30px" class="btn btn-primary" data-toggle="modal" href="#add1user">添加用户</button>
+        </table>
+        <table class="table table-hover table-condensed">
+            <legend>
+                <strong><p class="text">用户列表</p></strong>
+            </legend>
+            <thead>
+            <tr>
+                <th>用户编号</th>
+                <th>用户名</th>
+                <th>密码</th>
+                <th>所在公司</th>
+                <th>用户群组</th>
+                <th>是否在线</th>
+                <th>最后登录时间</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="clist : ${userList}">
+                <th scope="row" th:text="${clist.main.id}"></th>
+                <td th:text="${clist.main.username}"></td>
+                <td th:text="${clist.main.password}"></td>
+                <td th:text="${clist.main.corpname}"></td>
+                <td th:text="${clist.branch}"></td>
+                <td>
+                    <span class="badge" th:text="${clist.main.isOnline eq '1' ? '是' : '否'}"></span>
+                </td>
+                <td th:text="${clist.main.lastLogin}"></td>
+                <!--<td><span class="badge">新</span></td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="modal fade" id="add1user" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="my">添加用户</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-condensed">
+                        <legend>
+                            <strong>
+                                <span text="添加用户"></span>
+                            </strong>
+                        </legend>
+                        <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>公司名</th>
+                            <th>用户群组</th>
+                            <th>密码</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <input type="hidden" id="aduId" />
+                            <td>
+                                <input type="text" id="aduName" placeholder="用户名限20字符以内"/>
+                            </td>
+                            <td>
+                                <input type="text" id="aduCorp" placeholder="请输入公司名"/>
+                            </td>
+                            <td>
+                                <select id="aduGroup" class="selectpicker show-tick" data-live-search="true" th:field="*{groupList}">
+                                    <option th:each="userGroup : ${groupList}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="password" id="aduPsw" placeholder="请输入密码" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+                        <button type="button" class="btn btn-primary" onclick="addUser()" >
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <script type="text/javascript" th:inline="javascript">
 
-    <table class="table table-hover table-condensed">
-        <legend>
-            <strong><p class="text">用户列表</p></strong>
-        </legend>
-        <thead>
-        <tr>
-            <th>用户编号</th>
-            <th>用户名</th>
-            <th>密码</th>
-            <th>所在公司</th>
-            <th>用户群组</th>
-            <th>是否在线</th>
-            <th>最后登录时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr th:each="user : ${userList}">
-            <th scope="row" th:text="${user.id}"></th>
-            <td th:text="${user.username}"></td>
-            <td th:text="${user.password}"></td>
-            <td th:text="${user.corpname}"></td>
-            <td th:text="${user.group}"></td>
-            <td>
-                <span th:text="${user.isOnline eq '1' ? '是' : '否'}"></span>
-            </td>
-            <td th:text="${user.lastLogin}"></td>
-            <!--<td><a class="btn btn-danger" th:href="@{/users/delete/{userId}(userId=${user.id})}">删除</a></td>-->
-        </tr>
-        </tbody>
-    </table>
+        /*<![CDATA[*/
+        function addUser(){
+            // 装载局部刷新返回的页面
+            var un = $("#aduName").val();
+            var up = $("#aduPsw").val();
+            var uc = $("#aduCorp").val();
+            var ug = $("#aduGroup").val();
 
-    <div><a class="btn btn-primary" href="/user/reg" role="button">添加用户</a></div>
+            $.ajax({
+                url: "/user?add",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({username: un, password: up, corpname: uc, group: ug}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+            $("#add1user").on('hidden.bs.modal', function (e) {
+                $('#usertable').load("/user/fresh");
+            }).modal('hide');
+        }
+        /*]]>*/
+    </script>
 </div>
-
-</body>
-</html>

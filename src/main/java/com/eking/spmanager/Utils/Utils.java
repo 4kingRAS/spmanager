@@ -1,7 +1,6 @@
 package com.eking.spmanager.Utils;
 
 import java.util.List;
-import java.util.function.Consumer;
 
 /**
  * @Author Yulin.Wang
@@ -11,5 +10,6 @@ import java.util.function.Consumer;
 
 public interface Utils {
     //public String showIsActived;
+    public UtilsImpl.Combox combineList(Object a, Object b);
     public List<UtilsImpl.idx> findAllGPRole();
 }

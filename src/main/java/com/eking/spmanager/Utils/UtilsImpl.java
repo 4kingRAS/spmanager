@@ -30,9 +30,9 @@ public class UtilsImpl implements Utils {
         }
     }
 
-    public class RoleConverter {
-        public Integer roleid;
-        public UserGroup ug;
+    public class Combox {
+        public Object main;
+        public Object branch;
     }
     
     @Autowired
@@ -44,8 +44,15 @@ public class UtilsImpl implements Utils {
     @Autowired
     PmsService pmsService;
 
+    public Combox combineList(Object a, Object b) {
+        Combox c = new Combox();
+        c.main = a;
+        c.branch = b;
+        return c;
+    }
+
     public List<idx> findAllGPRole() {
-        List<idx> idxList = new ArrayList<idx>();
+        List<idx> idxList = new ArrayList<>();
         List<UserGroup> lg = userGroupService.findAllGroup();
         for (UserGroup x: lg) {
             Role role  = roleService.findById(pmsService.findByGroupid(x.getId()).getRoleid());

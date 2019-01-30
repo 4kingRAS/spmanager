@@ -10,14 +10,14 @@ import java.io.Serializable;
  **/
 
 @Entity
-public class Deposite implements Serializable {
+public class GoodsIndex implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "deposite_id")
+    @Column(name = "gindex_id")
     private Integer id;
 
     @Column(name = "goods_id", nullable = false)
-    private String goodsId;
+    private String goodsid;
 
     @Column(name = "goods_count")
     private Integer count;
@@ -30,12 +30,12 @@ public class Deposite implements Serializable {
         this.id = id;
     }
 
-    public String getGoodsId() {
-        return goodsId;
+    public String getGoodsid() {
+        return goodsid;
     }
 
-    public void setGoodsId(String goodsId) {
-        this.goodsId = goodsId;
+    public void setGoodsid(String goodsid) {
+        this.goodsid = goodsid;
     }
 
     public Integer getCount() {
@@ -45,4 +45,7 @@ public class Deposite implements Serializable {
     public void setCount(Integer count) {
         this.count = count;
     }
+
+
+
 }

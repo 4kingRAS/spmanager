@@ -13,10 +13,10 @@ import java.util.List;
  **/
 
 public interface UserGroupService {
-    public void addGroup(UserGroup userGroup);
-    public void delete(UserGroup userGroup);
-    public void update(UserGroup userGroup);
-    public UserGroup findById(Integer id);
-    public List<UserGroup> findAllGroup();
-    public UserGroup findByName(String name);
+    void addGroup(UserGroup userGroup);
+    void delete(UserGroup userGroup);
+    void update(UserGroup userGroup);
+    UserGroup findById(Integer id);
+    List<UserGroup> findAllGroup();
+    UserGroup findByName(String name);
 }

@@ -11,7 +11,8 @@ import java.util.List;
  **/
 
 public interface UserService {
-    public void addSingleUser(User user);
-    public User findByUserName(String username);
-    public List<User> findAllUser();
+    void addSingleUser(User user);
+    User findByUserName(String username);
+    List<User> findAllUser();
+    void update(User user);
 }

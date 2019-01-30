@@ -21,7 +21,7 @@
         </tr>
     </table>
 
-    <div id="grouptb" th:fragment="grouptb">
+    <div id="groupTable" th:fragment="groupTable">
         <table class="table table-hover table-condensed">
             <legend>
                 <strong><p class="text">群组列表</p></strong>
@@ -52,8 +52,8 @@
                     <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_AGENT'}" onclick="return false;" checked="checked"></td>
                     <td class="col-lg-2">
                         <div class="btn-group">
-                            <button class="btn btn-primary" data-toggle="modal" th:href="'#'+${idxList.ug.id}">修改</button>
-                            <button class="btn btn-danger" th:onclick="'javascript:deleteGroup('+${idxList.ug.id}+')'">删除</button>
+                            <button class="btn btn-primary btn-sm" data-toggle="modal" th:href="'#'+${idxList.ug.id}">编辑</button>
+                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:deleteGroup('+${idxList.ug.id}+')'">删除</button>
                         </div>
                         <!-- MODAL -->
                         <div class="modal fade" th:id="${idxList.ug.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -61,7 +61,7 @@
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                                        <h4 class="modal-title" id="myModalLabel">修改群组</h4>
+                                        <h4 class="modal-title" id="myModalLabel">修改群组信息</h4>
                                     </div>
                                     <div class="modal-body">
                                         <table class="table table-hover table-condensed">
@@ -90,8 +90,8 @@
                                             </tbody>
                                         </table>
                                         <div class="modal-footer">
-                                            <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
-                                            <button type="button" class="btn btn-primary" th:onclick="'javascript:updateGroup('+${idxList.ug.id}+')'">
+                                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
+                                            <button type="button" class="btn btn-primary btn-sm" th:onclick="'javascript:updateGroup('+${idxList.ug.id}+')'">
                                                 提交更改
                                             </button>
                                         </div>
@@ -117,15 +117,13 @@
                 ga = "0";
             }
 
-            var jdata = JSON.stringify({UserGroup: {name: gName, isAgent: ga}, role: gpm});
-
             $.ajax({
-                url: [[@{/manager?add}]],
+                url: "/manager?add",
                 type: 'post',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: jdata,
-                    async: false
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({UserGroup: {name: gName, isAgent: ga}, role: gpm}),
+                async: false
                 // TRUE 异步 FALSE 同步
             });
 
@@ -135,7 +133,7 @@
         function deleteGroup(gid){
 
             $.ajax({
-                url: [[@{/manager?delete}]],
+                url: "/manager?delete",
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -157,18 +155,17 @@
             }
 
             $.ajax({
-                url: [[@{/manager?update}]],
+                url: "/manager?update",
                 type: 'post',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    data: JSON.stringify({id: gid, name: gname, isAgent: gag}),
-                    async: false
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id: gid, name: gname, isAgent: gag}),
+                async: false
                 // TRUE 异步 FALSE 同步
             });
             $("#"+gi).on('hidden.bs.modal', function (e) {
                 $('#grouptb').load("/manager/fresh");
-            });
-            $("#"+gi).modal('hide');
+            }).modal('hide');
         }
         /*]]>*/
     </script>

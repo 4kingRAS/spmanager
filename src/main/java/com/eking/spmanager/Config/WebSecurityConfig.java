@@ -51,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 /**
-                 * access("hasRole('ADMIN') and hasRole('USER')")  与的效果
+                 * .antMatchers(xxx).access("hasRole('ADMIN') and hasRole('USER')")  与的效果
                  * 用于组合权限
                  */
                 .antMatchers("/css/**").permitAll()
@@ -59,11 +59,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/js/**").permitAll()
                 .antMatchers("/user/reg").permitAll()
                 .antMatchers("/manager/**").hasRole("HNA")
+                .antMatchers("/user").hasRole("HNA")
+                .antMatchers("/goods/**").hasAnyRole("HNA", "EMPLOYEE", "AGENT")
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
                 .loginPage("/login")
                 .failureUrl("/login?error")
+                .defaultSuccessUrl("/", true)
                 .permitAll() //登录页面用户任意访问
                 .and()
                 .logout().logoutUrl("/logout").permitAll();

@@ -19,17 +19,17 @@ public class Goods implements Serializable {
     @Column(name = "goods_name", length = 100, nullable = false, unique = true)
     private String name;
 
-    @Column(name = "goods_type", length = 50, nullable = false, unique = true)
+    @Column(name = "goods_type", length = 50, nullable = false)
     private String type;
 
     @Column(name = "price_sell")
-    private float priceForSell;
+    private double priceForSell;
 
     @Column(name = "price_buy")
-    private float priceForBuy;
+    private double priceForBuy;
 
     @Column(name = "price_market")
-    private float priceForMarket;
+    private double priceForMarket;
 
     @Column(name = "goods_description", length = 180)
     private String description;
@@ -58,24 +58,28 @@ public class Goods implements Serializable {
         this.type = type;
     }
 
-    public float getPriceForSell() {
+    public double getPriceForSell() {
         return priceForSell;
     }
 
-    public void setPriceForSell(float priceForSell) {
+    public void setPriceForSell(double priceForSell) {
         this.priceForSell = priceForSell;
     }
 
-    public float getPriceForBuy() {
+    public double getPriceForBuy() {
         return priceForBuy;
     }
 
-    public void setPriceForBuy(float priceForBuy) {
+    public void setPriceForBuy(double priceForBuy) {
         this.priceForBuy = priceForBuy;
     }
 
-    public float getPriceForMarket() {
+    public double getPriceForMarket() {
         return priceForMarket;
+    }
+
+    public void setPriceForMarket(double priceForMarket) {
+        this.priceForMarket = priceForMarket;
     }
 
     public void setPriceForMarket(float priceForMarket) {
@@ -89,4 +93,14 @@ public class Goods implements Serializable {
     public void setDescription(String description) {
         this.description = description;
     }
+
+    @Override
+    public String toString() {
+        return "Goods{" +
+                "id=" + id.toString()+
+                ", name=" + name +
+                ", type=" + type +
+                '}';
+    }
+
 }

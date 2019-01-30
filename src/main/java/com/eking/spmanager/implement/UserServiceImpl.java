@@ -41,8 +41,15 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<User> findAllUser() {
         // TODO Auto-generated method stub
-        LOGGER.info("\n EKlog|| USER | FIND ALL |");
+        LOGGER.info("\n EKlog|| USER | FIND ALL  ]]");
         return (List<User>) userDAO.findAll();
-
     }
+
+    @Transactional
+    @Override
+    public void update(User user) {
+        userDAO.save(user);
+        LOGGER.info("\n EKlog|| USER | UPDATE - " + user.toString());
+    }
+
 }

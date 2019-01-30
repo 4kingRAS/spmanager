@@ -1,11 +1,9 @@
 package com.eking.spmanager.controller;
 
 import com.eking.spmanager.Utils.Utils;
-import com.eking.spmanager.Utils.UtilsImpl;
 import com.eking.spmanager.entity.Permission;
 import com.eking.spmanager.entity.UserGroup;
 import com.eking.spmanager.service.PmsService;
-import com.eking.spmanager.service.RoleService;
 import com.eking.spmanager.service.UserGroupService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -50,7 +48,7 @@ public class PermissionController {
     @RequestMapping(value = "/fresh", method = RequestMethod.GET)
     public String freshList(ModelMap map) {
         map.addAttribute("groupList", utils.findAllGPRole());
-        return "groupList::grouptb";
+        return "groupList::groupTable";
     }
 
     /**
@@ -72,14 +70,20 @@ public class PermissionController {
         UserGroup group = mapper.convertValue(node.get("UserGroup"), UserGroup.class);
         Integer rid = mapper.convertValue(node.get("role"), Integer.class);
 
-        group.setCount(1);
-        ugService.addGroup(group);
-        Integer gid = ugService.findByName(group.getName()).getId();
+        try {
+            group.setCount(1);
+            ugService.addGroup(group);
+            Integer gid = ugService.findByName(group.getName()).getId();
 
-        Permission pms = new Permission();
-        pms.setRoleid(rid);
-        pms.setGroupid(gid);
-        permissionService.addPermission(pms);
+            Permission pms = new Permission();
+            pms.setRoleid(rid);
+            pms.setGroupid(gid);
+            permissionService.addPermission(pms);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR: CREATE GROUP FAILED!";
+        }
+
         return "add " + group.toString() + " Success";
     }
 
