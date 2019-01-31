@@ -3,7 +3,6 @@
 <html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-    < taglib prefix="sec" uri="http://www.springframework.org/security/tags">
     <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/all.css}" />
     <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
@@ -37,6 +36,11 @@
             temp.submit();
         }
     </script>
+    <style>
+        body {
+            overflow-x:hidden;
+        }
+    </style>
 
     <title>首页</title>
 </head>
@@ -125,9 +129,9 @@
 </div>
 <div class="main sub_main">
     <h4>
-        <p class="bg-primary">技术栈：Springboot + hibernate + thymeleaf + bootstrap</p>
+        <p class="bg-primary">  技术栈：Springboot + hibernate + thymeleaf + bootstrap</p>
     </h4>
-    <div id="refresh" th:fragment="refresh">
+    <div id="refresh" th:fragment="refresh" style="padding: 5px">
         <!--content-->
     </div>
 </div>

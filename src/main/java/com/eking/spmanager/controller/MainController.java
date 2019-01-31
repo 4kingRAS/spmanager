@@ -6,6 +6,7 @@ package com.eking.spmanager.controller;
  * @Description
  **/
 
+import com.eking.spmanager.Utils.Utils;
 import com.eking.spmanager.entity.User;
 import com.eking.spmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +29,9 @@ import java.util.List;
 public class MainController {
 
     @Autowired
+    Utils utils;
+
+    @Autowired
     UserService userService;
 
     @RequestMapping(method = RequestMethod.GET)
@@ -36,10 +40,7 @@ public class MainController {
         //UserDetails userDetails =
                 //(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUserName(principal.getName());
-        Date d = new Date();
-        Timestamp t = new Timestamp(d.getTime());
-
-        user.setLastLogin(t);
+        user.setLastLogin(utils.getCurrentTime());
         user.setIsOnline("1");
         userService.update(user);
         return "/index";

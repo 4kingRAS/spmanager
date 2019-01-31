@@ -34,13 +34,20 @@ public class GoodsServiceImpl implements GoodsService {
 
     @Override
     public Goods findByName(String name) {
-        return null;
+        LOGGER.info("\n EKlog|| GOODS | FIND BY NAME - " + name);
+        return goodsDAO.findByName(name);
+    }
+
+    @Override
+    public List<Goods> findByType(String type) {
+        LOGGER.info("\n EKlog|| GOODS | FIND BY TYPE - " + type);
+        return goodsDAO.findByType(type);
     }
 
     @Override
     public List<Goods> findAllGoods() {
         LOGGER.info("\n EKlog|| GOODS | FIND ALL ]]");
-        return (List<Goods>) goodsDAO.findAll();
+        return goodsDAO.findAll();
     }
 
     @Transactional

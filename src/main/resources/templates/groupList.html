@@ -127,7 +127,7 @@
                 // TRUE 异步 FALSE 同步
             });
 
-            $('#grouptb').load("/manager/fresh");
+            $('#groupTable').load("/manager/fresh");
         }
 
         function deleteGroup(gid){
@@ -142,7 +142,7 @@
                 // TRUE 异步 FALSE 同步
             });
 
-            $('#grouptb').load("/manager/fresh");
+            $('#groupTable').load("/manager/fresh");
         }
 
         function updateGroup(gi){
@@ -164,7 +164,7 @@
                 // TRUE 异步 FALSE 同步
             });
             $("#"+gi).on('hidden.bs.modal', function (e) {
-                $('#grouptb').load("/manager/fresh");
+                $('#groupTable').load("/manager/fresh");
             }).modal('hide');
         }
         /*]]>*/

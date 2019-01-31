@@ -35,7 +35,7 @@ public class UserGroupServiceImpl implements UserGroupService {
     public List<UserGroup> findAllGroup() {
         // TODO Auto-generated method stub
         LOGGER.info("\n EKlog|| FIND ALL GROUP  ]]");
-        return (List<UserGroup>) userGroupDAO.findAll();
+        return userGroupDAO.findAll();
     }
 
     @Override

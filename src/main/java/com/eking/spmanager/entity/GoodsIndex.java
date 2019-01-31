@@ -17,7 +17,7 @@ public class GoodsIndex implements Serializable {
     private Integer id;
 
     @Column(name = "goods_id", nullable = false)
-    private String goodsid;
+    private Integer goodsid;
 
     @Column(name = "goods_count")
     private Integer count;
@@ -30,11 +30,11 @@ public class GoodsIndex implements Serializable {
         this.id = id;
     }
 
-    public String getGoodsid() {
+    public Integer getGoodsid() {
         return goodsid;
     }
 
-    public void setGoodsid(String goodsid) {
+    public void setGoodsid(Integer goodsid) {
         this.goodsid = goodsid;
     }
 
@@ -45,7 +45,5 @@ public class GoodsIndex implements Serializable {
     public void setCount(Integer count) {
         this.count = count;
     }
-
-
 
 }

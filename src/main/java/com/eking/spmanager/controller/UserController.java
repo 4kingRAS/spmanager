@@ -113,12 +113,10 @@ public class UserController {
         }
 
         try {
-            Date d = new Date();
-            Timestamp t = new Timestamp(d.getTime());
 
             user.setGroup(1);
             user.setIsOnline("1");
-            user.setLastLogin(t);
+            user.setLastLogin(utils.getCurrentTime());
             user.setIsActived("1");
 
             userService.addSingleUser(user);

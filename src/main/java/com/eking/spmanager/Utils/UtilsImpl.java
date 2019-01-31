@@ -8,7 +8,9 @@ import com.eking.spmanager.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -62,4 +64,9 @@ public class UtilsImpl implements Utils {
         return idxList;
     }
 
+    public Timestamp getCurrentTime() {
+        Date d = new Date();
+        Timestamp t = new Timestamp(d.getTime());
+        return t;
+    }
 }

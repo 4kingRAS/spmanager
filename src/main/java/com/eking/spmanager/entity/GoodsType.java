@@ -19,4 +19,19 @@ public class GoodsType implements Serializable {
     @Column(name = "goods_type", length = 50, nullable = false, unique = true)
     private String name;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 }

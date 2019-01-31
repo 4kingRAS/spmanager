@@ -13,6 +13,7 @@ import java.util.List;
 public interface GoodsService {
     void addGoods(Goods g);
     Goods findByName(String name);
+    List<Goods> findByType(String type);
     List<Goods> findAllGoods();
     void update(Goods g);
 }

@@ -1,5 +1,6 @@
 package com.eking.spmanager.Utils;
 
+import java.sql.Timestamp;
 import java.util.List;
 
 /**
@@ -10,6 +11,7 @@ import java.util.List;
 
 public interface Utils {
     //public String showIsActived;
-    public UtilsImpl.Combox combineList(Object a, Object b);
-    public List<UtilsImpl.idx> findAllGPRole();
+    UtilsImpl.Combox combineList(Object a, Object b);
+    List<UtilsImpl.idx> findAllGPRole();
+    Timestamp getCurrentTime();
 }
