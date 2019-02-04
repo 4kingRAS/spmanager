@@ -6,9 +6,10 @@ package com.eking.spmanager.controller;
  * @Description
  **/
 
-import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.Utils.Msg;
 import com.eking.spmanager.service.UserGroupService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -20,7 +21,6 @@ import com.eking.spmanager.entity.User;
 import com.eking.spmanager.service.UserService;
 
 import javax.validation.Valid;
-import java.sql.Timestamp;
 import java.util.*;
 
 @Controller
@@ -48,13 +48,19 @@ public class UserController {
             clist.add(utils.combineList(x, gname));
         }
 
+
+        Pageable pageable = PageRequest.of(0,5, Sort.Direction.ASC,"id");
+        int start = (int)pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > clist.size() ? clist.size() : (start + pageable.getPageSize());
+        Page<UtilsImpl.Combox> datas = new PageImpl<>(clist, pageable, 9);//(clist.subList(start, end), pageable, clist.size());
         map.addAttribute("groupList", ugService.findAllGroup());
-        map.addAttribute("userList", clist);
+        map.addAttribute("datas", datas);
         return "userList";
     }
 
     @RequestMapping(value = "/fresh", method = RequestMethod.GET)
-    public String freshList(ModelMap map) {
+    public String freshList(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page,
+                            @RequestParam(value = "size", defaultValue = "1") Integer size) {
         List<User> ulist = userService.findAllUser();
         List<UtilsImpl.Combox> clist = new ArrayList<>();
         for (User x: ulist) {
@@ -70,9 +76,8 @@ public class UserController {
      */
     @ResponseBody
     @RequestMapping(params = "add", method = RequestMethod.POST)
-    public String postGroupForm(@RequestBody @Valid User user,
-                                BindingResult bindingResult)
-            throws Exception {
+    public String postUserForm(@RequestBody @Valid User user,
+                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "ERROR";
         }
@@ -89,42 +94,62 @@ public class UserController {
         return "add " + user.toString() + " Success";
     }
 
-    @RequestMapping(value = "/reg", method = RequestMethod.GET)
-    public String createUserForm(ModelMap map) {
-        User user = new User();
-        map.addAttribute("user", user);
-        map.addAttribute("action", "reg");
-        return "regForm";
-    }
-
-    /**
-     *  创建用户
-     *    处理 "/users" 的 POST 请求，用来获取用户列表
-     *    通过 @ModelAttribute 绑定参数，也通过 @RequestParam 从页面中传递参数
-     */
-    @RequestMapping(value = "/reg", method = RequestMethod.POST)
-    public String postUserForm(ModelMap map,
-                           @ModelAttribute @Valid User user,
-                           BindingResult bindingResult) {
-
-        if (bindingResult.hasErrors()) {
-            map.addAttribute("action", "reg");
-            return "regForm";
-        }
-
+    @ResponseBody
+    @RequestMapping(params = "deal", method = RequestMethod.POST)
+    public String postDealUser(@RequestBody Msg msg) {
         try {
-
-            user.setGroup(1);
-            user.setIsOnline("1");
-            user.setLastLogin(utils.getCurrentTime());
-            user.setIsActived("1");
-
-            userService.addSingleUser(user);
+            User user = userService.findById(msg.getId());
+            if (user.getIsActived().equals("1")) {
+                user.setIsActived("0");
+            }
+            else {
+                user.setIsActived("1");
+            }
+            userService.update(user);
+            return "UPDATE " + user.toString() + " Success";
         } catch (Exception e) {
             e.printStackTrace();
+            return "ERROR: UPDATE USER FAILED!";
         }
-
-        return "redirect:/user/";
     }
+
+
+    /**
+     * LEGACY
+     * **/
+//
+//    @RequestMapping(value = "/reg", method = RequestMethod.GET)
+//    public String createUserForm(ModelMap map) {
+//        User user = new User();
+//        map.addAttribute("user", user);
+//        map.addAttribute("action", "reg");
+//        return "regForm";
+//    }
+//
+//
+//    @RequestMapping(value = "/reg", method = RequestMethod.POST)
+//    public String postUserForm(ModelMap map,
+//                           @ModelAttribute @Valid User user,
+//                           BindingResult bindingResult) {
+//
+//        if (bindingResult.hasErrors()) {
+//            map.addAttribute("action", "reg");
+//            return "regForm";
+//        }
+//
+//        try {
+//
+//            user.setGroup(1);
+//            user.setIsOnline("1");
+//            user.setLastLogin(utils.getCurrentTime());
+//            user.setIsActived("1");
+//
+//            userService.addSingleUser(user);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//        return "redirect:/user/";
+//    }
 
 }

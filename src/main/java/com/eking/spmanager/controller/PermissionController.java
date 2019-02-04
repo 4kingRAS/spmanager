@@ -38,17 +38,27 @@ public class PermissionController {
      *  获取群组列表
      */
     @RequestMapping(method = RequestMethod.GET)
-    public String getUserList(ModelMap map) {
-        UserGroup ug = new UserGroup();
-        map.addAttribute("ugmodel", ug);
-        map.addAttribute("groupList", utils.findAllGPRole());
-        return "groupList";
+    public String getUGList(ModelMap map) {
+        try {
+            UserGroup ug = new UserGroup();
+            map.addAttribute("ugmodel", ug);
+            map.addAttribute("groupList", utils.findAllGPRole());
+            return "groupList";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error";
+        }
     }
 
     @RequestMapping(value = "/fresh", method = RequestMethod.GET)
     public String freshList(ModelMap map) {
-        map.addAttribute("groupList", utils.findAllGPRole());
-        return "groupList::groupTable";
+        try {
+            map.addAttribute("groupList", utils.findAllGPRole());
+            return "groupList::groupTable";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "Error";
+        }
     }
 
     /**
@@ -71,7 +81,7 @@ public class PermissionController {
         Integer rid = mapper.convertValue(node.get("role"), Integer.class);
 
         try {
-            group.setCount(1);
+            group.setCount(0);
             ugService.addGroup(group);
             Integer gid = ugService.findByName(group.getName()).getId();
 
@@ -92,9 +102,7 @@ public class PermissionController {
      */
     @ResponseBody
     @RequestMapping(params = "delete", method = RequestMethod.POST)
-    public String deleteUser(@RequestBody UserGroup group,
-                             BindingResult bindingResult)
-                             throws Exception {
+    public String deleteUG(@RequestBody UserGroup group, BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return "DELETE ERROR";
         }
@@ -107,14 +115,14 @@ public class PermissionController {
      */
     @ResponseBody
     @RequestMapping(params = "update", method = RequestMethod.POST)
-    public String updateUser(@RequestBody @Valid UserGroup group,
+    public String updateUG(@RequestBody @Valid UserGroup group,
                              BindingResult bindingResult)
             throws Exception {
         if (bindingResult.hasErrors()) {
             return "UPDATE ERROR";
         }
-
-        group.setCount(1);
+        UserGroup temp = ugService.findById(group.getId());
+        group.setCount(temp.getCount());
         ugService.update(group);
         return "update " + group.toString() + " Success";
     }

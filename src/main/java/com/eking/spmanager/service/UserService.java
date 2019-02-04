@@ -1,6 +1,7 @@
 package com.eking.spmanager.service;
 
 import com.eking.spmanager.entity.User;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 
@@ -12,7 +13,9 @@ import java.util.List;
 
 public interface UserService {
     void addSingleUser(User user);
+    User findById(Integer id);
     User findByUserName(String username);
     List<User> findAllUser();
+    Page<User> findAllUserInPage(Integer page, Integer size);
     void update(User user);
 }

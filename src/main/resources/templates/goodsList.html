@@ -6,17 +6,43 @@
             </div>
             <div>
                 <ul class="nav navbar-nav" >
-                    <li th:each="goodsType : ${gtList}">
-                        <a href="#" th:onclick="getByType([[${goodsType.id}]])" th:id="'type'+${goodsType.id}" th:text="${goodsType.name}"></a>
+                    <li th:each="goodsType : ${gtList}" >
+                        <a href="#" th:onclick="getByType([[${goodsType.id}]])"
+                           th:id="'type'+${goodsType.id}" th:text="${goodsType.name}"></a>
                     </li>
+                    <li><button id="addgt" class="btn btn-default navbar-btn">+</button></li>
                 </ul>
+                <div class="navbar-form navbar-right" role="search">
+                    <div class="input-group">
+                        <input id="search" class="form-control" name="search"
+                               type="text" placeholder="想要什么？">
+                        <span class="input-group-btn">
+                            <button type="button" class="btn btn-default">搜索</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
             </div>
         </div>
     </nav>
+    <div class="modal fade" id="addGTModal" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
     <div id="goodsTable" th:fragment="goodsTable">
+
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <h4>商品列表</h4>
+            </div>
+            <div style="margin-right: 20px; float: right!important;">
+                <button class="btn btn-primary">添加商品</button>
+            </div>
+        </div>
         <legend>
-            <strong><p class="text">  商品列表</p></strong>
         </legend>
+
         <table>
             <thead>
                 <tr>
@@ -48,10 +74,14 @@
                                     <td class="col-md-1" th:text="${goods.priceForSell}"></td>
                                     <td class="col-md-1" th:text="${goods.priceForMarket}"></td>
                                     <td class="col-md-3" style="text-align: center">
-                                        <button class="btn btn-default btn-sm" data-toggle="collapse" name="myclog" th:href="'#pn'+${goods.id}">+</button>
+                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${goods.id}">
+                                            <span class="if-collapsed">+</span>
+                                            <span class="if-not-collapsed">-</span>
+                                        </button>
                                         <div class="btn-group">
+                                            <button class="btn btn-info btn-sm" data-toggle="modal" th:href="'#gx'+${goods.id}">采购</button>
                                             <button class="btn btn-success btn-sm" data-toggle="modal" th:href="'#gx'+${goods.id}">更新</button>
-                                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:deleteGroup('+${goods.id}+')'">删除</button>
+                                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:oup('+${goods.id}+')'">删除</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -61,8 +91,9 @@
                             <div class="panel-body" style="padding: 5px">
                                 <div class="row">
                                     <div class="col-sm-6 col-md-3">
+                                        <h4>商品信息：</h4>
                                         <blockquote>
-                                            <h4 th:text="${goods.description}"></h4>
+                                            <h5 th:text="${goods.description}"></h5>
                                         </blockquote>
                                     </div>
                                     <div class="col-sm-6 col-md-3">
@@ -77,54 +108,28 @@
                 </li>
             </div>
         </ul>
+    </div>
 
-        <!--<td class="col-lg-2">-->
-                            <!--<div class="btn-group">-->
-                                <!--<button class="btn btn-primary btn-sm" data-toggle="collapse" href="#collg">展开</button>-->
-                                <!--<button class="btn btn-primary btn-sm" data-toggle="modal" th:href="'#gx'+${goods.id}">更新</button>-->
-                                <!--<button class="btn btn-danger btn-sm" th:onclick="'javascript:deleteGroup('+${goods.id}+')'">删除</button>-->
-                            <!--</div>-->
-                            <!--&lt;!&ndash; MODAL &ndash;&gt;-->
-                            <!--<div class="modal fade" th:id="'gx'+${goods.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">-->
-                                <!--<div class="modal-dialog">-->
-                                    <!--<div class="modal-content">-->
-                                        <!--<div class="modal-header">-->
-                                            <!--<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>-->
-                                            <!--<h4 class="modal-title" id="myModalLabel">更新商品信息</h4>-->
-                                        <!--</div>-->
-                                        <!--<div class="modal-body">-->
-                                            <!--<table class="table table-hover table-condensed">-->
-                                                <!--<legend>-->
-                                                    <!--<strong>-->
-                                                        <!--<span th:text="'群组ID：'+${goods.id}"></span>-->
-                                                    <!--</strong>-->
-                                                <!--</legend>-->
-                                                <!--<thead>-->
-                                                <!--<tr>-->
-                                                    <!--<th>群组名</th>-->
-                                                    <!--<th>是否我司员工</th>-->
-                                                <!--</tr>-->
-                                                <!--</thead>-->
-                                                <!--<tbody>-->
-                                                <!--<tr>-->
-                                                    <!--<input type="hidden" th:id="'ug'+${goods.id}" th:value="${goods.id}"/>-->
-                                                    <!--<td>-->
-                                                        <!--<input type="text" th:id="'ugn'+${goods.id}" th:value="${goods.name}"/>-->
-                                                    <!--</td>-->
-                                                <!--</tr>-->
-                                                <!--</tbody>-->
-                                            <!--</table>-->
-                                            <!--<div class="modal-footer">-->
-                                                <!--<button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>-->
-                                                <!--<button type="button" class="btn btn-primary btn-sm" th:onclick="'javascript:updateGroup('+${goods.id}+')'">-->
-                                                    <!--提交更改-->
-                                                <!--</button>-->
-                                            <!--</div>-->
-                                        <!--</div>-->
-                                    <!--</div>&lt;!&ndash; /.modal-content &ndash;&gt;-->
-                                <!--</div>&lt;!&ndash; /.modal &ndash;&gt;-->
-                            <!--</div>-->
-                        <!--</td>-->
+    <div id="test" th:fragment="test">
+        <div class="contentDiv">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>name</th>
+                    <th>isbn</th>
+                    <th>author</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="obj : ${datas}">
+                    <td th:text="${obj.id}">${obj.id}</td>
+                    <td th:text="${obj.name}">${obj.name}</td>
+                </tr>
+                </tbody>
+            </table>
+            <div th:include="Pager::pager" th:remove="tag"></div>
+        </div>
     </div>
     <script type="text/javascript" th:inline="javascript">
 
@@ -152,19 +157,16 @@
             $('#grouptb').load("/manager/fresh");
         }
 
-        function deleteGroup(gid){
-
-            $.ajax({
-                url: "/manager?delete",
-                type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({id: gid}),
-                async: false
-                // TRUE 异步 FALSE 同步
+        $("#addgt").click(function(){
+            $("#addGTModal").modal({
+                backdrop: 'static',     // 点击空白不关闭
+                keyboard: false,        // 按键盘esc也不会关闭
+                remote: '/goods/addGTM'
             });
+        });
 
-            $('#grouptb').load("/manager/fresh");
+        function addGoodsType() {
+            alert(1);
         }
 
         function getByType(name){
@@ -180,12 +182,6 @@
 
             $('#goodsTable').load("/goods/list");
         }
-
-        $(":input[name='myclog']").click(function(){
-            $(this).text(function(i,old){
-                return old=='+' ?  '-' : '+';
-            });
-        });
 
         $(".nav a").on("click", function(){
             $(".nav").find(".active").removeClass("active");

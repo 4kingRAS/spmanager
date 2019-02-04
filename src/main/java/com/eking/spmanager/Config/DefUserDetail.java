@@ -1,7 +1,6 @@
 package com.eking.spmanager.Config;
 
 import com.eking.spmanager.entity.Role;
-import com.eking.spmanager.entity.UserGroup;
 import com.eking.spmanager.entity.User;
 
 import com.eking.spmanager.service.PmsService;
@@ -47,7 +46,7 @@ public class DefUserDetail implements UserDetailsService {
             throw new UsernameNotFoundException("用户名不存在");
         }
 
-        if(user.getIsActived() == "0")
+        if(user.getIsActived().equals("0"))
         {
             throw new UsernameNotFoundException("用户被禁用！");
         }

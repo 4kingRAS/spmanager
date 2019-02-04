@@ -19,13 +19,14 @@ import org.springframework.transaction.annotation.Transactional;
 public class PmsServiceImpl implements PmsService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PmsServiceImpl.class);
+    private static String entity = "PERMISSION";
 
     @Autowired
     private PermissionDAO pd;
 
     @Override
     public Permission findByGroupid(Integer id) {
-        LOGGER.info("\n EKlog|| Permission | FIND BY GROUPID - " + id);
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY GPID", id.toString());
         return pd.findByGroupid(id);
     }
 
@@ -33,7 +34,7 @@ public class PmsServiceImpl implements PmsService {
     @Override
     public void addPermission(Permission p) {
         pd.save(p);
-        LOGGER.info("\n EKlog|| NEW GROUP - " + p.toString());
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "NEW", p.toString());
     }
 
 }

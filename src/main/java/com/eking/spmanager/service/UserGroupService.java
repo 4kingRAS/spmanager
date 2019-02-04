@@ -1,7 +1,5 @@
 package com.eking.spmanager.service;
 
-import com.eking.spmanager.entity.Role;
-import com.eking.spmanager.entity.User;
 import com.eking.spmanager.entity.UserGroup;
 
 import java.util.List;

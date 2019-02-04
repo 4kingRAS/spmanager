@@ -1,10 +1,13 @@
 package com.eking.spmanager.Utils;
 
+import com.eking.spmanager.entity.Permission;
 import com.eking.spmanager.entity.Role;
 import com.eking.spmanager.entity.UserGroup;
 import com.eking.spmanager.service.PmsService;
 import com.eking.spmanager.service.RoleService;
 import com.eking.spmanager.service.UserGroupService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,6 +24,9 @@ import java.util.List;
 
 @Service
 public class UtilsImpl implements Utils {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsImpl.class);
+    private static String entity = "UTILITY";
     
     public class idx {
         public UserGroup ug;
@@ -54,19 +60,27 @@ public class UtilsImpl implements Utils {
     }
 
     public List<idx> findAllGPRole() {
-        List<idx> idxList = new ArrayList<>();
-        List<UserGroup> lg = userGroupService.findAllGroup();
-        for (UserGroup x: lg) {
-            Role role  = roleService.findById(pmsService.findByGroupid(x.getId()).getRoleid());
-            idx i = new idx(x, role);
-            idxList.add(i);
+        try {
+            List<idx> idxList = new ArrayList<>();
+            List<UserGroup> lg = userGroupService.findAllGroup();
+            for (UserGroup x: lg) {
+
+                Permission p = pmsService.findByGroupid(x.getId());
+                Role role = roleService.findById(p.getRoleid());
+                idx i = new idx(x, role);
+                idxList.add(i);
+            }
+
+            return idxList;
+        } catch (Exception e) {
+            e.printStackTrace();
+            LOGGER.error("[eKing log]: {}  : - {}", entity, "CANT FIND ALL ROLE");
+            return null;
         }
-        return idxList;
     }
 
     public Timestamp getCurrentTime() {
         Date d = new Date();
-        Timestamp t = new Timestamp(d.getTime());
-        return t;
+        return new Timestamp(d.getTime());
     }
 }

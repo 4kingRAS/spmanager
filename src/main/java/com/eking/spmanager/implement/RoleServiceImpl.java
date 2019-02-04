@@ -18,12 +18,13 @@ import org.springframework.stereotype.Service;
 public class RoleServiceImpl implements RoleService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RoleServiceImpl.class);
+    private static String entity = "ROLE";
 
     @Autowired
     RoleDAO roleDAO;
 
     public Role findById(Integer id) {
-        LOGGER.info("\n EKlog|| ROLE | FIND BY ID - " + id);
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY ID", id.toString());
         return roleDAO.findById(id).get();
     }
 }

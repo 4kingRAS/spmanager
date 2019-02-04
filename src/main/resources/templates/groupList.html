@@ -53,7 +53,8 @@
                     <td class="col-lg-2">
                         <div class="btn-group">
                             <button class="btn btn-primary btn-sm" data-toggle="modal" th:href="'#'+${idxList.ug.id}">编辑</button>
-                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:deleteGroup('+${idxList.ug.id}+')'">删除</button>
+                            <button class="btn btn-danger btn-sm" th:if="${idxList.role.name != 'ROLE_HNA'}"
+                                    th:onclick="'javascript:deleteGroup('+${idxList.ug.id}+')'">删除</button>
                         </div>
                         <!-- MODAL -->
                         <div class="modal fade" th:id="${idxList.ug.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

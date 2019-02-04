@@ -9,9 +9,16 @@
     <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/all.js}"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap-select.js}"></script>
-    <script src="https://cdn.bootcss.com/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
 
     <script>
+        $(function (){
+            $("[data-toggle='popover']").popover({
+                trigger: 'hover', //等于data-trigger="hover"
+                html: true,
+            });
+        });
+
         function localRefresh(url) {
             // 装载局部刷新返回的页面
             $('#refresh').load(url);
@@ -40,6 +47,12 @@
         body {
             overflow-x:hidden;
         }
+        [data-toggle="collapse"].collapsed .if-not-collapsed {
+            display: none;
+        }
+        [data-toggle="collapse"]:not(.collapsed) .if-collapsed {
+            display: none;
+        }
     </style>
 
     <title>首页</title>
@@ -57,8 +70,9 @@
             </li>
             <li><a><i class="icon20 ask_icon m_r5"></i>帮助</a></li>
             <li>
-                <i class="u_pic m_r10"><img src="images/HNA.jpg"></i>
-                <td class="text" th:text="${username}" ></td>
+                <span th:field="*{user}" style="margin-right: 10px" th:text="${user.username}" th:title="'用户状态：'+${user.isActived eq '1' ? '有效':'无效'}"
+                      data-trigger="hover" data-toggle="popover" data-placement="bottom"></span>
+                <i class="u_pic m_r10" ><img src="images/JAVA.jpg"></i>
             </li>
         </ul>
     </div>
@@ -82,14 +96,14 @@
                 <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m03"></i>仓库管理</a>
                 <div class="sub_meau" data-role="tree_action" data-con="1">
                     <dl>
-                        <dd data-tit="2">
+                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/goods/test')|">
                             <a data-role="root" data-level="2">
                                 <em class="s_arrow"></em>
                                 仓库总览
                             </a>
                         </dd>
-                        <dd data-tit="2">
-                            <a data-role="root" data-level="2" th:onclick="|javascript:localRefresh('/goods')|">
+                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/goods')|">
+                            <a data-role="root" data-level="2" >
                                 <em class="s_arrow"></em>
                                 商品详情
                             </a>
@@ -108,16 +122,16 @@
                 <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m05"></i>系统管理</a>
                 <div class="sub_meau" data-role="tree_action" data-con="1">
                     <dl>
-                        <dd>
+                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/user')|">
                             <a data-role="root" data-level="2">
                                 <em class="s_arrow"></em>
-                                <input type="button" th:onclick="|javascript:localRefresh('/user')|" value="用户管理" style="background-color: transparent; border: 0;"/>
+                                用户管理
                             </a>
                         </dd>
-                        <dd>
+                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/manager')|">
                             <a data-role="root" data-level="2">
                                 <em class="s_arrow"></em>
-                                <input type="button" th:onclick="|javascript:localRefresh('/manager')|" value="群组管理" style="background-color: transparent; border: 0;"/>
+                                群组管理
                             </a>
                         </dd>
                     </dl>
@@ -129,7 +143,7 @@
 </div>
 <div class="main sub_main">
     <h4>
-        <p class="bg-primary">  技术栈：Springboot + hibernate + thymeleaf + bootstrap</p>
+        <p class="bg-primary">  STACK | Springboot + hibernate + thymeleaf + bootstrap |</p>
     </h4>
     <div id="refresh" th:fragment="refresh" style="padding: 5px">
         <!--content-->

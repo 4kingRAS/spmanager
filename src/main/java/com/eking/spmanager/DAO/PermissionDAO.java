@@ -10,5 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 
 public interface PermissionDAO extends JpaRepository<Permission, Integer> {
-    public Permission findByGroupid(Integer id);
+    Permission findByGroupid(Integer id);
 }

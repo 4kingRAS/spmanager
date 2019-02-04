@@ -1,7 +1,6 @@
 package com.eking.spmanager.entity;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import java.io.Serializable;
 
 /**

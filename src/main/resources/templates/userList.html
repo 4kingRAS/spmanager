@@ -20,10 +20,12 @@
                 <th>用户群组</th>
                 <th>是否在线</th>
                 <th>最后登录时间</th>
+                <th>是否有效</th>
+                <th>操作</th>
             </tr>
             </thead>
             <tbody>
-            <tr th:each="clist : ${userList}">
+            <tr th:each="clist : ${datas}">
                 <th scope="row" th:text="${clist.main.id}"></th>
                 <td th:text="${clist.main.username}"></td>
                 <td th:text="${clist.main.password}"></td>
@@ -33,11 +35,19 @@
                     <span class="badge" th:text="${clist.main.isOnline eq '1' ? '是' : '否'}"></span>
                 </td>
                 <td th:text="${clist.main.lastLogin}"></td>
-                <!--<td><span class="badge">新</span></td>-->
+                <td>
+                    <span class="badge" th:text="${clist.main.isActived eq '1' ? '有效' : '封禁'}"></span>
+                </td>
+                <td class="col-lg-1">
+                    <div class="btn-group">
+                        <button class="btn btn-danger btn-sm" th:onclick="'javascript:dealUser('+${clist.main.id}+')'" th:text="${clist.main.isActived eq '1' ? '封禁' : '解封'}"></button>
+                    </div>
+                </td>
             </tr>
             </tbody>
         </table>
     </div>
+    <div th:include="Pager::pager" th:remove="tag"></div>
     <div class="modal fade" id="add1user" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -94,7 +104,6 @@
 
         /*<![CDATA[*/
         function addUser(){
-            // 装载局部刷新返回的页面
             var un = $("#aduName").val();
             var up = $("#aduPsw").val();
             var uc = $("#aduCorp").val();
@@ -113,6 +122,33 @@
                 $('#userTable').load("/user/fresh");
             }).modal('hide');
         }
+        function getPage(p){
+            $.ajax({
+                url: "/goods/page",
+                type: 'post',
+                data: {"page": p},
+                async: false,
+                success: function (data) {
+                    $("#userTable").html(data);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function dealUser(id){
+
+            $.ajax({
+                url: "/user?deal",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id: id}),
+                async: false
+            });
+
+            $('#userTable').load("/user/fresh");
+        }
+
         /*]]>*/
     </script>
 </div>

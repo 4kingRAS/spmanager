@@ -10,19 +10,11 @@ import com.eking.spmanager.Utils.Utils;
 import com.eking.spmanager.entity.User;
 import com.eking.spmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import com.eking.spmanager.*;
-
-import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
-import java.sql.Timestamp;
-import java.util.Date;
-import java.util.List;
 
 @Controller         // Controller ,could ignore the notation - ResponseBody
 @RequestMapping("/")
@@ -36,13 +28,14 @@ public class MainController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String index(ModelMap map, Principal principal) {
-        map.addAttribute("username", principal.getName());
+
         //UserDetails userDetails =
                 //(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUserName(principal.getName());
         user.setLastLogin(utils.getCurrentTime());
         user.setIsOnline("1");
         userService.update(user);
+        map.addAttribute("user", user);
         return "/index";
     }
 
