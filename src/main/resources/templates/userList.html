@@ -46,8 +46,8 @@
             </tr>
             </tbody>
         </table>
+        <div th:include="Pager::pager" th:remove="tag"></div>
     </div>
-    <div th:include="Pager::pager" th:remove="tag"></div>
     <div class="modal fade" id="add1user" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -124,7 +124,7 @@
         }
         function getPage(p){
             $.ajax({
-                url: "/goods/page",
+                url: "/user/fresh",
                 type: 'post',
                 data: {"page": p},
                 async: false,

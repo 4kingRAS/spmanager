@@ -27,6 +27,9 @@ import java.util.*;
 @RequestMapping(value = "/user")
 public class UserController {
 
+    private static final int G_PAGE = 0;
+    private static final int G_SIZE = 5;
+
     @Autowired
     UserService userService;
 
@@ -36,38 +39,48 @@ public class UserController {
     @Autowired
     Utils utils;
 
+    public Page<UtilsImpl.Combox> getComboxPage(int page, int size) {
+        List<User> ulist = userService.findAllUser();
+        List<UtilsImpl.Combox> clist = new ArrayList<>();
+        for (User x: ulist) {
+            String gname = ugService.findById(x.getGroup()).getName();
+            clist.add(utils.combineList(x, gname));
+        }
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC,"id");
+        int start = (int)pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > clist.size() ? clist.size() : (start + pageable.getPageSize());
+        Page<UtilsImpl.Combox> datas = new PageImpl<>(clist.subList(start, end), pageable, clist.size());
+
+        return datas;
+    }
+
     /**
      *  获取用户列表
      */
     @RequestMapping(method = RequestMethod.GET)
     public String getUserList(ModelMap map) {
-        List<User> ulist = userService.findAllUser();
-        List<UtilsImpl.Combox> clist = new ArrayList<>();
-        for (User x: ulist) {
-            String gname = ugService.findById(x.getGroup()).getName();
-            clist.add(utils.combineList(x, gname));
-        }
 
-
-        Pageable pageable = PageRequest.of(0,5, Sort.Direction.ASC,"id");
-        int start = (int)pageable.getOffset();
-        int end = (start + pageable.getPageSize()) > clist.size() ? clist.size() : (start + pageable.getPageSize());
-        Page<UtilsImpl.Combox> datas = new PageImpl<>(clist, pageable, 9);//(clist.subList(start, end), pageable, clist.size());
+        Page<UtilsImpl.Combox> datas = getComboxPage(G_PAGE, G_SIZE);
         map.addAttribute("groupList", ugService.findAllGroup());
         map.addAttribute("datas", datas);
         return "userList";
     }
 
+    @RequestMapping(value = "/fresh", method = RequestMethod.POST)
+    public String postFresh(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page,
+                            @RequestParam(value = "size", defaultValue = "5") Integer size) {
+
+        Page<UtilsImpl.Combox> datas = getComboxPage(page, size);
+        map.addAttribute("datas", datas);
+        return "userList::userTable";
+    }
+
     @RequestMapping(value = "/fresh", method = RequestMethod.GET)
-    public String freshList(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page,
-                            @RequestParam(value = "size", defaultValue = "1") Integer size) {
-        List<User> ulist = userService.findAllUser();
-        List<UtilsImpl.Combox> clist = new ArrayList<>();
-        for (User x: ulist) {
-            String gname = ugService.findById(x.getGroup()).getName();
-            clist.add(utils.combineList(x, gname));
-        }
-        map.addAttribute("userList", clist);
+    public String getFresh(ModelMap map) {
+
+        Page<UtilsImpl.Combox> datas = getComboxPage(G_PAGE, G_SIZE);
+        map.addAttribute("datas", datas);
         return "userList::userTable";
     }
 
