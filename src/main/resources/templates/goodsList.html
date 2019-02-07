@@ -58,7 +58,7 @@
         </table>
 
         <ul class="list-group">
-            <div th:each="goods : ${goodsList}">
+            <div th:each="goods : ${datas}">
                 <li class="list-group-item" style="padding: unset">
                     <div class="panel panel-default" style="margin-bottom: 0px">
                         <div class="panel-heading">
@@ -108,29 +108,11 @@
                 </li>
             </div>
         </ul>
+        <div th:include="Pager::pager" th:remove="tag"></div>
     </div>
 
-    <div id="test" th:fragment="test">
-        <div class="contentDiv">
-            <table class="table table-hover">
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>name</th>
-                    <th>isbn</th>
-                    <th>author</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr th:each="obj : ${datas}">
-                    <td th:text="${obj.id}">${obj.id}</td>
-                    <td th:text="${obj.name}">${obj.name}</td>
-                </tr>
-                </tbody>
-            </table>
-            <div th:include="Pager::pager" th:remove="tag"></div>
-        </div>
-    </div>
+
+
     <script type="text/javascript" th:inline="javascript">
 
         /*<![CDATA[*/
@@ -169,18 +151,30 @@
             alert(1);
         }
 
-        function getByType(name){
+        function getByType(type){
+            $.ajax({
+                url: "/goods/bytype",
+                type: 'post',
+                data: {"type": type},
+                async: false,
+                success: function () {
+                    getPage(0);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function getPage(p){
             $.ajax({
                 url: "/goods/list",
                 type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({id: name}),
-                async: false
+                data: {"page": p},
+                async: false,
+                success: function (data) {
+                    $("#goodsTable").html(data);
+                }
                 // TRUE 异步 FALSE 同步
             });
-
-            $('#goodsTable').load("/goods/list");
         }
 
         $(".nav a").on("click", function(){

@@ -1,14 +1,13 @@
 package com.eking.spmanager.Utils;
 
-import com.eking.spmanager.entity.Permission;
-import com.eking.spmanager.entity.Role;
-import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.entity.*;
 import com.eking.spmanager.service.PmsService;
 import com.eking.spmanager.service.RoleService;
 import com.eking.spmanager.service.UserGroupService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
@@ -77,6 +76,28 @@ public class UtilsImpl implements Utils {
             LOGGER.error("[eKing log]: {}  : - {}", entity, "CANT FIND ALL ROLE");
             return null;
         }
+    }
+
+
+//    public Page<UtilsImpl.Combox> convertPage(int page, int size, List<UtilsImpl.Combox> clist) {
+//
+//        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC,"id");
+//        int start = (int)pageable.getOffset();
+//        int end = (start + pageable.getPageSize()) > clist.size() ? clist.size() : (start + pageable.getPageSize());
+//        Page<UtilsImpl.Combox> datas = new PageImpl<>(clist.subList(start, end), pageable, clist.size());
+//
+//        return datas;
+//    }
+
+
+    public <T> Page<T> convertPage(int page, int size, List<T> clist) {
+
+        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC,"id");
+        int start = (int)pageable.getOffset();
+        int end = (start + pageable.getPageSize()) > clist.size() ? clist.size() : (start + pageable.getPageSize());
+        Page<T> datas = new PageImpl<>(clist.subList(start, end), pageable, clist.size());
+
+        return datas;
     }
 
     public Timestamp getCurrentTime() {

@@ -82,13 +82,13 @@ public class GoodsServiceImpl implements GoodsService {
             @Override
             public Predicate toPredicate(Root<Goods> root, CriteriaQuery<?> query, CriteriaBuilder criteriaBuilder) {
                 List<Predicate> list = new ArrayList<Predicate>();
-                if(null!=goods.getName()&&!"".equals(goods.getName())){
+                if(null != goods.getName() && !"".equals(goods.getName())){
                     list.add(criteriaBuilder.equal(root.get("name").as(String.class), goods.getName()));
                 }
                 Predicate[] p = new Predicate[list.size()];
                 return criteriaBuilder.and(list.toArray(p));
             }
-        },pageable);
+        }, pageable);
         return goodsPage;
     }
 

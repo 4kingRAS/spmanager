@@ -1,5 +1,8 @@
 package com.eking.spmanager.Utils;
 
+import com.eking.spmanager.entity.Goods;
+import org.springframework.data.domain.Page;
+
 import java.sql.Timestamp;
 import java.util.List;
 
@@ -11,6 +14,7 @@ import java.util.List;
 
 public interface Utils {
     //public String showIsActived;
+    <T> Page<T> convertPage(int page, int size, List<T> clist);
     UtilsImpl.Combox combineList(Object a, Object b);
     List<UtilsImpl.idx> findAllGPRole();
     Timestamp getCurrentTime();

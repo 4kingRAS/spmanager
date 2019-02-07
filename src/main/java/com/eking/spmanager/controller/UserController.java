@@ -47,12 +47,7 @@ public class UserController {
             clist.add(utils.combineList(x, gname));
         }
 
-        Pageable pageable = PageRequest.of(page, size, Sort.Direction.ASC,"id");
-        int start = (int)pageable.getOffset();
-        int end = (start + pageable.getPageSize()) > clist.size() ? clist.size() : (start + pageable.getPageSize());
-        Page<UtilsImpl.Combox> datas = new PageImpl<>(clist.subList(start, end), pageable, clist.size());
-
-        return datas;
+        return utils.convertPage(page, size, clist);
     }
 
     /**
