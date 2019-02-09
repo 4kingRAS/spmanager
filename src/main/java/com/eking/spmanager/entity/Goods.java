@@ -82,10 +82,6 @@ public class Goods implements Serializable {
         this.priceForMarket = priceForMarket;
     }
 
-    public void setPriceForMarket(float priceForMarket) {
-        this.priceForMarket = priceForMarket;
-    }
-
     public String getDescription() {
         return description;
     }

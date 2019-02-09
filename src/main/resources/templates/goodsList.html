@@ -10,7 +10,7 @@
                         <a href="#" th:onclick="getByType([[${goodsType.id}]])"
                            th:id="'type'+${goodsType.id}" th:text="${goodsType.name}"></a>
                     </li>
-                    <li><button id="addgt" class="btn btn-default navbar-btn">+</button></li>
+                    <li><button class="btn btn-default navbar-btn">+</button></li>
                 </ul>
                 <div class="navbar-form navbar-right" role="search">
                     <div class="input-group">
@@ -24,24 +24,17 @@
             </div>
         </div>
     </nav>
-    <div class="modal fade" id="addGTModal" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
-    </div>
-    <div id="goodsTable" th:fragment="goodsTable">
-
-        <div class="row">
-            <div class="col-sm-2 col-md-2">
-                <h4>商品列表</h4>
-            </div>
-            <div style="margin-right: 20px; float: right!important;">
-                <button class="btn btn-primary">添加商品</button>
-            </div>
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <h4>商品列表</h4>
         </div>
-        <legend>
-        </legend>
+        <div style="margin-right: 20px; float: right!important;">
+            <button id="addGoods" class="btn btn-primary">添加商品</button>
+        </div>
+    </div>
+    <legend>
+    </legend>
+    <div id="goodsTable" th:fragment="goodsTable">
 
         <table>
             <thead>
@@ -111,8 +104,12 @@
         <div th:include="Pager::pager" th:remove="tag"></div>
     </div>
 
-
-
+    <div class="modal fade" id="addGoodsModal" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
     <script type="text/javascript" th:inline="javascript">
 
         /*<![CDATA[*/
@@ -139,16 +136,37 @@
             $('#grouptb').load("/manager/fresh");
         }
 
-        $("#addgt").click(function(){
-            $("#addGTModal").modal({
+        $("#addGoods").click(function(){
+            $("#addGoodsModal").modal({
                 backdrop: 'static',     // 点击空白不关闭
                 keyboard: false,        // 按键盘esc也不会关闭
-                remote: '/goods/addGTM'
+                remote: '/goods/addGM'
             });
         });
 
-        function addGoodsType() {
-            alert(1);
+        function postGoods() {
+            var gn = $("#gsName").val();
+            var gt = $("#gsType").val();
+            var gps = $("#gsPS").val();
+            var gpb = $("#gsPB").val();
+            var gpm = $("#gsPM").val();
+            var gdp= $("#gsDscp").val();
+
+            $.ajax({
+                url: "/goods?add",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({name: gn, type: gt, priceForSell: gps, priceForBuy: gpb,
+                    priceForMarket: gpm, description: gdp}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+            $("#addGoodsModal").on('hidden.bs.modal', function (e) {
+                getByType(gt);
+                $(this).removeData("bs.modal");
+                $(this).find(".modal-content").children().remove();
+            }).modal('hide');
         }
 
         function getByType(type){

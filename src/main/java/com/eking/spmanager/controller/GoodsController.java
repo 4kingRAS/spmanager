@@ -6,12 +6,12 @@ import com.eking.spmanager.entity.Goods;
 import com.eking.spmanager.entity.GoodsType;
 import com.eking.spmanager.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 
 /**
@@ -39,7 +39,7 @@ public class GoodsController {
     List<Goods> glist;
 
     @RequestMapping(method = RequestMethod.GET)
-    public String getUserList(ModelMap map) {
+    public String loadList(ModelMap map) {
 
         glist = goodsService.findAllGoods();
         map.addAttribute("gtList", gtDAO.findAll());
@@ -54,22 +54,8 @@ public class GoodsController {
         return "goodsList::goodsTable";
     }
 
-    @ResponseBody
-    @RequestMapping(value = "/bytype", method = RequestMethod.POST)
-    public String postList(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type) {
-        //map.addAttribute("goodsList", glist);
-        if (type == -1) {
-            glist = goodsService.findAllGoods();
-        }
-        else {
-            GoodsType gt = gtDAO.findById(type).get();
-            glist = goodsService.findByType(gt.getName());
-        }
-        return "Success";
-    }
-
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String getList(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type,
+    public String postList(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type,
                           @RequestParam(value = "page", defaultValue = "0") Integer page) {
         try {
             map.addAttribute("datas", utils.convertPage(page, G_SIZE, glist));
@@ -80,9 +66,42 @@ public class GoodsController {
         }
     }
 
-    @RequestMapping(value = "/addGTM", method = RequestMethod.GET)
-    public String getGTModal() {
+    @ResponseBody
+    @RequestMapping(value = "/bytype", method = RequestMethod.POST)
+    public String getTypeList(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type) {
+        if (type == -1) {
+            glist = goodsService.findAllGoods();
+        }
+        else {
+            GoodsType gt = gtDAO.findById(type).get();
+            glist = goodsService.findByType(gt.getName());
+        }
+        return "Success";
+    }
+
+    @RequestMapping(value = "/addGM", method = RequestMethod.GET)
+    public String getGTModal(ModelMap map) {
+        map.addAttribute("gtList", gtDAO.findAll());
         return "modalGoodsInfo";
+    }
+
+    @ResponseBody
+    @RequestMapping(params = "add", method = RequestMethod.POST)
+    public String postGoods(@RequestBody @Valid Goods goods,
+                               BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "ERROR";
+        }
+
+        try {
+            String type = gtDAO.findById(Integer.valueOf(goods.getType())).get().getName();
+            goods.setType(type);
+            goodsService.addGoods(goods);
+            return "add " + goods.toString() + " Success";
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "ERROR: CREATE GOODS FAILED!";
+        }
     }
 
 }

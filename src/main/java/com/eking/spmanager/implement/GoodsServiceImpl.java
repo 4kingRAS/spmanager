@@ -3,6 +3,7 @@ package com.eking.spmanager.implement;
 import com.eking.spmanager.DAO.GoodsDAO;
 import com.eking.spmanager.entity.Goods;
 import com.eking.spmanager.service.GoodsService;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -8,17 +8,17 @@ package com.eking.spmanager.controller;
 
 import com.eking.spmanager.Utils.Msg;
 import com.eking.spmanager.service.UserGroupService;
+import com.eking.spmanager.Utils.Utils;
+import com.eking.spmanager.Utils.UtilsImpl;
+import com.eking.spmanager.entity.User;
+import com.eking.spmanager.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
-
-import com.eking.spmanager.Utils.Utils;
-import com.eking.spmanager.Utils.UtilsImpl;
-import com.eking.spmanager.entity.User;
-import com.eking.spmanager.service.UserService;
 
 import javax.validation.Valid;
 import java.util.*;
