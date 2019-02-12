@@ -1,0 +1,31 @@
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title">添加商品至购物车</h4>
+</div>
+<div class="modal-body">
+    <strong>
+        <span text="添加商品"></span>
+    </strong>
+    <form class="bs-example bs-example-form" role="form" th:each="goods : ${goods}">
+        <input type="hidden" id="acId" th:value="${goods.id}"/>
+        <div class="input-group">
+            <span class="badge" style="font-size: 18px">商品名称</span>
+            <h4 id="acName" th:value="${goods.name}" th:text="${goods.name}"></h4>
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">竞标价(元)</span>
+            <input type="text" class="form-control" id="acPB" th:placeholder="${goods.PriceForSell}">
+        </div>
+        <br>
+        <div class="input-group">
+            <span class="input-group-addon">数量</span>
+            <input type="text" class="form-control" id="acAmount" >
+        </div>
+    </form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" onclick="postCart()" >
+        提交
+    </button>
+</div>

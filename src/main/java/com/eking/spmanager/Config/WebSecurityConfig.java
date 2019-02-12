@@ -37,7 +37,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     }
 
     /**
-     * conifgure authentication
+     * configure authentication
      */
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -57,10 +57,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/css/**").permitAll()
                 .antMatchers("/images/*").permitAll()
                 .antMatchers("/js/**").permitAll()
-                .antMatchers("/user/reg").permitAll()
                 .antMatchers("/manager/**").hasRole("HNA")
                 .antMatchers("/user").hasRole("HNA")
                 .antMatchers("/goods/**").hasAnyRole("HNA", "EMPLOYEE", "AGENT")
+                .antMatchers("/order").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()
@@ -69,7 +69,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .defaultSuccessUrl("/", true)
                 .permitAll() //登录页面用户任意访问
                 .and()
-                .logout().logoutUrl("/logout").permitAll();
+                .logout().logoutUrl("/logout").permitAll()
+                .and()
+                .logout().deleteCookies("JSESSIONID");
+
         http.csrf().disable();
         //http.headers().frameOptions().disable();
     }

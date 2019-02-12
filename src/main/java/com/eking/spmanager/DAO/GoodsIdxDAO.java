@@ -10,4 +10,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
  **/
 
 public interface GoodsIdxDAO extends JpaRepository<GoodsIndex, Integer> {
+    GoodsIndex findByGoodsid(Integer goodsId);
 }

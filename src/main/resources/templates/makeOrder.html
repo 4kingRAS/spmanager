@@ -1,0 +1,100 @@
+<div class="contentDiv">
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <h4>购物车</h4>
+        </div>
+        <div style="margin-right: 20px; float: right!important;">
+            <button class="btn btn-primary">olloo</button>
+        </div>
+    </div>
+    <legend>
+    </legend>
+    <div id="makeOrder" th:fragment="makeOrder">
+        <div th:if="${isNullCart eq 'false'}">
+            <table>
+                <thead>
+                <tr>
+                    <th class="col-md-1" >确认选择</th>
+                    <th class="col-md-1" >商品类别</th>
+                    <th class="col-md-3" >商品名称</th>
+                    <th class="col-md-1" >建议零售价(元)</th>
+                    <th class="col-md-1" >您的竞标价(元)</th>
+                    <th class="col-md-1" >购买数量</th>
+                    <th class="col-md-1" style="text-align: center" >操作</th>
+                </tr>
+                </thead>
+            </table>
+            <ul class="list-group">
+                <div th:each="box : ${order}">
+                <li class="list-group-item" style="padding: unset">
+                    <div class="panel panel-default" style="margin-bottom: 0px">
+                        <div class="panel-heading">
+                            <table>
+                                <tr>
+                                    <td class="col-md-1">
+                                        <input type="checkbox" th:id="'gsc'+${box.s.id}" checked="checked">
+                                    </td>
+                                    <td class="col-md-1" th:text="${box.s.type}"></td>
+                                    <td class="col-md-3" >
+                                        <span th:text="${box.s.name}"></span>
+                                    </td>
+                                    <td class="col-md-1" th:text="${box.s.priceForSell}"></td>
+                                    <td class="col-md-1" >
+                                        <input type="text" th:id="'pr'+${box.s.id}"
+                                               th:value="${box.c.price}" readOnly="true">
+                                    </td>
+                                    <td class="col-md-1" >
+                                        <input type="text" th:id="'am'+${box.s.id}"
+                                               th:value="${box.c.amount}" readOnly="true">
+                                    </td>
+                                    <td class="col-md-1" style="text-align: center">
+                                        <div class="btn-group">
+                                            <button class="btn btn-success btn-sm" th:id="'edit'+${box.s.id}"
+                                                    th:onclick="GEdit([[${box.s.id}]])" value="0" text="修改" ></button>
+                                            <button class="btn btn-danger btn-sm" >删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+            </div>
+            </ul>
+            <div class="alert alert-info">
+                共<span th:text="${amount}"></span>个商品
+                &nbsp;&nbsp;总价:<sapn th:text="${sumPrice}"></sapn>（元）
+            </div>
+        </div>
+        <h3 th:if="${isNullCart eq 'true'}" style="text-align: center">
+            您的购物车空空如也
+        </h3>
+
+    </div>
+    <div style="margin-right: 10px; float: right!important;">
+        <button class="btn btn-primary">提交订单</button>
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+
+        function GEdit(id){
+            var b = $("#edit"+id);
+            if (b.value == 0) {
+                b.click(function () {
+                    $("#pr" + id).removeAttr("readOnly");
+                    $("#am" + id).removeAttr("readOnly");
+                    b.value = 1;
+                    b.text("保存");
+                })
+            }
+            else {
+                b.click(function () {
+                    $("#pr" + id).attr("readOnly", "true");
+                    $("#am" + id).attr("readOnly", "true");
+                    b.value = 0;
+                    b.text("修改");
+                })
+            }
+        }
+    </script>
+</div>

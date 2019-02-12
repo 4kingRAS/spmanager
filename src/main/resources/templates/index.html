@@ -5,7 +5,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/all.css}" />
-    <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/all.js}"></script>
     <script type="text/javascript" th:src="@{/js/bootstrap-select.js}"></script>
@@ -55,7 +55,7 @@
         }
     </style>
 
-    <title>首页</title>
+    <title>供销系统</title>
 </head>
 <body>
 <div class="top">
@@ -81,7 +81,12 @@
 <div class="m_left" id="m_left">
     <div class="meau" id="meau">
         <ul>
-            <li data-tit="1"><a class="on" data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m01"></i>总览</a></li>
+            <li data-tit="1"><a class="on" data-role="root" data-level="1"><i class="icon30 m01"></i>总览</a></li>
+            <li data-tit="1">
+                <a data-role="root" data-level="1" th:onclick="|javascript:localRefresh('/order')|">
+                    <i class="icon30 m04"></i>购物车 <span class="badge" id="cartSign" style="display: none">!</span>
+                </a>
+            </li>
             <li data-tit="1">
                 <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m02"></i>订单管理</a>
                 <div class="sub_meau" data-role="tree_action" data-con="1">

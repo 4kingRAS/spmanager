@@ -25,22 +25,22 @@
             </tr>
             </thead>
             <tbody>
-            <tr th:each="clist : ${datas}">
-                <th scope="row" th:text="${clist.main.id}"></th>
-                <td th:text="${clist.main.username}"></td>
-                <td th:text="${clist.main.password}"></td>
-                <td th:text="${clist.main.corpname}"></td>
-                <td th:text="${clist.branch}"></td>
+            <tr th:each="box : ${datas}">
+                <th scope="row" th:text="${box.s.id}"></th>
+                <td th:text="${box.s.username}"></td>
+                <td th:text="${box.s.password}"></td>
+                <td th:text="${box.s.corpname}"></td>
+                <td th:text="${box.c}"></td>
                 <td>
-                    <span class="badge" th:text="${clist.main.isOnline eq '1' ? '是' : '否'}"></span>
+                    <span class="badge" th:text="${box.s.isOnline eq '1' ? '是' : '否'}"></span>
                 </td>
-                <td th:text="${clist.main.lastLogin}"></td>
+                <td th:text="${box.s.lastLogin}"></td>
                 <td>
-                    <span class="badge" th:text="${clist.main.isActived eq '1' ? '有效' : '封禁'}"></span>
+                    <span class="badge" th:text="${box.s.isActived eq '1' ? '有效' : '封禁'}"></span>
                 </td>
                 <td class="col-lg-1">
                     <div class="btn-group">
-                        <button class="btn btn-danger btn-sm" th:onclick="'javascript:dealUser('+${clist.main.id}+')'" th:text="${clist.main.isActived eq '1' ? '封禁' : '解封'}"></button>
+                        <button class="btn btn-danger btn-sm" th:onclick="'javascript:dealUser('+${box.s.id}+')'" th:text="${box.s.isActived eq '1' ? '封禁' : '解封'}"></button>
                     </div>
                 </td>
             </tr>

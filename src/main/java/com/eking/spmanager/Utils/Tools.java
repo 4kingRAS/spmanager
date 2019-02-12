@@ -22,9 +22,9 @@ import java.util.List;
  **/
 
 @Service
-public class UtilsImpl implements Utils {
+public class Tools {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(UtilsImpl.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(Tools.class);
     private static String entity = "UTILITY";
     
     public class idx {
@@ -36,11 +36,6 @@ public class UtilsImpl implements Utils {
             this.role = role;
         }
     }
-
-    public class Combox {
-        public Object main;
-        public Object branch;
-    }
     
     @Autowired
     UserGroupService userGroupService;
@@ -50,13 +45,6 @@ public class UtilsImpl implements Utils {
     
     @Autowired
     PmsService pmsService;
-
-    public Combox combineList(Object a, Object b) {
-        Combox c = new Combox();
-        c.main = a;
-        c.branch = b;
-        return c;
-    }
 
     public List<idx> findAllGPRole() {
         try {

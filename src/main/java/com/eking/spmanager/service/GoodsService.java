@@ -17,6 +17,7 @@ import java.util.List;
 public interface GoodsService {
     void addGoods(Goods g);
     Goods findByName(String name);
+    Goods findById(Integer id);
     List<Goods> findByType(String type);
     List<Goods> findAllGoods();
     Page<Goods> findGoodsNoCondition(Integer page, Integer size);

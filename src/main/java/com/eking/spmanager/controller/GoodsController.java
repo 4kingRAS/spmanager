@@ -1,7 +1,9 @@
 package com.eking.spmanager.controller;
 
+import com.eking.spmanager.DAO.GoodsIdxDAO;
 import com.eking.spmanager.DAO.GoodsTypeDAO;
-import com.eking.spmanager.Utils.Utils;
+import com.eking.spmanager.Utils.Box;
+import com.eking.spmanager.Utils.Tools;
 import com.eking.spmanager.entity.Goods;
 import com.eking.spmanager.entity.GoodsType;
 import com.eking.spmanager.service.GoodsService;
@@ -11,7 +13,10 @@ import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -26,6 +31,7 @@ public class GoodsController {
 
     private static final int G_PAGE = 0;
     private static final int G_SIZE = 2;
+    private Integer gType = -1;
 
     @Autowired
     GoodsService goodsService;
@@ -34,16 +40,33 @@ public class GoodsController {
     GoodsTypeDAO gtDAO;
 
     @Autowired
-    Utils utils;
+    GoodsIdxDAO gIdxDAO;
 
-    List<Goods> glist;
+    @Autowired
+    Tools utils;
+
+    public List<Box> makelist(Integer type) {
+        List<Box> list = new ArrayList<>();
+        List<Goods> glist;
+        if (type == -1) {
+            glist = goodsService.findAllGoods();
+        }
+        else {
+            GoodsType gt = gtDAO.findById(type).get();
+            glist = goodsService.findByType(gt.getName());
+        }
+        for (Goods g: glist) {
+            Integer count = gIdxDAO.findByGoodsid(g.getId()).getCount();
+            list.add(new Box(g, count));
+        }
+        return list;
+    }
 
     @RequestMapping(method = RequestMethod.GET)
     public String loadList(ModelMap map) {
 
-        glist = goodsService.findAllGoods();
         map.addAttribute("gtList", gtDAO.findAll());
-        map.addAttribute("datas", goodsService.findGoodsNoCondition(G_PAGE, G_SIZE));
+        map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, makelist(-1)));
         return "goodsList";
     }
 
@@ -55,10 +78,10 @@ public class GoodsController {
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public String postList(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type,
-                          @RequestParam(value = "page", defaultValue = "0") Integer page) {
+    public String postList(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page) {
         try {
-            map.addAttribute("datas", utils.convertPage(page, G_SIZE, glist));
+            map.addAttribute("datas",
+                    utils.convertPage(page, G_SIZE, makelist(gType)));
             return "goodsList::goodsTable";
         } catch (Exception e) {
             e.printStackTrace();
@@ -68,14 +91,8 @@ public class GoodsController {
 
     @ResponseBody
     @RequestMapping(value = "/bytype", method = RequestMethod.POST)
-    public String getTypeList(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type) {
-        if (type == -1) {
-            glist = goodsService.findAllGoods();
-        }
-        else {
-            GoodsType gt = gtDAO.findById(type).get();
-            glist = goodsService.findByType(gt.getName());
-        }
+    public String getListByType(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type) {
+        gType = type;
         return "Success";
     }
 
@@ -85,10 +102,29 @@ public class GoodsController {
         return "modalGoodsInfo";
     }
 
+    @RequestMapping(value = "/addCart", method = RequestMethod.GET)
+    public String getCartModal(ModelMap map, @RequestParam(value = "gid") Integer gid) {
+
+        map.addAttribute("goods", goodsService.findById(gid));
+        return "modalAddCart";
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/addCart", method = RequestMethod.POST)
+    public String postCartModal(ModelMap map, @RequestParam(value = "gid") Integer gid,
+                                @RequestParam(value = "amount") Integer amount,
+                                @RequestParam(value = "price") double price,
+                                HttpServletResponse response) {
+        /**URLEncoder.encode(value,"utf-8") 解决中文乱码问题**/
+        Cookie cookie = new Cookie("cart" + gid, gid + "-" + amount + "-" + price);
+        cookie.setPath("/"); // 跨域 记得 setDomain
+        response.addCookie(cookie);
+        return "SUCCESS";
+    }
+
     @ResponseBody
     @RequestMapping(params = "add", method = RequestMethod.POST)
-    public String postGoods(@RequestBody @Valid Goods goods,
-                               BindingResult bindingResult) {
+    public String postGoods(@RequestBody @Valid Goods goods, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "ERROR";
         }

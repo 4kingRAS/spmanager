@@ -45,6 +45,12 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     @Override
+    public Goods findById(Integer id) {
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY ID", id.toString());
+        return goodsDAO.findById(id).get();
+    }
+
+    @Override
     public Goods findByName(String name) {
         LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY NAME", name);
         return goodsDAO.findByName(name);

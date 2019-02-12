@@ -6,10 +6,10 @@ package com.eking.spmanager.controller;
  * @Description
  **/
 
+import com.eking.spmanager.Utils.Box;
 import com.eking.spmanager.Utils.Msg;
+import com.eking.spmanager.Utils.Tools;
 import com.eking.spmanager.service.UserGroupService;
-import com.eking.spmanager.Utils.Utils;
-import com.eking.spmanager.Utils.UtilsImpl;
 import com.eking.spmanager.entity.User;
 import com.eking.spmanager.service.UserService;
 
@@ -37,17 +37,17 @@ public class UserController {
     UserGroupService ugService;
 
     @Autowired
-    Utils utils;
+    Tools tools;
 
-    public Page<UtilsImpl.Combox> getComboxPage(int page, int size) {
+    public Page<Box> getComboxPage(int page, int size) {
         List<User> ulist = userService.findAllUser();
-        List<UtilsImpl.Combox> clist = new ArrayList<>();
+        List<Box> list = new ArrayList<>();
         for (User x: ulist) {
-            String gname = ugService.findById(x.getGroup()).getName();
-            clist.add(utils.combineList(x, gname));
+            String name = ugService.findById(x.getGroup()).getName();
+            list.add(new Box(x, name));
         }
 
-        return utils.convertPage(page, size, clist);
+        return tools.convertPage(page, size, list);
     }
 
     /**
@@ -56,9 +56,8 @@ public class UserController {
     @RequestMapping(method = RequestMethod.GET)
     public String getUserList(ModelMap map) {
 
-        Page<UtilsImpl.Combox> datas = getComboxPage(G_PAGE, G_SIZE);
         map.addAttribute("groupList", ugService.findAllGroup());
-        map.addAttribute("datas", datas);
+        map.addAttribute("datas", getComboxPage(G_PAGE, G_SIZE));
         return "userList";
     }
 
@@ -66,16 +65,14 @@ public class UserController {
     public String postFresh(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page,
                             @RequestParam(value = "size", defaultValue = "5") Integer size) {
 
-        Page<UtilsImpl.Combox> datas = getComboxPage(page, size);
-        map.addAttribute("datas", datas);
+        map.addAttribute("datas", getComboxPage(page, size));
         return "userList::userTable";
     }
 
     @RequestMapping(value = "/fresh", method = RequestMethod.GET)
     public String getFresh(ModelMap map) {
 
-        Page<UtilsImpl.Combox> datas = getComboxPage(G_PAGE, G_SIZE);
-        map.addAttribute("datas", datas);
+        map.addAttribute("datas", getComboxPage(G_PAGE, G_SIZE));
         return "userList::userTable";
     }
 
@@ -125,38 +122,6 @@ public class UserController {
     /**
      * LEGACY
      * **/
-//
-//    @RequestMapping(value = "/reg", method = RequestMethod.GET)
-//    public String createUserForm(ModelMap map) {
-//        User user = new User();
-//        map.addAttribute("user", user);
-//        map.addAttribute("action", "reg");
-//        return "regForm";
-//    }
-//
-//
-//    @RequestMapping(value = "/reg", method = RequestMethod.POST)
-//    public String postUserForm(ModelMap map,
-//                           @ModelAttribute @Valid User user,
-//                           BindingResult bindingResult) {
-//
-//        if (bindingResult.hasErrors()) {
-//            map.addAttribute("action", "reg");
-//            return "regForm";
-//        }
-//
-//        try {
-//
-//            user.setGroup(1);
-//            user.setIsOnline("1");
-//            user.setLastLogin(utils.getCurrentTime());
-//            user.setIsActived("1");
-//
-//            userService.addSingleUser(user);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//
 //        return "redirect:/user/";
 //    }
 

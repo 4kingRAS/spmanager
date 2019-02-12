@@ -11,8 +11,8 @@
                                                 curUrl=${curTmpUrl.endsWith('&amp;') ? curTmpUrl.substring(0, curTmpUrl.length()-1):curTmpUrl}" >
             <!--<li th:text="${pars}"></li>-->
 
-            <li><a href="#" th:href="@{${curUrl}(page=0)}">首页</a></li>
-            <li th:if="${datas.hasPrevious()}"><a href="#" th:href="@{${curUrl}(page=${datas.number-1})}">上一页</a></li>
+            <li><a href="#" th:onclick="getPage(0)">首页</a></li>
+            <li th:if="${datas.hasPrevious()}"><a href="#" th:onclick="getPage([[${datas.number-1}]])">上一页</a></li>
 
             <!--总页数小于等于10-->
             <div th:if="${(datas.totalPages le 10) and (datas.totalPages gt 0)}" th:remove="tag">
@@ -36,9 +36,9 @@
             </div>
 
 
-            <li th:if="${datas.hasNext()}"><a href="#" th:href="@{${curUrl}(page=${datas.number+1})}">下一页</a></li>
+            <li th:if="${datas.hasNext()}"><a href="#" th:onclick="getPage([[${datas.number+1}]])">下一页</a></li>
             <!--<li><a href="#" th:href="@{${curUrl}(page=${datas.totalPages-1})}">尾页</a></li>-->
-            <li><a href="#" th:href="${datas.totalPages le 0 ? curUrl+'page=0':curUrl+'&amp;page='+(datas.totalPages-1)}">尾页</a></li>
+            <!--<li><a href="#" th:href="${datas.totalPages le 0 ? curUrl+'page=0':curUrl+'&amp;page='+(datas.totalPages-1)}">尾页</a></li>-->
             <li><span th:utext="'共'+${datas.totalPages}+'页 / '+${datas.totalElements}+' 条'"></span></li>
         </ul>
     </div>

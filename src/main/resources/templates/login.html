@@ -4,9 +4,9 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}" />
     <link rel="stylesheet" type="text/css" th:href="@{/css/all.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
     <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
     <script type="text/javascript" th:src="@{/js/all.js}"></script>
-    <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
     <style type="text/css">
         body {
             padding-top: 50px;
@@ -41,14 +41,17 @@
                     <p class="text">[欢迎使用供销管理系统]</p>
                 </strong>
             </legend>
-            <h5>使用账号密码登录</h5>
-
-            <form name="form" th:action="@{/login}" method="POST"> <!-- 3 -->
-                <label for="username">用户名:</label>
-                <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
-                <label for="password">密码：</label>:
-                <input type="password" id="password" name="password" /> <br />
-                <input class="btn btn-primary" type="submit" value="登录" style="margin-top: 20px" />
+            <form class="bs-example bs-example-form" style="width: 300px;margin: 0px auto" role="form" th:action="@{/login}" method="POST">
+                <div class="input-group" >
+                    <span class="input-group-addon">用户名:</span>
+                    <input type="text" class="form-control" id="username" name="username" autofocus="autofocus" />
+                </div>
+                <br>
+                <div class="input-group" style="width: 300px">
+                    <span class="input-group-addon" style="width: 71px"> 密码: </span>
+                    <input type="password" class="form-control" id="password" name="password" />
+                </div>
+                <input class="btn btn-primary" type="submit" value="登录" style="margin-top: 10px" />
             </form>
         </div>
     </div>

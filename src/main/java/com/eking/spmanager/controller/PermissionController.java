@@ -1,10 +1,11 @@
 package com.eking.spmanager.controller;
 
-import com.eking.spmanager.Utils.Utils;
+import com.eking.spmanager.Utils.Tools;
 import com.eking.spmanager.entity.Permission;
 import com.eking.spmanager.entity.UserGroup;
 import com.eking.spmanager.service.PmsService;
 import com.eking.spmanager.service.UserGroupService;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,13 +33,14 @@ public class PermissionController {
     PmsService permissionService;
 
     @Autowired
-    Utils utils;
+    Tools utils;
 
     /**
      *  获取群组列表
      */
     @RequestMapping(method = RequestMethod.GET)
     public String getUGList(ModelMap map) {
+
         try {
             UserGroup ug = new UserGroup();
             map.addAttribute("ugmodel", ug);
