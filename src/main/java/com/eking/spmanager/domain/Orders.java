@@ -1,9 +1,8 @@
-package com.eking.spmanager.entity;
+package com.eking.spmanager.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
-import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @Author Yulin.Wang
@@ -18,7 +17,7 @@ public class Orders implements Serializable {
     @Column(name = "order_id")
     private Integer id;
 
-    /** 0: buy 1: sell **/
+    /** 0: import 1: export **/
     @Column(name = "order_type", nullable = false, columnDefinition = "char(1)")
     private String type;
 
@@ -36,10 +35,10 @@ public class Orders implements Serializable {
 
     /** fk user **/
     @Column(name = "create_by")
-    private Integer createBy;
+    private String createBy;
 
     @Column(name = "check_by")
-    private Integer checkBy;
+    private String checkBy;
 
     @Column(name = "order_comment", length = 100)
     private String comment;
@@ -98,19 +97,19 @@ public class Orders implements Serializable {
         this.checkAt = checkAt;
     }
 
-    public Integer getCreateBy() {
+    public String getCreateBy() {
         return createBy;
     }
 
-    public void setCreateBy(Integer createBy) {
+    public void setCreateBy(String createBy) {
         this.createBy = createBy;
     }
 
-    public Integer getCheckBy() {
+    public String getCheckBy() {
         return checkBy;
     }
 
-    public void setCheckBy(Integer checkBy) {
+    public void setCheckBy(String checkBy) {
         this.checkBy = checkBy;
     }
 

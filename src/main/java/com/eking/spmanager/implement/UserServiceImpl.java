@@ -1,9 +1,8 @@
 package com.eking.spmanager.implement;
 
-import com.eking.spmanager.DAO.UserDAO;
-import com.eking.spmanager.entity.Goods;
-import com.eking.spmanager.entity.User;
-import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.dao.UserDAO;
+import com.eking.spmanager.domain.User;
+import com.eking.spmanager.domain.UserGroup;
 import com.eking.spmanager.service.UserGroupService;
 import com.eking.spmanager.service.UserService;
 import org.slf4j.Logger;

@@ -1,4 +1,4 @@
-package com.eking.spmanager.DAO;
+package com.eking.spmanager.dao;
 
 /**
  * @Author Yulin.Wang
@@ -6,7 +6,7 @@ package com.eking.spmanager.DAO;
  * @Description
  **/
 
-import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.domain.UserGroup;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserGroupDAO extends JpaRepository<UserGroup, Integer> {

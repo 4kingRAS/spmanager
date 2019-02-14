@@ -1,4 +1,4 @@
-package com.eking.spmanager.Config;
+package com.eking.spmanager.config;
 
 import org.springframework.security.access.SecurityMetadataSource;
 import org.springframework.security.access.intercept.AbstractSecurityInterceptor;

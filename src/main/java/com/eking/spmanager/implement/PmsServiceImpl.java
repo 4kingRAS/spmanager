@@ -1,7 +1,7 @@
 package com.eking.spmanager.implement;
 
-import com.eking.spmanager.entity.Permission;
-import com.eking.spmanager.DAO.PermissionDAO;
+import com.eking.spmanager.domain.Permission;
+import com.eking.spmanager.dao.PermissionDAO;
 import com.eking.spmanager.service.PmsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

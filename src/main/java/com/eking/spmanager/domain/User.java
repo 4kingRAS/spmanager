@@ -1,4 +1,4 @@
-package com.eking.spmanager.entity;
+package com.eking.spmanager.domain;
 
 /**
  * @Author Yulin.Wang

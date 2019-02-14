@@ -1,6 +1,6 @@
-package com.eking.spmanager.DAO;
+package com.eking.spmanager.dao;
 
-import com.eking.spmanager.entity.Role;
+import com.eking.spmanager.domain.Role;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

@@ -1,4 +1,4 @@
-package com.eking.spmanager.Config;
+package com.eking.spmanager.config;
 
 /**
  * @Author Yulin.Wang
@@ -60,7 +60,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/manager/**").hasRole("HNA")
                 .antMatchers("/user").hasRole("HNA")
                 .antMatchers("/goods/**").hasAnyRole("HNA", "EMPLOYEE", "AGENT")
-                .antMatchers("/order").permitAll()
+                .antMatchers("/order/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .formLogin()

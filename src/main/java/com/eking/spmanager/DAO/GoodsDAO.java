@@ -1,6 +1,6 @@
-package com.eking.spmanager.DAO;
+package com.eking.spmanager.dao;
 
-import com.eking.spmanager.entity.Goods;
+import com.eking.spmanager.domain.Goods;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;

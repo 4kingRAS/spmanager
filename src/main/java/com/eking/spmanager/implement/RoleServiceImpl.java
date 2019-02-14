@@ -1,7 +1,7 @@
 package com.eking.spmanager.implement;
 
-import com.eking.spmanager.entity.Role;
-import com.eking.spmanager.DAO.RoleDAO;
+import com.eking.spmanager.domain.Role;
+import com.eking.spmanager.dao.RoleDAO;
 import com.eking.spmanager.service.RoleService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

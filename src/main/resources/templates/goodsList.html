@@ -61,7 +61,7 @@
                                         <span th:text="${box.s.name}"></span>
                                         <span class="badge" >new~</span>
                                     </td>
-                                    <td class="col-md-1" th:text="${box.c}"></td>
+                                    <td class="col-md-1" th:text="${box.c eq 0 ? '缺货' : box.c}"></td>
                                     <td class="col-md-2" th:text="${box.s.priceForMarket}"></td>
                                     <td class="col-md-3" style="text-align: center">
                                         <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${box.s.id}">
@@ -69,7 +69,8 @@
                                             <span class="if-not-collapsed">-</span>
                                         </button>
                                         <div class="btn-group">
-                                            <button class="btn btn-info btn-sm" data-toggle="modal" th:onclick="'javascript:addCart('+${box.s.id}+')'">采购</button>
+                                            <button class="btn btn-info btn-sm" th:if="${box.c gt 0}"
+                                                    data-toggle="modal" th:onclick="'javascript:addCart('+${box.s.id}+')'">采购</button>
                                             <button class="btn btn-success btn-sm" data-toggle="modal" th:href="'#gx'+${box.s.id}">更新</button>
                                             <button class="btn btn-danger btn-sm" th:onclick="'javascript:oup('+${box.s.id}+')'">删除</button>
                                         </div>
@@ -82,7 +83,7 @@
                                 <div class="row">
                                     <div class="col-md-5">
                                         <h5>商品信息：</h5>
-                                        <div class="alert alert-info"  style="text-align: right">
+                                        <div class="alert alert-info"  style="text-align: left">
                                             进货价(元):<span th:text="${box.s.priceForBuy}"></span>
                                             &nbsp;&nbsp;建议零售价(元):<sapn th:text="${box.s.priceForSell}"></sapn>
                                         </div>
@@ -116,6 +117,18 @@
     <div class="modal fade" id="addCartModal" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">请确认订单</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="postCart()" >
+                        提交
+                    </button>
+                </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal -->
     </div>
@@ -155,7 +168,7 @@
                 // TRUE 异步 FALSE 同步
             });
             $("#addCartModal").modal('hide');
-            document.getElementById("cartSign").style.display="inline";
+            $("#cartSign").show();
         }
 
         function postGoods() {
@@ -176,7 +189,7 @@
                 async: false
                 // TRUE 异步 FALSE 同步
             });
-            $("#addGoodsModal").on('hidden.bs.modal', function (e) {
+            $("#addGoodsModal").on('hidden.bs.modal', function () {
                 getByType(gt);
                 $(this).removeData("bs.modal");
                 $(this).find(".modal-content").children().remove();

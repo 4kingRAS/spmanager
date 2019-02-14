@@ -1,7 +1,7 @@
 package com.eking.spmanager.implement;
 
-import com.eking.spmanager.DAO.OrderDAO;
-import com.eking.spmanager.entity.Orders;
+import com.eking.spmanager.dao.OrderDAO;
+import com.eking.spmanager.domain.Orders;
 import com.eking.spmanager.service.OrderService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,8 +25,9 @@ public class OrderServiceImpl implements OrderService {
 
     @Transactional
     @Override
-    public void addOrder(Orders o) {
+    public Integer addOrder(Orders o) {
         orderDAO.save(o);
         LOGGER.info("[eKing log]: {}  {}: - {}", entity, "NEW ", o.toString());
+        return o.getId();
     }
 }

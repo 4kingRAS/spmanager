@@ -1,6 +1,6 @@
-package com.eking.spmanager.DAO;
+package com.eking.spmanager.dao;
 
-import com.eking.spmanager.entity.Orders;
+import com.eking.spmanager.domain.Orders;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

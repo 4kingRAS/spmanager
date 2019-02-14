@@ -1,6 +1,6 @@
 package com.eking.spmanager.service;
 
-import com.eking.spmanager.entity.Orders;
+import com.eking.spmanager.domain.Orders;
 
 /**
  * @Author Yulin.Wang
@@ -9,5 +9,5 @@ import com.eking.spmanager.entity.Orders;
  **/
 
 public interface OrderService {
-    void addOrder(Orders o);
+    Integer addOrder(Orders o);
 }

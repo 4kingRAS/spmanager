@@ -1,6 +1,6 @@
 package com.eking.spmanager.Utils;
 
-import com.eking.spmanager.entity.*;
+import com.eking.spmanager.domain.*;
 import com.eking.spmanager.service.PmsService;
 import com.eking.spmanager.service.RoleService;
 import com.eking.spmanager.service.UserGroupService;

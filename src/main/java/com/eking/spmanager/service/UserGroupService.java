@@ -1,6 +1,6 @@
 package com.eking.spmanager.service;
 
-import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.domain.UserGroup;
 
 import java.util.List;
 

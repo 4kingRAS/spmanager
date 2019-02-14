@@ -10,7 +10,7 @@ import com.eking.spmanager.Utils.Box;
 import com.eking.spmanager.Utils.Msg;
 import com.eking.spmanager.Utils.Tools;
 import com.eking.spmanager.service.UserGroupService;
-import com.eking.spmanager.entity.User;
+import com.eking.spmanager.domain.User;
 import com.eking.spmanager.service.UserService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +99,7 @@ public class UserController {
         return "add " + user.toString() + " Success";
     }
 
+    /** 简易通知类消息 Msg 封禁/解封 **/
     @ResponseBody
     @RequestMapping(params = "deal", method = RequestMethod.POST)
     public String postDealUser(@RequestBody Msg msg) {

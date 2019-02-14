@@ -1,8 +1,8 @@
 package com.eking.spmanager.controller;
 
 import com.eking.spmanager.Utils.Tools;
-import com.eking.spmanager.entity.Permission;
-import com.eking.spmanager.entity.UserGroup;
+import com.eking.spmanager.domain.Permission;
+import com.eking.spmanager.domain.UserGroup;
 import com.eking.spmanager.service.PmsService;
 import com.eking.spmanager.service.UserGroupService;
 
@@ -71,18 +71,17 @@ public class PermissionController {
     @ResponseBody
     @RequestMapping(params = "add", method = RequestMethod.POST)
     public String postGroupForm(@RequestBody String str,
-                                BindingResult bindingResult)
-                                throws Exception {
+                                BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "ERROR";
         }
-        ObjectMapper mapper = new ObjectMapper();
-        JsonNode node = mapper.readTree(str);
-
-        UserGroup group = mapper.convertValue(node.get("UserGroup"), UserGroup.class);
-        Integer rid = mapper.convertValue(node.get("role"), Integer.class);
 
         try {
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(str);
+            UserGroup group = mapper.convertValue(node.get("UserGroup"), UserGroup.class);
+            Integer rid = mapper.convertValue(node.get("role"), Integer.class);
+
             group.setCount(0);
             ugService.addGroup(group);
             Integer gid = ugService.findByName(group.getName()).getId();
@@ -91,12 +90,12 @@ public class PermissionController {
             pms.setRoleid(rid);
             pms.setGroupid(gid);
             permissionService.addPermission(pms);
+
+            return "add " + group.toString() + " Success";
         } catch (Exception e) {
             e.printStackTrace();
             return "ERROR: CREATE GROUP FAILED!";
         }
-
-        return "add " + group.toString() + " Success";
     }
 
     /**

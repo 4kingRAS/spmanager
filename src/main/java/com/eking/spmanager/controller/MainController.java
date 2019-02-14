@@ -7,7 +7,11 @@ package com.eking.spmanager.controller;
  **/
 
 import com.eking.spmanager.Utils.Tools;
-import com.eking.spmanager.entity.User;
+import com.eking.spmanager.domain.Permission;
+import com.eking.spmanager.domain.User;
+import com.eking.spmanager.service.PmsService;
+import com.eking.spmanager.service.RoleService;
+import com.eking.spmanager.service.UserGroupService;
 import com.eking.spmanager.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -29,22 +33,26 @@ public class MainController {
     @Autowired
     UserService userService;
 
+    @Autowired
+    UserGroupService userGroupService;
+
+    @Autowired
+    RoleService roleService;
+
     @RequestMapping(method = RequestMethod.GET)
     public String index(ModelMap map, Principal principal) {
-
         //UserDetails userDetails =
                 //(UserDetails) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         User user = userService.findByUserName(principal.getName());
         user.setLastLogin(utils.getCurrentTime());
         user.setIsOnline("1");
         userService.update(user);
+        Integer gid = user.getGroup();
+        String info = "级别:  [" + userGroupService.findById(gid).getName() + "]";
+        map.addAttribute("dscp", roleService.findById(gid).getDescription());
+        map.addAttribute("info", info);
         map.addAttribute("user", user);
         return "/index";
-    }
-
-    @RequestMapping(value = "info", method = RequestMethod.GET)
-    public String getUserInfo(Principal principal) {
-        return principal.getName();
     }
 
     @RequestMapping(value = "login", method = RequestMethod.GET)

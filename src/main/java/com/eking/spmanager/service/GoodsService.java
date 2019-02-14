@@ -1,10 +1,7 @@
 package com.eking.spmanager.service;
 
-import com.eking.spmanager.entity.Goods;
+import com.eking.spmanager.domain.Goods;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
 import java.util.List;
 

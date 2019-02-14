@@ -1,6 +1,6 @@
 package com.eking.spmanager.service;
 
-import com.eking.spmanager.entity.User;
+import com.eking.spmanager.domain.User;
 import org.springframework.data.domain.Page;
 
 import java.util.List;

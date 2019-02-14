@@ -1,26 +1,26 @@
-<div class="contentDiv">
-    <div class="row">
-        <div class="col-sm-2 col-md-2">
-            <h4>购物车</h4>
+<div id="makeOrder" th:fragment="makeOrder" >
+    <div class="contentDiv">
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <h4>购物车</h4>
+            </div>
+            <div style="margin-right: 20px; float: right!important;">
+                <button class="btn btn-primary">olloo</button>
+            </div>
         </div>
-        <div style="margin-right: 20px; float: right!important;">
-            <button class="btn btn-primary">olloo</button>
-        </div>
-    </div>
-    <legend>
-    </legend>
-    <div id="makeOrder" th:fragment="makeOrder">
+        <legend></legend>
         <div th:if="${isNullCart eq 'false'}">
-            <table>
+            <table >
                 <thead>
                 <tr>
                     <th class="col-md-1" >确认选择</th>
                     <th class="col-md-1" >商品类别</th>
-                    <th class="col-md-3" >商品名称</th>
-                    <th class="col-md-1" >建议零售价(元)</th>
-                    <th class="col-md-1" >您的竞标价(元)</th>
+                    <th class="col-md-2" >商品名称</th>
+                    <th class="col-md-2" >建议零售价(元)</th>
+                    <th class="col-md-1" >库存</th>
+                    <th class="col-md-2" >您的竞标价(元)</th>
                     <th class="col-md-1" >购买数量</th>
-                    <th class="col-md-1" style="text-align: center" >操作</th>
+                    <th class="col-md-2" style="text-align: center" >操作</th>
                 </tr>
                 </thead>
             </table>
@@ -32,26 +32,30 @@
                             <table>
                                 <tr>
                                     <td class="col-md-1">
-                                        <input type="checkbox" th:id="'gsc'+${box.s.id}" checked="checked">
+                                        <input type="checkbox" th:id="'gck'+${box.s.id}" th:value="${box.s.id}"
+                                               th:onclick="checkStat([[${box.s.id}]])" checked="checked">
                                     </td>
                                     <td class="col-md-1" th:text="${box.s.type}"></td>
-                                    <td class="col-md-3" >
+                                    <td class="col-md-2" >
                                         <span th:text="${box.s.name}"></span>
                                     </td>
-                                    <td class="col-md-1" th:text="${box.s.priceForSell}"></td>
-                                    <td class="col-md-1" >
-                                        <input type="text" th:id="'pr'+${box.s.id}"
-                                               th:value="${box.c.price}" readOnly="true">
+                                    <td class="col-md-2" th:text="${box.s.priceForSell}"></td>
+                                    <td class="col-md-1" th:text="${box.c.depo}" th:id="'dp'+${box.s.id}">
+                                    </td>
+                                    <td class="col-md-2" >
+                                        <sapn th:id="'pr'+${box.s.id}" th:text="${box.c.price}"></sapn>
                                     </td>
                                     <td class="col-md-1" >
-                                        <input type="text" th:id="'am'+${box.s.id}"
-                                               th:value="${box.c.amount}" readOnly="true">
+                                        <sapn th:id="'am'+${box.s.id}" th:text="${box.c.amount}"></sapn>
+                                        <span class="badge" th:id="'ck'+${box.s.id}"
+                                              th:style="${box.c.amount gt box.c.depo ? 'display:inline' : 'display:none'}">超出库存</span>
                                     </td>
-                                    <td class="col-md-1" style="text-align: center">
+                                    <td class="col-md-2" style="text-align: right">
                                         <div class="btn-group">
-                                            <button class="btn btn-success btn-sm" th:id="'edit'+${box.s.id}"
-                                                    th:onclick="GEdit([[${box.s.id}]])" value="0" text="修改" ></button>
-                                            <button class="btn btn-danger btn-sm" >删除</button>
+                                            <button type="button" class="btn btn-success btn-sm" th:id="'edit'+${box.s.id}"
+                                                    th:onclick="GEdit([[${box.s.id}]])">修改</button>
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                    th:onclick="delItem([[${box.s.id}]])">删除</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -62,39 +66,177 @@
             </div>
             </ul>
             <div class="alert alert-info">
-                共<span th:text="${amount}"></span>个商品
-                &nbsp;&nbsp;总价:<sapn th:text="${sumPrice}"></sapn>（元）
+                共<span id="statAm" th:text="${amount}"></span>个商品
+                &nbsp;&nbsp;总价:<sapn id="statPr" th:text="${sumPrice}"></sapn>（元）
+            </div>
+            <div style="margin-right: 10px; float: right!important;">
+                <button class="btn btn-primary" onclick="checkInput()">提交订单</button>
             </div>
         </div>
+        
         <h3 th:if="${isNullCart eq 'true'}" style="text-align: center">
             您的购物车空空如也
         </h3>
 
-    </div>
-    <div style="margin-right: 10px; float: right!important;">
-        <button class="btn btn-primary">提交订单</button>
+        <div class="modal fade" id="modalTips" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3 class="modal-title">请确认订单!</h3>
+                    </div>
+                    <legend></legend>
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            共<span id="statAm" th:text="${amount}"></span>个商品
+                            &nbsp;&nbsp;总价:<sapn id="statPr" th:text="${sumPrice}"></sapn>（元）
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="postOrder()" >
+                            确定
+                        </button>
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
     </div>
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
 
-        function GEdit(id){
-            var b = $("#edit"+id);
-            if (b.value == 0) {
-                b.click(function () {
-                    $("#pr" + id).removeAttr("readOnly");
-                    $("#am" + id).removeAttr("readOnly");
-                    b.value = 1;
-                    b.text("保存");
-                })
+        var amount = parseInt($("#statAm").text());
+        var sum = parseFloat($("#statPr").text());
+
+
+        function checkStat(id) {
+            //TODO: checkbox could unavailable when editing.
+
+            var am = $("#am"+id);
+            if ($("#gck" + id).is(":checked")) {
+                amount = amount + 1;
+                sum = sum + parseInt(am.text()) * parseFloat($("#pr"+id).text());
             }
             else {
-                b.click(function () {
-                    $("#pr" + id).attr("readOnly", "true");
-                    $("#am" + id).attr("readOnly", "true");
-                    b.value = 0;
-                    b.text("修改");
-                })
+                amount = amount - 1;
+                sum = sum - parseInt(am.text()) * parseFloat($("#pr"+id).text());
+            }
+
+            $("#statAm").text(amount);
+            $("#statPr").text(sum.toFixed(2));
+        }
+
+        function GEdit(id){
+            var b = $("#edit"+id);
+
+            if (b.html() == "修改") {
+                var p = $("#pr" + id).text();
+                var a = $("#am" + id).text();
+                sum = sum -  parseInt(a) * parseFloat(p);
+
+                $("#pr" + id).html("<input type=\"text\" style=\"width: 100px\" id=\"pri"+ id +"\"\n" +
+                    "value=\"" + p + "\">");
+                $("#am" + id).html("<input type=\"text\" style=\"width: 60px\" id=\"ami"+ id +"\"\n" +
+                    "value=\"" + a + "\">");
+                b.html("保存");
+            }
+            else {
+                var am = $("#ami" + id).val();
+                sum = sum + am * $("#pri" + id).val();
+
+                $("#pr" + id).html("<span>"+ $("#pri" + id).val() +"</span>");
+                $("#am" + id).html("<span>"+ am +"</span>");
+                b.html("修改");
+                if (am <= parseInt($("#dp" + id).text())) {
+                    $("#ck" + id).hide();
+                }
+                else {
+                    $("#ck" + id).show();
+                }
+                sum = sum.toFixed(2);
+                $("#statPr").text(sum);
             }
         }
+
+        function checkInput() {
+            var flag = true; /* validate input form */
+            $("#cartSign").hide();
+
+            $("span.badge").each(function () {
+                if ( !($(this).is(":hidden")) ) {
+                    flag = false;
+                }
+            });
+            if (!flag) {
+                alert("库存不足，请修改！");
+                return;
+            }
+            if($("input").length > ($("[checked]").length + 1)) {
+                alert("请保存修改！");
+                return;
+            }
+
+            $("#modalTips").modal('show');
+        }
+
+        function postOrder() {
+            $.ajax({
+                url: "/order/makeOrder?make",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({type: "1", price: sum, amount: amount}),
+                async: false,
+                success: function (id) {
+                    dealSubOrder(id);
+                }
+            });
+            $("#modalTips").on('hidden.bs.modal', function () {
+                $('#makeOrder').load("/order/makeOrder");
+            }).modal('hide');
+        }
+
+        function dealSubOrder(oid) {
+            var dataArray = [];
+            var i = 0;
+            $("[checked]").each(function(){
+                if($(this).is(":checked")) {
+                    var gid = $(this).val();
+                    var amount = $("#am" + gid).text();
+                    var price = $("#pr" + gid).text();
+                    var data = {OrderDetail: {orderId: oid, goodsId: gid, count: amount, price: price}};
+                    dataArray.push(data);
+                    i++;
+                }
+            });
+            dataArray.push({Amount: i}); /* must be string for JAVA MAPPER */
+            postSubOrder(dataArray);
+        }
+
+        function postSubOrder(dataArray) {
+            $.ajax({
+                url: "/order/makeOrder?makeSub",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(dataArray),
+                async: false
+            });
+        }
+
+        function delItem(id) {
+            $.ajax({
+                url: "/order/makeOrder/clear",
+                type: 'post',
+                data: {"gid": id},
+                async: false
+            });
+            $('#makeOrder').load("/order/makeOrder");
+        }
+
+        function clearSign() {
+            $("#cartSign").hide();
+        }
+
     </script>
-</div>
+</div><!-- fragment end -->

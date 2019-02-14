@@ -68,7 +68,11 @@
                     <input type="submit" class="btn btn-default btn-sm" value="注销" onclick="offline()"/>
                 </a>
             </li>
-            <li><a><i class="icon20 ask_icon m_r5"></i>帮助</a></li>
+            <li>
+                <span th:text="${info}" th:title="${dscp}"
+                      data-trigger="hover" data-toggle="popover" data-placement="bottom">
+                </span>
+            </li>
             <li>
                 <span th:field="*{user}" style="margin-right: 10px" th:text="${user.username}" th:title="'用户状态：'+${user.isActived eq '1' ? '有效':'无效'}"
                       data-trigger="hover" data-toggle="popover" data-placement="bottom"></span>
@@ -83,8 +87,9 @@
         <ul>
             <li data-tit="1"><a class="on" data-role="root" data-level="1"><i class="icon30 m01"></i>总览</a></li>
             <li data-tit="1">
-                <a data-role="root" data-level="1" th:onclick="|javascript:localRefresh('/order')|">
-                    <i class="icon30 m04"></i>购物车 <span class="badge" id="cartSign" style="display: none">!</span>
+                <a data-role="root" data-level="1" th:onclick="|javascript:localRefresh('/order/makeOrder')|">
+                    <i class="icon30 m04"></i>
+                    购物车 <span class="badge" id="cartSign" style="display: none;background-color: red">!</span>
                 </a>
             </li>
             <li data-tit="1">

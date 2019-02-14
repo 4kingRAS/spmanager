@@ -1,7 +1,7 @@
-package com.eking.spmanager.Config;
+package com.eking.spmanager.config;
 
-import com.eking.spmanager.entity.Role;
-import com.eking.spmanager.entity.User;
+import com.eking.spmanager.domain.Role;
+import com.eking.spmanager.domain.User;
 
 import com.eking.spmanager.service.PmsService;
 import com.eking.spmanager.service.RoleService;

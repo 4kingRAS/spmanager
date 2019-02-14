@@ -1,4 +1,4 @@
-package com.eking.spmanager.Config;
+package com.eking.spmanager.config;
 
 /**
  * @Author Yulin.Wang

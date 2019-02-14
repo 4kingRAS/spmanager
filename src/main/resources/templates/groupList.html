@@ -4,7 +4,8 @@
         <tr>
             <th>群组名</th>
             <th>属性</th>
-            <th>员工权限</th>
+            <th>采购员工</th>
+            <th>审核员工</th>
             <th>代理商权限</th>
             <th>操作</th>
         </tr>
@@ -14,6 +15,7 @@
             <td><input type="checkbox" id="gagent" >属于我司</td>
             <td><input type="radio" id="gpm1" name="pmsType" value="2" /></td>
             <td><input type="radio" id="gpm2" name="pmsType" value="3" /></td>
+            <td><input type="radio" id="gpm3" name="pmsType" value="4" /></td>
             <td>
                 <input class="btn btn-primary" type="submit" value="添加群组" onclick="addGroup()" />
             </td>
@@ -34,8 +36,9 @@
                     <th>群组人数</th>
                     <th>是否我司员工</th>
                     <th>管理员权限</th>
-                    <th>员工权限</th>
-                    <th>代理商权限</th>
+                    <th>采购员工</th>
+                    <th>审核员工</th>
+                    <th>代理商</th>
                     <th>操作</th>
                 </tr>
             </thead>
@@ -48,7 +51,8 @@
                         <span th:text="${idxList.ug.isAgent eq '0' ? '是' : '否'}"></span>
                     </td>
                     <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_HNA'}" onclick="return false;" checked="checked"></td>
-                    <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_EMPLOYEE'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_BUYER'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_CHECKER'}" onclick="return false;" checked="checked"></td>
                     <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_AGENT'}" onclick="return false;" checked="checked"></td>
                     <td class="col-lg-2">
                         <div class="btn-group">

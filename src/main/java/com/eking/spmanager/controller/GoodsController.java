@@ -1,11 +1,11 @@
 package com.eking.spmanager.controller;
 
-import com.eking.spmanager.DAO.GoodsIdxDAO;
-import com.eking.spmanager.DAO.GoodsTypeDAO;
+import com.eking.spmanager.dao.GoodsIdxDAO;
+import com.eking.spmanager.dao.GoodsTypeDAO;
 import com.eking.spmanager.Utils.Box;
 import com.eking.spmanager.Utils.Tools;
-import com.eking.spmanager.entity.Goods;
-import com.eking.spmanager.entity.GoodsType;
+import com.eking.spmanager.domain.Goods;
+import com.eking.spmanager.domain.GoodsType;
 import com.eking.spmanager.service.GoodsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;

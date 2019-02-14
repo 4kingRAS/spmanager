@@ -1,6 +1,6 @@
 package com.eking.spmanager.service;
 
-import com.eking.spmanager.entity.Permission;
+import com.eking.spmanager.domain.Permission;
 
 /**
  * @Author Yulin.Wang

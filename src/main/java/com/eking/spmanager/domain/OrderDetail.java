@@ -1,4 +1,4 @@
-package com.eking.spmanager.entity;
+package com.eking.spmanager.domain;
 
 import javax.persistence.*;
 
@@ -77,4 +77,14 @@ public class OrderDetail {
     public void setIsActived(String isActived) {
         this.isActived = isActived;
     }
+
+    @Override
+    public String toString() {
+        return "Orders{" +
+                "id=" + id.toString()+
+                ", oid=" + orderId.toString() +
+                ", gid=" + goodsId.toString() +
+                '}';
+    }
+
 }

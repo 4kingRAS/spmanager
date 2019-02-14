@@ -1,7 +1,7 @@
 package com.eking.spmanager.implement;
 
-import com.eking.spmanager.DAO.GoodsDAO;
-import com.eking.spmanager.entity.Goods;
+import com.eking.spmanager.dao.GoodsDAO;
+import com.eking.spmanager.domain.Goods;
 import com.eking.spmanager.service.GoodsService;
 
 import org.slf4j.Logger;
