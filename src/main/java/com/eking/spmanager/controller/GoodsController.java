@@ -30,7 +30,7 @@ import java.util.List;
 public class GoodsController {
 
     private static final int G_PAGE = 0;
-    private static final int G_SIZE = 2;
+    private static final int G_SIZE = 3;
     private Integer gType = -1;
 
     @Autowired
@@ -45,16 +45,17 @@ public class GoodsController {
     @Autowired
     Tools utils;
 
-    public List<Box> makelist(Integer type) {
+    public List<Box> makeList(Integer type) {
         List<Box> list = new ArrayList<>();
         List<Goods> glist;
+
         if (type == -1) {
             glist = goodsService.findAllGoods();
-        }
-        else {
+        } else {
             GoodsType gt = gtDAO.findById(type).get();
             glist = goodsService.findByType(gt.getName());
         }
+
         for (Goods g: glist) {
             Integer count = gIdxDAO.findByGoodsid(g.getId()).getCount();
             list.add(new Box(g, count));
@@ -63,10 +64,10 @@ public class GoodsController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public String loadList(ModelMap map) {
+    public String initGoodsList(ModelMap map) {
 
         map.addAttribute("gtList", gtDAO.findAll());
-        map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, makelist(-1)));
+        map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, makeList(-1)));
         return "goodsList";
     }
 
@@ -80,8 +81,7 @@ public class GoodsController {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public String postList(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page) {
         try {
-            map.addAttribute("datas",
-                    utils.convertPage(page, G_SIZE, makelist(gType)));
+            map.addAttribute("datas", utils.convertPage(page, G_SIZE, makeList(gType)));
             return "goodsList::goodsTable";
         } catch (Exception e) {
             e.printStackTrace();
@@ -91,7 +91,8 @@ public class GoodsController {
 
     @ResponseBody
     @RequestMapping(value = "/bytype", method = RequestMethod.POST)
-    public String getListByType(ModelMap map, @RequestParam(value = "type", defaultValue = "-1") Integer type) {
+    public String getListByType(ModelMap map,
+                                @RequestParam(value = "type", defaultValue = "-1") Integer type) {
         gType = type;
         return "Success";
     }

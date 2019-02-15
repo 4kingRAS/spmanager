@@ -40,13 +40,12 @@ public class PermissionController {
      */
     @RequestMapping(method = RequestMethod.GET)
     public String getUGList(ModelMap map) {
-
         try {
             UserGroup ug = new UserGroup();
             map.addAttribute("ugmodel", ug);
-            map.addAttribute("groupList", utils.findAllGPRole());
+            map.addAttribute("groupList", utils.getGroupWithRole());
             return "groupList";
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return "Error";
         }
@@ -55,9 +54,9 @@ public class PermissionController {
     @RequestMapping(value = "/fresh", method = RequestMethod.GET)
     public String freshList(ModelMap map) {
         try {
-            map.addAttribute("groupList", utils.findAllGPRole());
+            map.addAttribute("groupList", utils.getGroupWithRole());
             return "groupList::groupTable";
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             e.printStackTrace();
             return "Error";
         }
@@ -107,8 +106,14 @@ public class PermissionController {
         if (bindingResult.hasErrors()) {
             return "DELETE ERROR";
         }
-        ugService.delete(ugService.findById(group.getId()));
-        return "delete Success";
+
+        try {
+            ugService.delete(ugService.findById(group.getId()));
+            return "delete Success";
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return "Error";
+        }
     }
 
     /**
@@ -117,15 +122,20 @@ public class PermissionController {
     @ResponseBody
     @RequestMapping(params = "update", method = RequestMethod.POST)
     public String updateUG(@RequestBody @Valid UserGroup group,
-                             BindingResult bindingResult)
-            throws Exception {
+                             BindingResult bindingResult){
         if (bindingResult.hasErrors()) {
             return "UPDATE ERROR";
         }
-        UserGroup temp = ugService.findById(group.getId());
-        group.setCount(temp.getCount());
-        ugService.update(group);
-        return "update " + group.toString() + " Success";
+
+        try {
+            UserGroup temp = ugService.findById(group.getId());
+            group.setCount(temp.getCount());
+            ugService.update(group);
+            return "update " + group.toString() + " Success";
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return "Error";
+        }
     }
 
 }

@@ -1,10 +1,10 @@
 <div class="contentDiv">
     <div class="row">
         <div class="col-sm-2 col-md-2">
-            <h4>商品列表</h4>
+            <h4>订单列表</h4>
         </div>
         <div style="margin-right: 20px; float: right!important;">
-            <button class="btn btn-primary">添加商品</button>
+            <button class="btn btn-primary">0O0O0O</button>
         </div>
     </div>
     <legend>
@@ -13,60 +13,51 @@
         <table>
             <thead>
             <tr>
-                <th class="col-md-1" >商品编号</th>
-                <th class="col-md-1" >商品类别</th>
-                <th class="col-md-4" >商品名称</th>
-                <th class="col-md-1" >进货价(元)</th>
-                <th class="col-md-1" >代理价(元)</th>
-                <th class="col-md-1" >市场价(元)</th>
-                <th class="col-md-3" style="text-align: center" >操作</th>
+                <th class="col-md-1" >订单编号</th>
+                <th class="col-md-1" >订单类别</th>
+                <th class="col-md-2" >成交总价(元)</th>
+                <th class="col-md-1" >商品种数</th>
+                <th class="col-md-2" >创建时间</th>
+                <th class="col-md-2" >成交时间</th>
+                <th class="col-md-1" >状态</th>
+                <th class="col-md-2" style="text-align: center" >操作</th>
             </tr>
             </thead>
         </table>
         <ul class="list-group">
-            <div th:each="goods : ${datas}">
+            <div th:each="orders : ${datas}">
                 <li class="list-group-item" style="padding: unset">
                     <div class="panel panel-default" style="margin-bottom: 0px">
                         <div class="panel-heading">
                             <table>
                                 <tr>
-                                    <th class="col-md-1" th:text="${goods.id}"></th>
-                                    <td class="col-md-1" th:text="${goods.type}"></td>
-                                    <td class="col-md-4" >
-                                        <span th:text="${goods.name}"></span>
-                                        <span class="badge" >new~</span>
+                                    <th class="col-md-1" th:text="${orders.id}"></th>
+                                    <td class="col-md-1" th:text="${orders.type}"></td>
+                                    <td class="col-md-2" th:text="${orders.price}"></td>
+                                    <td class="col-md-1" th:text="${orders.amount}"></td>
+                                    <td class="col-md-2" >
+                                        <span th:text="*{#calendars.format(orders.createAt,'yyyy-MM-dd HH:mm:ss')}"></span>
                                     </td>
-                                    <td class="col-md-1" th:text="${goods.priceForBuy}"></td>
-                                    <td class="col-md-1" th:text="${goods.priceForSell}"></td>
-                                    <td class="col-md-1" th:text="${goods.priceForMarket}"></td>
-                                    <td class="col-md-3" style="text-align: center">
-                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${goods.id}">
+                                    <td class="col-md-2" th:text="${orders.checkAt}"></td>
+                                    <td class="col-md-1" >
+                                        <span class="badge" th:text="${orders.isChecked eq '1' ? 'Done' : 'Pending'}">new~</span>
+                                    </td>
+                                    <td class="col-md-2" style="text-align: center">
+                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${orders.id}">
                                             <span class="if-collapsed">+</span>
                                             <span class="if-not-collapsed">-</span>
                                         </button>
                                         <div class="btn-group">
-                                            <button class="btn btn-info btn-sm" data-toggle="modal" th:href="'#gx'+${goods.id}">采购</button>
-                                            <button class="btn btn-success btn-sm" data-toggle="modal" th:href="'#gx'+${goods.id}">更新</button>
-                                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:oup('+${goods.id}+')'">删除</button>
+                                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:cancel('+${orders.id}+')'">取消订单</button>
                                         </div>
                                     </td>
                                 </tr>
                             </table>
                         </div>
-                        <div th:id="'pn'+${goods.id}" class="panel-collapse collapse">
+                        <div th:id="'pn'+${orders.id}" class="panel-collapse collapse">
                             <div class="panel-body" style="padding: 5px">
                                 <div class="row">
-                                    <div class="col-sm-6 col-md-3">
-                                        <h4>商品信息：</h4>
-                                        <blockquote>
-                                            <h5 th:text="${goods.description}"></h5>
-                                        </blockquote>
-                                    </div>
-                                    <div class="col-sm-6 col-md-3">
-                                        <a href="#" class="thumbnail" style="margin-bottom: 0px">
-                                            <img th:src="@{'/images/goods/'+${goods.id}+'.jpg'}">
-                                        </a>
-                                    </div>
+                                    666
                                 </div>
                             </div>
                         </div>
@@ -75,6 +66,7 @@
             </div>
         </ul>
         <div th:include="Pager::pager" th:remove="tag"></div>
+        <div id="isbuyer" th:value="${isBuyer eq 'true' ? true : false}" style="display: none"></div>
     </div>
     <script type="text/javascript" th:inline="javascript">
 

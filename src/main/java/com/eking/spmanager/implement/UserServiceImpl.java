@@ -46,32 +46,16 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findById(Integer id) {
-        try {
-
-            User u = userDAO.findById(id).get();
-            LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY ID", id.toString());
-            return u;
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            LOGGER.error("[eKing log]: {}  {}: - {}", entity, "CANT FIND BY ID", id.toString());
-            return null;
-        }
+        User u = userDAO.findById(id).get();
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY ID", id.toString());
+        return u;
     }
 
     @Override
     public User findByUserName(String username) {
-        try {
-
-            User u = userDAO.findByUsername(username);
-            LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY NAME", username);
-            return u;
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            LOGGER.error("[eKing log]: {}  {}: - {}", entity, "CANT FIND BY NAME", username);
-            return null;
-        }
+        User u = userDAO.findByUsername(username);
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY NAME", username);
+        return u;
     }
 
     @Override

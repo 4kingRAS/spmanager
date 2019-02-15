@@ -7,9 +7,7 @@ package com.eking.spmanager.controller;
  **/
 
 import com.eking.spmanager.Utils.Tools;
-import com.eking.spmanager.domain.Permission;
 import com.eking.spmanager.domain.User;
-import com.eking.spmanager.service.PmsService;
 import com.eking.spmanager.service.RoleService;
 import com.eking.spmanager.service.UserGroupService;
 import com.eking.spmanager.service.UserService;
@@ -18,7 +16,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Principal;
@@ -63,15 +60,8 @@ public class MainController {
     @ResponseBody
     @RequestMapping(params = "off", method = RequestMethod.POST)
     public String offline(Principal principal, HttpServletRequest request, HttpServletResponse response) {
-        Cookie[] cookies = request.getCookies();
-        if(cookies != null) {
-            for (Cookie cookie : cookies) {
-                if (cookie.getName().contains("cart")) {
-                    cookie.setMaxAge(0);
-                    response.addCookie(cookie);
-                }
-            }
-        }
+        utils.clearCookies("cart", request, response);
+
         User user = userService.findByUserName(principal.getName());
         user.setIsOnline("0");
         userService.update(user);

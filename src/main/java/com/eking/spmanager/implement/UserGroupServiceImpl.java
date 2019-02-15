@@ -40,17 +40,9 @@ public class UserGroupServiceImpl implements UserGroupService {
 
     @Override
     public UserGroup findById(Integer id) {
-        try {
-
-            UserGroup ug = userGroupDAO.findById(id).get();//容器对象，加个get()
-            LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY ID", id.toString());
-            return ug;
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            LOGGER.error("[eKing log]: {}  {}: - {}", entity, "CANT FIND BY ID", id.toString());
-            return null;
-        }
+        UserGroup ug = userGroupDAO.findById(id).get();//容器对象，加个get()
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY ID", id.toString());
+        return ug;
     }
 
     @Transactional
@@ -68,17 +60,9 @@ public class UserGroupServiceImpl implements UserGroupService {
     }
 
     public UserGroup findByName(String name) {
-        try {
-
-            UserGroup ug = userGroupDAO.findByName(name);
-            LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY NAME", name);
-            return ug;
-        } catch (Exception e) {
-
-            e.printStackTrace();
-            LOGGER.error("[eKing log]: {}  {}: - {}", entity, "CANT FIND BY NAME", name);
-            return null;
-        }
+        UserGroup ug = userGroupDAO.findByName(name);
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY NAME", name);
+        return ug;
     }
 
 }

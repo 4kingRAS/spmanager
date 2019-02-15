@@ -2,23 +2,23 @@
     <div class="contentDiv">
         <div class="row">
             <div class="col-sm-2 col-md-2">
-                <h4>购物车</h4>
+                <h4>订单列表</h4>
             </div>
             <div style="margin-right: 20px; float: right!important;">
                 <button class="btn btn-primary">olloo</button>
             </div>
         </div>
         <legend></legend>
-        <div th:if="${isNullCart eq 'false'}">
+        <div th:if="${isEmptyCart eq 'false'}">
             <table >
                 <thead>
                 <tr>
                     <th class="col-md-1" >确认选择</th>
                     <th class="col-md-1" >商品类别</th>
                     <th class="col-md-2" >商品名称</th>
-                    <th class="col-md-2" >建议零售价(元)</th>
+                    <th class="col-md-2" >参考价格(元)</th>
                     <th class="col-md-1" >库存</th>
-                    <th class="col-md-2" >您的竞标价(元)</th>
+                    <th class="col-md-2" >提交价格(元)</th>
                     <th class="col-md-1" >购买数量</th>
                     <th class="col-md-2" style="text-align: center" >操作</th>
                 </tr>
@@ -39,15 +39,18 @@
                                     <td class="col-md-2" >
                                         <span th:text="${box.s.name}"></span>
                                     </td>
-                                    <td class="col-md-2" th:text="${box.s.priceForSell}"></td>
+                                    <td class="col-md-2"
+                                        th:text="${isBuyer eq 'true' ? box.s.priceForBuy : box.s.priceForSell}">
+
+                                    </td>
                                     <td class="col-md-1" th:text="${box.c.depo}" th:id="'dp'+${box.s.id}">
                                     </td>
                                     <td class="col-md-2" >
-                                        <sapn th:id="'pr'+${box.s.id}" th:text="${box.c.price}"></sapn>
+                                        <span th:id="'pr'+${box.s.id}" th:text="${box.c.price}"></span>
                                     </td>
                                     <td class="col-md-1" >
-                                        <sapn th:id="'am'+${box.s.id}" th:text="${box.c.amount}"></sapn>
-                                        <span class="badge" th:id="'ck'+${box.s.id}"
+                                        <span th:id="'am'+${box.s.id}" th:text="${box.c.amount}"></span>
+                                        <span class="badge" th:id="'ck'+${box.s.id}" th:if="${isBuyer eq 'false'}"
                                               th:style="${box.c.amount gt box.c.depo ? 'display:inline' : 'display:none'}">超出库存</span>
                                     </td>
                                     <td class="col-md-2" style="text-align: right">
@@ -73,8 +76,8 @@
                 <button class="btn btn-primary" onclick="checkInput()">提交订单</button>
             </div>
         </div>
-        
-        <h3 th:if="${isNullCart eq 'true'}" style="text-align: center">
+
+        <h3 th:if="${isEmptyCart eq 'true'}" style="text-align: center">
             您的购物车空空如也
         </h3>
 
@@ -101,13 +104,13 @@
                 </div><!-- /.modal-content -->
             </div><!-- /.modal -->
         </div>
+        <div id="isbuyer" th:value="${isBuyer eq 'true' ? true : false}" style="display: none"></div>
     </div>
     <script type="text/javascript" th:inline="javascript">
         /*<![CDATA[*/
 
         var amount = parseInt($("#statAm").text());
         var sum = parseFloat($("#statPr").text());
-
 
         function checkStat(id) {
             //TODO: checkbox could unavailable when editing.
@@ -128,11 +131,13 @@
 
         function GEdit(id){
             var b = $("#edit"+id);
+            var isBuyer = $("#isbuyer").val();
 
             if (b.html() == "修改") {
                 var p = $("#pr" + id).text();
                 var a = $("#am" + id).text();
                 sum = sum -  parseInt(a) * parseFloat(p);
+                console.log(sum);
 
                 $("#pr" + id).html("<input type=\"text\" style=\"width: 100px\" id=\"pri"+ id +"\"\n" +
                     "value=\"" + p + "\">");
@@ -147,14 +152,14 @@
                 $("#pr" + id).html("<span>"+ $("#pri" + id).val() +"</span>");
                 $("#am" + id).html("<span>"+ am +"</span>");
                 b.html("修改");
-                if (am <= parseInt($("#dp" + id).text())) {
-                    $("#ck" + id).hide();
+                if (!isBuyer) {
+                    if (am <= parseInt($("#dp" + id).text())) {
+                        $("#ck" + id).hide();
+                    } else {
+                        $("#ck" + id).show();
+                    }
                 }
-                else {
-                    $("#ck" + id).show();
-                }
-                sum = sum.toFixed(2);
-                $("#statPr").text(sum);
+                $("#statPr").text(sum.toFixed(2));
             }
         }
 
@@ -185,7 +190,7 @@
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
-                data: JSON.stringify({type: "1", price: sum, amount: amount}),
+                data: JSON.stringify({price: sum, amount: amount}),
                 async: false,
                 success: function (id) {
                     dealSubOrder(id);
@@ -232,10 +237,6 @@
                 async: false
             });
             $('#makeOrder').load("/order/makeOrder");
-        }
-
-        function clearSign() {
-            $("#cartSign").hide();
         }
 
     </script>

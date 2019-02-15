@@ -107,8 +107,7 @@ public class UserController {
             User user = userService.findById(msg.getId());
             if (user.getIsActived().equals("1")) {
                 user.setIsActived("0");
-            }
-            else {
+            } else {
                 user.setIsActived("1");
             }
             userService.update(user);

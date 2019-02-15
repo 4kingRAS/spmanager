@@ -43,25 +43,25 @@
                 </tr>
             </thead>
             <tbody>
-                <tr th:each="idxList : ${groupList}">
-                    <th scope="row"  th:text="${idxList.ug.id}"></th>
-                    <td th:text="${idxList.ug.name}"></td>
-                    <td th:text="${idxList.ug.count}"></td>
+                <tr th:each="box : ${groupList}">
+                    <th scope="row"  th:text="${box.s.id}"></th>
+                    <td th:text="${box.s.name}"></td>
+                    <td th:text="${box.s.count}"></td>
                     <td>
-                        <span th:text="${idxList.ug.isAgent eq '0' ? '是' : '否'}"></span>
+                        <span th:text="${box.s.isAgent eq '0' ? '是' : '否'}"></span>
                     </td>
-                    <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_HNA'}" onclick="return false;" checked="checked"></td>
-                    <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_BUYER'}" onclick="return false;" checked="checked"></td>
-                    <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_CHECKER'}" onclick="return false;" checked="checked"></td>
-                    <td><input type="checkbox" th:checked="${idxList.role.name eq 'ROLE_AGENT'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_HNA'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_BUYER'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_CHECKER'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_AGENT'}" onclick="return false;" checked="checked"></td>
                     <td class="col-lg-2">
                         <div class="btn-group">
-                            <button class="btn btn-primary btn-sm" data-toggle="modal" th:href="'#'+${idxList.ug.id}">编辑</button>
-                            <button class="btn btn-danger btn-sm" th:if="${idxList.role.name != 'ROLE_HNA'}"
-                                    th:onclick="'javascript:deleteGroup('+${idxList.ug.id}+')'">删除</button>
+                            <button class="btn btn-primary btn-sm" data-toggle="modal" th:href="'#'+${box.s.id}">编辑</button>
+                            <button class="btn btn-danger btn-sm" th:if="${box.c.name != 'ROLE_HNA'}"
+                                    th:onclick="'javascript:deleteGroup('+${box.s.id}+')'">删除</button>
                         </div>
                         <!-- MODAL -->
-                        <div class="modal fade" th:id="${idxList.ug.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal fade" th:id="${box.s.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -72,7 +72,7 @@
                                         <table class="table table-hover table-condensed">
                                             <legend>
                                                 <strong>
-                                                    <span th:text="'群组ID：'+${idxList.ug.id}"></span>
+                                                    <span th:text="'群组ID：'+${box.s.id}"></span>
                                                 </strong>
                                             </legend>
                                             <thead>
@@ -83,12 +83,12 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <input type="hidden" th:id="'ug'+${idxList.ug.id}" th:value="${idxList.ug.id}"/>
+                                                    <input type="hidden" th:id="'ug'+${box.s.id}" th:value="${box.s.id}"/>
                                                     <td>
-                                                        <input type="text" th:id="'ugn'+${idxList.ug.id}" th:value="${idxList.ug.name}"/>
+                                                        <input type="text" th:id="'ugn'+${box.s.id}" th:value="${box.s.name}"/>
                                                     </td>
                                                     <td>
-                                                        <input type="checkbox" th:id="'uga'+${idxList.ug.id}" th:checked="${idxList.ug.isAgent}">
+                                                        <input type="checkbox" th:id="'uga'+${box.s.id}" th:checked="${box.s.isAgent}">
                                                         属于我司
                                                     </td>
                                                 </tr>
@@ -96,7 +96,7 @@
                                         </table>
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
-                                            <button type="button" class="btn btn-primary btn-sm" th:onclick="'javascript:updateGroup('+${idxList.ug.id}+')'">
+                                            <button type="button" class="btn btn-primary btn-sm" th:onclick="'javascript:updateGroup('+${box.s.id}+')'">
                                                 提交更改
                                             </button>
                                         </div>

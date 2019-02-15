@@ -96,7 +96,10 @@
                 <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m02"></i>订单管理</a>
                 <div class="sub_meau" data-role="tree_action" data-con="1">
                     <dl>
-                        <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>全部订单</a></dd>
+                        <dd><a data-role="root" data-level="2" th:onclick="|javascript:localRefresh('/order')|">
+                                <em class="s_arrow"></em>全部订单
+                            </a>
+                        </dd>
                         <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>已完成</a></dd>
                         <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>已取消</a></dd>
                     </dl>
