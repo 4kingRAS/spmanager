@@ -17,7 +17,7 @@
                         <input id="search" class="form-control" name="search"
                                type="text" placeholder="想要什么？">
                         <span class="input-group-btn">
-                            <button type="button" class="btn btn-default">搜索</button>
+                            <button type="button"  class="btn btn-default">搜索</button>
                         </span>
                     </div><!-- /input-group -->
                 </div>
@@ -28,8 +28,10 @@
         <div class="col-sm-2 col-md-2">
             <h4>商品列表</h4>
         </div>
-        <div style="margin-right: 20px; float: right!important;">
-            <button id="addGoods" class="btn btn-primary">添加商品</button>
+        <div sec:authorize="hasAnyRole('HNA','BUYER')">
+            <div style="margin-right: 20px; float: right!important;">
+                <button id="addGoods"  class="btn btn-primary">添加商品</button>
+            </div>
         </div>
     </div>
     <legend></legend>
@@ -70,9 +72,10 @@
                                         </button>
                                         <div class="btn-group">
                                             <button class="btn btn-info btn-sm" th:if="${box.c gt 0}"
-                                                    data-toggle="modal" th:onclick="'javascript:addCart('+${box.s.id}+')'">采购</button>
-                                            <button class="btn btn-success btn-sm" data-toggle="modal" th:href="'#gx'+${box.s.id}">更新</button>
-                                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:oup('+${box.s.id}+')'">删除</button>
+                                                    data-toggle="modal" th:onclick="addCart([[${box.s.id}]])">采购</button>
+                                            <button class="btn btn-success btn-sm" data-toggle="modal"
+                                                    th:onclick="updateItem([[${box.s.id}]])">更新</button>
+                                            <button class="btn btn-danger btn-sm" th:onclick="delItem([[${box.s.id}]])">删除</button>
                                         </div>
                                     </td>
                                 </tr>
@@ -177,6 +180,7 @@
             var gps = $("#gsPS").val();
             var gpb = $("#gsPB").val();
             var gpm = $("#gsPM").val();
+            var gam = $("#gsAM").val();
             var gdp= $("#gsDscp").val();
 
             $.ajax({
@@ -184,8 +188,8 @@
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
-                data: JSON.stringify({name: gn, type: gt, priceForSell: gps, priceForBuy: gpb,
-                    priceForMarket: gpm, description: gdp}),
+                data: JSON.stringify({Goods: {name: gn, type: gt, priceForSell: gps, priceForBuy: gpb,
+                    priceForMarket: gpm, description: gdp}, Amount: gam}),
                 async: false
                 // TRUE 异步 FALSE 同步
             });

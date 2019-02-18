@@ -43,7 +43,7 @@ public class Orders implements Serializable {
     @Column(name = "order_comment", length = 100)
     private String comment;
 
-    /** 0 pending 1 done **/
+    /** 0 pending 1 pass 2 denied**/
     @Column(name = "is_checked", columnDefinition = "char(1) default '0'")
     private String isChecked;
 

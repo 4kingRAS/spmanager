@@ -1,5 +1,6 @@
 package com.eking.spmanager.controller;
 
+import com.eking.spmanager.dao.DepositLogDAO;
 import com.eking.spmanager.dao.GoodsIdxDAO;
 import com.eking.spmanager.Utils.Box;
 import com.eking.spmanager.Utils.Tools;
@@ -8,7 +9,6 @@ import com.eking.spmanager.service.GoodsService;
 import com.eking.spmanager.service.OrderDetailService;
 import com.eking.spmanager.service.OrderService;
 
-import com.eking.spmanager.service.UserService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +24,7 @@ import javax.validation.Valid;
 import java.io.IOException;
 import java.security.Principal;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -39,6 +40,9 @@ public class OrderController {
     private static final int G_PAGE = 0;
     private static final int G_SIZE = 5;
 
+    List<Orders> ordersList;
+    Role role;
+
     class Cart {
         public Integer amount;
         public double price;
@@ -52,6 +56,9 @@ public class OrderController {
     GoodsIdxDAO gIdxDAO;
 
     @Autowired
+    DepositLogDAO logDAO;
+
+    @Autowired
     OrderService orderService;
 
     @Autowired
@@ -60,19 +67,64 @@ public class OrderController {
     @Autowired
     Tools utils;
 
+    /** 订单列表页面 **/
     @RequestMapping(method = RequestMethod.GET)
-    public String initOrderList(ModelMap map, Principal principal) {
+    public String getOrderList(@RequestParam(value = "type", defaultValue = "-1") Integer type,
+                                    ModelMap map, Principal principal) {
         try {
-            Role role = utils.getRole(principal.getName());
+            String name = principal.getName();
+            role = utils.getRole(name);
+
             if (utils.isCheckerEmployee(role.getId())) {
+                switch (type) {
+                    case 1 : {
+                        // done
+                        ordersList = orderService.findByIsCheckedNot("0");
+                        break;
+                    }
+                    case 0 : {
+                        // PENDING
+                        ordersList = orderService.findByIsChecked("0");
+                        break;
+                    }
+                    default : {
+                        // all
+                        ordersList = orderService.findAllOrder();
+                        break;
+                    }
+                }
+                map.addAttribute("isChecker", "true");
 
             } else {
-
-                List<Orders> ordersList = orderService.findByCreateBy(principal.getName());
-                map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, ordersList));
-                map.addAttribute("isBuyer",
-                        utils.isBuyerEmployee(role.getId()) ? "true" : "false");
+                switch (type) {
+                    case 0 : {
+                        // canceled
+                        ordersList = orderService.findByCreateByAndIsActived(name, "0");
+                        break;
+                    }
+                    case 1 : {
+                        // passed or denied
+                        ordersList = orderService.findByCreateByAndIsCheckedNot(name, "0");
+                        break;
+                    }
+                    case 2 : {
+                        // PENDING
+                        ordersList = orderService.findByCreateByAndIsChecked(name, "0");
+                        break;
+                    }
+                    default : {
+                        // all of not canceled
+                        ordersList = orderService.findByCreateByAndIsActived(name, "1");
+                        break;
+                    }
+                }
+                map.addAttribute("isChecker", "false");
             }
+
+            Collections.reverse(ordersList);
+            map.addAttribute("isBuyer",
+                    utils.isBuyerEmployee(role.getId()) ? "true" : "false");
+            map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, ordersList));
             return "orderList";
         } catch (RuntimeException e) {
             e.printStackTrace();
@@ -80,7 +132,81 @@ public class OrderController {
         }
     }
 
-    @RequestMapping(value = "/makeOrder", method = RequestMethod.GET)
+    /** post 分页 **/
+    @RequestMapping(method = RequestMethod.POST)
+    public String postList(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page) {
+        try {
+            map.addAttribute("isChecker",
+                    utils.isCheckerEmployee(role.getId()) ? "true" : "false");
+            map.addAttribute("isBuyer",
+                    utils.isBuyerEmployee(role.getId()) ? "true" : "false");
+            map.addAttribute("datas", utils.convertPage(page, G_SIZE, ordersList));
+
+            return "orderList";
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    /** 获得订单明细 **/
+    @RequestMapping(value = "/detail", method = RequestMethod.POST)
+    public String getOrderDetail(@RequestParam(value = "order") Integer oid, ModelMap map) {
+
+        try {
+            List<OrderDetail> details = detailService.findByOrderId(oid);
+            List<Box> list = new ArrayList<>();
+            for (OrderDetail od: details) {
+                String name = goodsService.findById(od.getGoodsId()).getName();
+                list.add(new Box(od, name));
+            }
+            map.addAttribute("details", list);
+            return "orderListPanel";
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    /** 处理订单 **/
+    @ResponseBody
+    @RequestMapping(value = "/deal", method = RequestMethod.POST)
+    public String dealOrder(@RequestParam(value = "order") Integer oid,
+                            @RequestParam(value = "opt") String opt, Principal principal, ModelMap map) {
+
+        try {
+            Orders order = orderService.findById(oid);
+            order.setCheckBy(principal.getName());
+            order.setCheckAt(utils.getCurrentTime());
+            if (opt.equals("pass")) {
+                order.setIsChecked("1");
+
+                List<OrderDetail> list = detailService.findByOrderId(oid);
+                for(OrderDetail orderDetail : list) {
+                    Integer amount = orderDetail.getCount();
+                    Integer gid = orderDetail.getGoodsId();
+                    GoodsIndex goodsIndex = gIdxDAO.findByGoodsid(gid);
+                    if (order.getType().equals("0")) {
+                        goodsIndex.setCount(goodsIndex.getCount() + amount);
+                        
+                    } else {
+                        goodsIndex.setCount(goodsIndex.getCount() - amount);
+                    }
+                }
+            } else {
+                order.setIsChecked("2");
+            }
+
+            orderService.update(order);
+            return "DONE";
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    /** 购物车页面 **/
+    @RequestMapping(value = "/orderMaker", method = RequestMethod.GET)
     public String getOrderMap(ModelMap map, HttpServletRequest request, Principal principal) {
         Role role = utils.getRole(principal.getName());
         Integer amount = 0;
@@ -113,15 +239,16 @@ public class OrderController {
             map.addAttribute("isBuyer",
                     utils.isBuyerEmployee(role.getId()) ? "true" : "false");
 
-            return "makeOrder";
+            return "orderMaker";
         } catch (RuntimeException e) {
             e.printStackTrace();
             return "ERROR";
         }
     }
 
+    /** 购物车-添加订单 **/
     @ResponseBody
-    @RequestMapping(value = "/makeOrder", params = "make", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderMaker", params = "make", method = RequestMethod.POST)
     public String postOrder(@RequestBody @Valid Orders orders,
                             BindingResult bindingResult, Principal principal) {
         if (bindingResult.hasErrors()) {
@@ -150,8 +277,9 @@ public class OrderController {
         }
     }
 
+    /** 购物车-添加子订单 **/
     @ResponseBody
-    @RequestMapping(value = "/makeOrder", params = "makeSub", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderMaker", params = "makeSub", method = RequestMethod.POST)
     public String postSubOrder(@RequestBody String orderList, HttpServletRequest request,
                                HttpServletResponse response, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
@@ -177,10 +305,11 @@ public class OrderController {
         }
     }
 
+    /** 购物车-删除子订单 **/
     @ResponseBody
-    @RequestMapping(value = "/makeOrder/clear", method = RequestMethod.POST)
+    @RequestMapping(value = "/orderMaker/clear", method = RequestMethod.POST)
     public String clearItem(@RequestParam(value = "gid") Integer gid, HttpServletRequest request,
-                               HttpServletResponse response) {
+                            HttpServletResponse response) {
         try {
             utils.clearCookies("cart" + gid.toString(), request, response);
             return "CLEAR";

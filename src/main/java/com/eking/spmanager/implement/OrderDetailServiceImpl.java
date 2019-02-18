@@ -9,6 +9,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 /**
  * @Author Yulin.Wang
  * @Date 2019-02-14
@@ -27,6 +29,12 @@ public class OrderDetailServiceImpl implements OrderDetailService {
     public void addOrderDetail(OrderDetail od) {
         orderDetailDAO.save(od);
         LOGGER.info("[eKing log]: {}  {}: - {}", entity, "NEW ", od.toString());
+    }
+
+    @Transactional
+    public List<OrderDetail> findByOrderId(Integer id) {
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND BY OID ", id.toString());
+        return orderDetailDAO.findByOrderId(id);
     }
 
 }

@@ -13,4 +13,11 @@ import java.util.List;
 
 public interface OrderDAO extends JpaRepository<Orders, Integer> {
     List<Orders> findByCreateBy(String createBy);
+    List<Orders> findByCreateByAndIsActived(String createBy, String isActived);
+    List<Orders> findByIsChecked(String isChecked);
+    List<Orders> findByIsCheckedNot(String isChecked);
+    List<Orders> findByCreateByAndIsChecked(String createBy, String isChecked);
+    List<Orders> findByCreateByAndIsCheckedNot(String createBy, String isChecked);
+    List<Orders> findByIsActived(String isActived);
+    List<Orders> findByIsActivedAndIsChecked(String isActived, String isChecked);
 }

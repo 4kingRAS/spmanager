@@ -5,8 +5,11 @@ import com.eking.spmanager.dao.GoodsTypeDAO;
 import com.eking.spmanager.Utils.Box;
 import com.eking.spmanager.Utils.Tools;
 import com.eking.spmanager.domain.Goods;
+import com.eking.spmanager.domain.GoodsIndex;
 import com.eking.spmanager.domain.GoodsType;
 import com.eking.spmanager.service.GoodsService;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -65,9 +68,9 @@ public class GoodsController {
 
     @RequestMapping(method = RequestMethod.GET)
     public String initGoodsList(ModelMap map) {
-
+        gType = -1;
         map.addAttribute("gtList", gtDAO.findAll());
-        map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, makeList(-1)));
+        map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, makeList(gType)));
         return "goodsList";
     }
 
@@ -100,7 +103,7 @@ public class GoodsController {
     @RequestMapping(value = "/addGM", method = RequestMethod.GET)
     public String getGTModal(ModelMap map) {
         map.addAttribute("gtList", gtDAO.findAll());
-        return "modalGoodsInfo";
+        return "modalAddGoods";
     }
 
     @RequestMapping(value = "/addCart", method = RequestMethod.GET)
@@ -125,15 +128,25 @@ public class GoodsController {
 
     @ResponseBody
     @RequestMapping(params = "add", method = RequestMethod.POST)
-    public String postGoods(@RequestBody @Valid Goods goods, BindingResult bindingResult) {
+    public String postGoods(@RequestBody String str, BindingResult bindingResult) {
         if (bindingResult.hasErrors()) {
             return "ERROR";
         }
 
         try {
-            String type = gtDAO.findById(Integer.valueOf(goods.getType())).get().getName();
-            goods.setType(type);
+            ObjectMapper mapper = new ObjectMapper();
+            JsonNode node = mapper.readTree(str);
+            Goods goods = mapper.convertValue(node.get("Goods"), Goods.class);
+            Integer amount = mapper.convertValue(node.get("Amount"), Integer.class);
+
+            GoodsType gt = gtDAO.findById(Integer.valueOf(goods.getType())).get();
+            goods.setType(gt.getName());
             goodsService.addGoods(goods);
+
+            GoodsIndex goodsIndex = new GoodsIndex();
+            goodsIndex.setGoodsid(goodsService.findByName(goods.getName()).getId());
+            goodsIndex.setCount(amount);
+            gIdxDAO.save(goodsIndex);
             return "add " + goods.toString() + " Success";
         } catch (Exception e) {
             e.printStackTrace();

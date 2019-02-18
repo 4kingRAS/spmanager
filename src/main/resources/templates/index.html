@@ -86,22 +86,51 @@
     <div class="meau" id="meau">
         <ul>
             <li data-tit="1"><a class="on" data-role="root" data-level="1"><i class="icon30 m01"></i>总览</a></li>
-            <li data-tit="1">
-                <a data-role="root" data-level="1" th:onclick="|javascript:localRefresh('/order/makeOrder')|">
-                    <i class="icon30 m04"></i>
-                    购物车 <span class="badge" id="cartSign" style="display: none;background-color: red">!</span>
-                </a>
-            </li>
+            <div sec:authorize="!hasRole('CHECKER')">
+                <li data-tit="1">
+                    <a data-role="root" data-level="1" th:onclick="localRefresh([['/order/orderMaker']])">
+                        <i class="icon30 m04"></i>
+                        购物车 <span class="badge" id="cartSign" style="display: none;background-color: red">!</span>
+                    </a>
+                </li>
+            </div>
             <li data-tit="1">
                 <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m02"></i>订单管理</a>
                 <div class="sub_meau" data-role="tree_action" data-con="1">
                     <dl>
-                        <dd><a data-role="root" data-level="2" th:onclick="|javascript:localRefresh('/order')|">
+                        <dd><a data-role="root" data-level="2" th:onclick="localRefresh([['/order']])">
                                 <em class="s_arrow"></em>全部订单
                             </a>
                         </dd>
-                        <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>已完成</a></dd>
-                        <dd><a data-role="root" data-level="2"><em class="s_arrow"></em>已取消</a></dd>
+                        <div sec:authorize="hasRole('CHECKER')">
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=1']])">
+                                    <em class="s_arrow"></em>已审核
+                                </a>
+                            </dd>
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=0']])">
+                                    <em class="s_arrow"></em>未审核
+                                </a>
+                            </dd>
+                        </div>
+                        <div sec:authorize="!hasRole('CHECKER')">
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=1']])">
+                                    <em class="s_arrow"></em>已完成
+                                </a>
+                            </dd>
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=2']])">
+                                    <em class="s_arrow"></em>审核中
+                                </a>
+                            </dd>
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=0']])">
+                                    <em class="s_arrow"></em>已取消
+                                </a>
+                            </dd>
+                        </div>
                     </dl>
                 </div>
             </li>
@@ -109,24 +138,26 @@
                 <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m03"></i>仓库管理</a>
                 <div class="sub_meau" data-role="tree_action" data-con="1">
                     <dl>
-                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/goods/test')|">
+                        <dd data-tit="2" th:onclick="localRefresh([['/goods/test']])">
                             <a data-role="root" data-level="2">
                                 <em class="s_arrow"></em>
                                 仓库总览
                             </a>
                         </dd>
-                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/goods')|">
+                        <dd data-tit="2" th:onclick="localRefresh([['/goods']])">
                             <a data-role="root" data-level="2" >
                                 <em class="s_arrow"></em>
                                 商品详情
                             </a>
                         </dd>
-                        <dd data-tit="2">
-                            <a data-role="root" data-level="2">
-                                <em class="s_arrow"></em>
-                                出入库记录
-                            </a>
-                        </dd>
+                        <div sec:authorize="!hasRole('AGENT')">
+                            <dd data-tit="2">
+                                <a data-role="root" data-level="2">
+                                    <em class="s_arrow"></em>
+                                    出入库记录
+                                </a>
+                            </dd>
+                        </div>
                     </dl>
                 </div>
             </li>
@@ -135,13 +166,13 @@
                 <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m05"></i>系统管理</a>
                 <div class="sub_meau" data-role="tree_action" data-con="1">
                     <dl>
-                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/user')|">
+                        <dd data-tit="2" th:onclick="localRefresh([['/user']])">
                             <a data-role="root" data-level="2">
                                 <em class="s_arrow"></em>
                                 用户管理
                             </a>
                         </dd>
-                        <dd data-tit="2" th:onclick="|javascript:localRefresh('/manager')|">
+                        <dd data-tit="2" th:onclick="localRefresh([['/manager']])">
                             <a data-role="root" data-level="2">
                                 <em class="s_arrow"></em>
                                 群组管理

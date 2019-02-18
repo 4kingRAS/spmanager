@@ -4,9 +4,6 @@
             <div class="col-sm-2 col-md-2">
                 <h4>订单列表</h4>
             </div>
-            <div style="margin-right: 20px; float: right!important;">
-                <button class="btn btn-primary">olloo</button>
-            </div>
         </div>
         <legend></legend>
         <div th:if="${isEmptyCart eq 'false'}">
@@ -91,8 +88,8 @@
                     <legend></legend>
                     <div class="modal-body">
                         <div class="alert alert-info">
-                            共<span id="statAm" th:text="${amount}"></span>个商品
-                            &nbsp;&nbsp;总价:<sapn id="statPr" th:text="${sumPrice}"></sapn>（元）
+                            共<span id="tpAm" ></span>个商品
+                            &nbsp;&nbsp;总价:<sapn id="tpPr"></sapn>（元）
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -181,23 +178,25 @@
                 return;
             }
 
+            $("#tpAm").text(amount);
+            $("#tpPr").text(sum.toFixed(2));
             $("#modalTips").modal('show');
         }
 
         function postOrder() {
             $.ajax({
-                url: "/order/makeOrder?make",
+                url: "/order/orderMaker?make",
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
-                data: JSON.stringify({price: sum, amount: amount}),
+                data: JSON.stringify({price: sum.toFixed(2), amount: amount}),
                 async: false,
                 success: function (id) {
                     dealSubOrder(id);
                 }
             });
             $("#modalTips").on('hidden.bs.modal', function () {
-                $('#makeOrder').load("/order/makeOrder");
+                $('#makeOrder').load("/order/orderMaker");
             }).modal('hide');
         }
 
@@ -220,7 +219,7 @@
 
         function postSubOrder(dataArray) {
             $.ajax({
-                url: "/order/makeOrder?makeSub",
+                url: "/order/orderMaker?makeSub",
                 type: 'post',
                 dataType: 'json',
                 contentType: 'application/json',
@@ -231,12 +230,12 @@
 
         function delItem(id) {
             $.ajax({
-                url: "/order/makeOrder/clear",
+                url: "/order/orderMaker/clear",
                 type: 'post',
                 data: {"gid": id},
                 async: false
             });
-            $('#makeOrder').load("/order/makeOrder");
+            $('#makeOrder').load("/order/orderMaker");
         }
 
     </script>

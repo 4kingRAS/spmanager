@@ -12,38 +12,38 @@
                 <strong><p class="text">用户列表</p></strong>
             </legend>
             <thead>
-            <tr>
-                <th>用户编号</th>
-                <th>用户名</th>
-                <th>密码</th>
-                <th>所在公司</th>
-                <th>用户群组</th>
-                <th>是否在线</th>
-                <th>最后登录时间</th>
-                <th>是否有效</th>
-                <th>操作</th>
-            </tr>
+                <tr>
+                    <th>用户编号</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>所在公司</th>
+                    <th>用户群组</th>
+                    <th>是否在线</th>
+                    <th>最后登录时间</th>
+                    <th>是否有效</th>
+                    <th>操作</th>
+                </tr>
             </thead>
             <tbody>
-            <tr th:each="box : ${datas}">
-                <th scope="row" th:text="${box.s.id}"></th>
-                <td th:text="${box.s.username}"></td>
-                <td th:text="${box.s.password}"></td>
-                <td th:text="${box.s.corpname}"></td>
-                <td th:text="${box.c}"></td>
-                <td>
-                    <span class="badge" th:text="${box.s.isOnline eq '1' ? '是' : '否'}"></span>
-                </td>
-                <td th:text="${box.s.lastLogin}"></td>
-                <td>
-                    <span class="badge" th:text="${box.s.isActived eq '1' ? '有效' : '封禁'}"></span>
-                </td>
-                <td class="col-lg-1">
-                    <div class="btn-group">
-                        <button class="btn btn-danger btn-sm" th:onclick="'javascript:dealUser('+${box.s.id}+')'" th:text="${box.s.isActived eq '1' ? '封禁' : '解封'}"></button>
-                    </div>
-                </td>
-            </tr>
+                <tr th:each="box : ${datas}">
+                    <th scope="row" th:text="${box.s.id}"></th>
+                    <td th:text="${box.s.username}"></td>
+                    <td th:text="${box.s.password}"></td>
+                    <td th:text="${box.s.corpname}"></td>
+                    <td th:text="${box.c}"></td>
+                    <td>
+                        <span class="badge" th:text="${box.s.isOnline eq '1' ? '是' : '否'}"></span>
+                    </td>
+                    <td th:text="${box.s.lastLogin}"></td>
+                    <td>
+                        <span class="badge" th:text="${box.s.isActived eq '1' ? '有效' : '封禁'}"></span>
+                    </td>
+                    <td class="col-lg-1">
+                        <div class="btn-group">
+                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:dealUser('+${box.s.id}+')'" th:text="${box.s.isActived eq '1' ? '封禁' : '解封'}"></button>
+                        </div>
+                    </td>
+                </tr>
             </tbody>
         </table>
         <div th:include="Pager::pager" th:remove="tag"></div>

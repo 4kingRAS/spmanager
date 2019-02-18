@@ -1,0 +1,128 @@
+<div class="contentDiv">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">日志类别： </a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav" >
+                    <li th:each="goodsType : ${gtList}" >
+                        <a href="#" th:onclick="getByType([[${goodsType.id}]])"
+                           th:id="'type'+${goodsType.id}" th:text="${goodsType.name}"></a>
+                    </li>
+                    <li><button class="btn btn-default navbar-btn">+</button></li>
+                </ul>
+                <div class="navbar-form navbar-right" role="search">
+                    <div class="input-group">
+                        <input id="search" class="form-control" name="search"
+                               type="text" placeholder="keyword">
+                        <span class="input-group-btn">
+                            <button type="button"  class="btn btn-default">搜索</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <h4>商品列表</h4>
+        </div>
+    </div>
+    <legend></legend>
+    <div id="depositLog" th:fragment="depositLog">
+
+        <table>
+            <thead>
+            <tr>
+                <th class="col-md-1" >商品编号</th>
+                <th class="col-md-1" >商品类别</th>
+                <th class="col-md-3" >商品名称</th>
+                <th class="col-md-1" >库存数量</th>
+                <th class="col-md-2" >市场单价(元)</th>
+                <th class="col-md-3" style="text-align: center" >操作</th>
+            </tr>
+            </thead>
+        </table>
+
+        <ul class="list-group">
+            <div th:each="box : ${datas}">
+                <li class="list-group-item" style="padding: unset">
+                    <div class="panel panel-default" style="margin-bottom: 0px">
+                        <div class="panel-heading">
+                            <table>
+                                <tr>
+                                    <th class="col-md-1" th:text="${box.s.id}"></th>
+                                    <td class="col-md-1" th:text="${box.s.type}"></td>
+                                    <td class="col-md-3" >
+                                        <span th:text="${box.s.name}"></span>
+                                        <span class="badge" >new~</span>
+                                    </td>
+                                    <td class="col-md-1" th:text="${box.c eq 0 ? '缺货' : box.c}"></td>
+                                    <td class="col-md-2" th:text="${box.s.priceForMarket}"></td>
+                                    <td class="col-md-3" style="text-align: center">
+                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${box.s.id}">
+                                            <span class="if-collapsed">+</span>
+                                            <span class="if-not-collapsed">-</span>
+                                        </button>
+                                        <div class="btn-group">
+                                            <button class="btn btn-info btn-sm" th:if="${box.c gt 0}"
+                                                    data-toggle="modal" th:onclick="addCart([[${box.s.id}]])">采购</button>
+                                            <button class="btn btn-success btn-sm" data-toggle="modal"
+                                                    th:onclick="updateItem([[${box.s.id}]])">更新</button>
+                                            <button class="btn btn-danger btn-sm" th:onclick="delItem([[${box.s.id}]])">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </ul>
+        <div th:include="Pager::pager" th:remove="tag"></div>
+    </div>
+
+    <div class="modal fade" id="addGoodsModal" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+
+        function getByType(type){
+            $.ajax({
+                url: "/goods/bytype",
+                type: 'post',
+                data: {"type": type},
+                async: false,
+                success: function () {
+                    getPage(0);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function getPage(p){
+            $.ajax({
+                url: "/goods/list",
+                type: 'post',
+                data: {"page": p},
+                async: false,
+                success: function (data) {
+                    $("#goodsTable").html(data);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        $(".nav a").on("click", function(){
+            $(".nav").find(".active").removeClass("active");
+            $(this).parent().addClass("active");
+        });
+        /*]]>*/
+    </script>
+</div>

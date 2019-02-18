@@ -1,26 +1,27 @@
-<div class="contentDiv">
+<div id="orderTable" th:fragment="orderTable">
     <div class="row">
         <div class="col-sm-2 col-md-2">
             <h4>订单列表</h4>
         </div>
-        <div style="margin-right: 20px; float: right!important;">
-            <button class="btn btn-primary">0O0O0O</button>
-        </div>
+        <!--<div style="margin-right: 20px; float: right!important;">-->
+            <!--<button class="btn btn-primary">0O0O0O</button>-->
+        <!--</div>-->
     </div>
     <legend>
     </legend>
-    <div id="orderTable" th:fragment="orderTable">
+    <div class="contentDiv">
         <table>
             <thead>
             <tr>
                 <th class="col-md-1" >订单编号</th>
                 <th class="col-md-1" >订单类别</th>
-                <th class="col-md-2" >成交总价(元)</th>
+                <th class="col-md-1" >成交总价(元)</th>
                 <th class="col-md-1" >商品种数</th>
                 <th class="col-md-2" >创建时间</th>
-                <th class="col-md-2" >成交时间</th>
+                <th class="col-md-2" >成交时间
+                <th class="col-md-1" th:text="${isChecker eq 'true' ? '来源' : '审核员'}" ></th>
                 <th class="col-md-1" >状态</th>
-                <th class="col-md-2" style="text-align: center" >操作</th>
+                <th class="col-md-2" style="text-align: left" >操作</th>
             </tr>
             </thead>
         </table>
@@ -32,23 +33,38 @@
                             <table>
                                 <tr>
                                     <th class="col-md-1" th:text="${orders.id}"></th>
-                                    <td class="col-md-1" th:text="${orders.type}"></td>
-                                    <td class="col-md-2" th:text="${orders.price}"></td>
+                                    <td class="col-md-1" th:text="${orders.type eq '1' ? '销售' : '采购'}"></td>
+                                    <td class="col-md-1" th:text="${orders.price}"></td>
                                     <td class="col-md-1" th:text="${orders.amount}"></td>
                                     <td class="col-md-2" >
                                         <span th:text="*{#calendars.format(orders.createAt,'yyyy-MM-dd HH:mm:ss')}"></span>
                                     </td>
-                                    <td class="col-md-2" th:text="${orders.checkAt}"></td>
-                                    <td class="col-md-1" >
-                                        <span class="badge" th:text="${orders.isChecked eq '1' ? 'Done' : 'Pending'}">new~</span>
+                                    <td class="col-md-2">
+                                        <span th:text="*{#calendars.format(orders.checkAt,'yyyy-MM-dd HH:mm:ss')}"></span>
                                     </td>
-                                    <td class="col-md-2" style="text-align: center">
-                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${orders.id}">
-                                            <span class="if-collapsed">+</span>
+                                    <td class="col-md-1"
+                                        th:text="${isChecker eq 'true' ? orders.createBy : orders.checkBy}"></td>
+                                    <td class="col-md-1" >
+                                        <span class="badge" th:switch="${orders.isChecked}">
+                                            <span th:case="'0'">Pending</span>
+                                            <span th:case="'1'">Passed</span>
+                                            <span th:case="'2'">Denied</span>
+                                        </span>
+                                    </td>
+                                    <td class="col-md-2" style="text-align: left">
+                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse"
+                                                th:onclick="getDetail([[${orders.id}]])" th:href="'#pn'+${orders.id}">
+                                            <span th:id="'col'+${orders.id}" class="if-collapsed">+</span>
                                             <span class="if-not-collapsed">-</span>
                                         </button>
                                         <div class="btn-group">
-                                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:cancel('+${orders.id}+')'">取消订单</button>
+                                            <button class="btn btn-danger btn-sm"
+                                                    th:if="${isChecker eq 'false' and orders.isChecked eq '0'}"
+                                                    th:onclick="cancel([[${orders.id}]])">取消订单</button>
+                                            <div sec:authorize="hasRole('CHECKER')">
+                                                <button class="btn btn-success btn-sm" th:onclick="pass([[${orders.id}]])">批准</button>
+                                                <button class="btn btn-danger btn-sm" th:onclick="deny([[${orders.id}]])">拒绝</button>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
@@ -56,8 +72,8 @@
                         </div>
                         <div th:id="'pn'+${orders.id}" class="panel-collapse collapse">
                             <div class="panel-body" style="padding: 5px">
-                                <div class="row">
-                                    666
+                                <div th:id="'pnb'+${orders.id}" th:fragment="orderPanel">
+
                                 </div>
                             </div>
                         </div>
@@ -69,72 +85,42 @@
         <div id="isbuyer" th:value="${isBuyer eq 'true' ? true : false}" style="display: none"></div>
     </div>
     <script type="text/javascript" th:inline="javascript">
-
         /*<![CDATA[*/
-        function addGroup(){
-            // 装载局部刷新返回的页面
-            var gName = $("#gname").val();
-            var ga = "1";
-            var gpm = $("input[name='pmsType']:checked").val();
-            //is checked?
-            if($("#gagent").is(":checked")){
-                ga = "0";
-            }
 
+        function getDetail(id){
             $.ajax({
-                url: "/manager?add",
+                url: "/order/detail",
                 type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({UserGroup: {name: gName, isAgent: ga}, role: gpm}),
-                async: false
+                data: {"order": id},
+                async: false,
+                success: function (data) {
+                    $("#pnb"+id).html(data);
+                }
                 // TRUE 异步 FALSE 同步
             });
-
-            $('#grouptb').load("/manager/fresh");
         }
 
-        $("#addGoods").click(function(){
-            $("#addGoodsModal").modal({
-                backdrop: 'static',     // 点击空白不关闭
-                keyboard: false,        // 按键盘esc也不会关闭
-                remote: '/goods/addGM'
-            });
-        });
-
-        function postGoods() {
-            var gn = $("#gsName").val();
-            var gt = $("#gsType").val();
-            var gps = $("#gsPS").val();
-            var gpb = $("#gsPB").val();
-            var gpm = $("#gsPM").val();
-            var gdp= $("#gsDscp").val();
-
+        function pass(id){
             $.ajax({
-                url: "/goods?add",
+                url: "/order/deal",
                 type: 'post',
-                dataType: 'json',
-                contentType: 'application/json',
-                data: JSON.stringify({name: gn, type: gt, priceForSell: gps, priceForBuy: gpb,
-                    priceForMarket: gpm, description: gdp}),
-                async: false
-                // TRUE 异步 FALSE 同步
-            });
-            $("#addGoodsModal").on('hidden.bs.modal', function (e) {
-                getByType(gt);
-                $(this).removeData("bs.modal");
-                $(this).find(".modal-content").children().remove();
-            }).modal('hide');
-        }
-
-        function getByType(type){
-            $.ajax({
-                url: "/goods/bytype",
-                type: 'post',
-                data: {"type": type},
+                data: {"order": id, "opt": "pass"},
                 async: false,
                 success: function () {
-                    getPage(0);
+                    $("#orderTable").load("/order");
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function deny(id){
+            $.ajax({
+                url: "/order/deal",
+                type: 'post',
+                data: {"order": id, "opt": "deny"},
+                async: false,
+                success: function () {
+                    $("#orderTable").load("/order");
                 }
                 // TRUE 异步 FALSE 同步
             });
@@ -142,21 +128,17 @@
 
         function getPage(p){
             $.ajax({
-                url: "/goods/list",
+                url: "/order",
                 type: 'post',
                 data: {"page": p},
                 async: false,
                 success: function (data) {
-                    $("#goodsTable").html(data);
+                    $("#orderTable").html(data);
                 }
                 // TRUE 异步 FALSE 同步
             });
         }
 
-        $(".nav a").on("click", function(){
-            $(".nav").find(".active").removeClass("active");
-            $(this).parent().addClass("active");
-        });
         /*]]>*/
     </script>
 </div>

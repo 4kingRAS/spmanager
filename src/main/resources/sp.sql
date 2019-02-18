@@ -24,6 +24,7 @@ insert into goods values(1,'最新款苹果笔记本电脑 MacBook Pro 2018','Ma
 insert into goods values(2,' MacBook Air 2018','MacBook Air 2018',5688.01,7999.99,9688.01,'电脑');
 insert into goods values(3,'最新华为手机，华为Mate 20 无华为不战狼！爱国就用华为手机！','Huawei Mate 20',1688.01,2999.99,4888.8,'手机');
 insert into goods values(4,'CHANEL 香奈儿五号香水（经典）红色限量版*','Chanel N°5',1288.01,1599.99,1788.99,'化妆品');
+insert into goods values(5,'Pixel3的背板采用金属与玻璃拼接的技术，其工艺难度可想而知。并且相较于前代，Pixel3上增加了无线充电功能。','Google Pixel 3',2988.01,3499.99,3788.99,'手机');
 insert into goods_type values(1, '电脑');
 insert into goods_type values(2, '手机');
 insert into goods_type values(3, '化妆品');
