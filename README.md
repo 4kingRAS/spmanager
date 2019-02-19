@@ -3,4 +3,4 @@
 
 用spring security实现了简单的权限管理，spring data实现分页器。都是一些CRUD的东西，就是练练工程能力。
 
-
+![demo1](/demo1.png "demo")
