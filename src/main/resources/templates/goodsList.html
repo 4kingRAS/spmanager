@@ -10,7 +10,7 @@
                         <a href="#" th:onclick="getByType([[${goodsType.id}]])"
                            th:id="'type'+${goodsType.id}" th:text="${goodsType.name}"></a>
                     </li>
-                    <li><button class="btn btn-default navbar-btn">+</button></li>
+                    <!--<li><button class="btn btn-default navbar-btn">+</button></li>-->
                 </ul>
                 <div class="navbar-form navbar-right" role="search">
                     <div class="input-group">
@@ -71,11 +71,15 @@
                                             <span class="if-not-collapsed">-</span>
                                         </button>
                                         <div class="btn-group">
-                                            <button class="btn btn-info btn-sm" th:if="${box.c gt 0}"
+                                            <button sec:authorize="hasAnyRole('AGENT','BUYER')"
+                                                    class="btn btn-info btn-sm" th:if="${box.c gt 0}"
                                                     data-toggle="modal" th:onclick="addCart([[${box.s.id}]])">采购</button>
-                                            <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                    th:onclick="updateItem([[${box.s.id}]])">更新</button>
-                                            <button class="btn btn-danger btn-sm" th:onclick="delItem([[${box.s.id}]])">删除</button>
+                                            <button sec:authorize="hasRole('BUYER')" class="btn btn-success btn-sm"
+                                                    th:if="${box.c eq 0}" th:onclick="addCart([[${box.s.id}]])">补货</button>
+                                            <button sec:authorize="hasRole('BUYER')" class="btn btn-success btn-sm"
+                                                    data-toggle="modal" th:onclick="updateItem([[${box.s.id}]])">更新</button>
+                                            <button sec:authorize="hasRole('HNA')" class="btn btn-danger btn-sm"
+                                                    th:onclick="delItem([[${box.s.id}]])">删除</button>
                                         </div>
                                     </td>
                                 </tr>

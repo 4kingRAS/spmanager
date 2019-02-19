@@ -147,11 +147,11 @@
                         <dd data-tit="2" th:onclick="localRefresh([['/goods']])">
                             <a data-role="root" data-level="2" >
                                 <em class="s_arrow"></em>
-                                商品详情
+                                商品目录
                             </a>
                         </dd>
                         <div sec:authorize="!hasRole('AGENT')">
-                            <dd data-tit="2">
+                            <dd data-tit="2" th:onclick="localRefresh([['/depository']])">
                                 <a data-role="root" data-level="2">
                                     <em class="s_arrow"></em>
                                     出入库记录

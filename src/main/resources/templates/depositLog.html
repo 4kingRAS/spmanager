@@ -6,11 +6,12 @@
             </div>
             <div>
                 <ul class="nav navbar-nav" >
-                    <li th:each="goodsType : ${gtList}" >
-                        <a href="#" th:onclick="getByType([[${goodsType.id}]])"
-                           th:id="'type'+${goodsType.id}" th:text="${goodsType.name}"></a>
+                    <li>
+                        <a href="#" th:onclick="getByType([['in']])" th:id="typeIn">入库</a>
                     </li>
-                    <li><button class="btn btn-default navbar-btn">+</button></li>
+                    <li>
+                        <a href="#" th:onclick="getByType([['out']])" th:id="typeOut">出库</a>
+                    </li>
                 </ul>
                 <div class="navbar-form navbar-right" role="search">
                     <div class="input-group">
@@ -26,68 +27,40 @@
     </nav>
     <div class="row">
         <div class="col-sm-2 col-md-2">
-            <h4>商品列表</h4>
+            <h4>记录列表：</h4>
         </div>
     </div>
     <legend></legend>
     <div id="depositLog" th:fragment="depositLog">
-
-        <table>
+        <table class="table table-hover table-condensed">
             <thead>
             <tr>
+                <th class="col-md-1" >日志编号</th>
+                <th class="col-md-1" >订单编号</th>
+                <th class="col-md-1" >订单类别</th>
                 <th class="col-md-1" >商品编号</th>
-                <th class="col-md-1" >商品类别</th>
-                <th class="col-md-3" >商品名称</th>
-                <th class="col-md-1" >库存数量</th>
-                <th class="col-md-2" >市场单价(元)</th>
-                <th class="col-md-3" style="text-align: center" >操作</th>
+                <th class="col-md-1" >商品数量</th>
+                <th class="col-md-2" >出/入库时间</th>
+                <th class="col-md-1" >审核员</th>
             </tr>
             </thead>
+            <tbody>
+                <tr th:each="box : ${datas}">
+                    <th class="col-md-1" th:text="${box.s.id}"></th>
+                    <td class="col-md-1" th:text="${box.c.id}"></td>
+                    <td class="col-md-1">
+                        <span class="badge" th:text="${box.c.type eq '0' ? '入库' : '出库'}"></span>
+                    </td>
+                    <td class="col-md-1" th:text="${box.s.goodsId}"></td>
+                    <td class="col-md-1" th:text="${box.s.amount}"></td>
+                    <td class="col-md-2" >
+                        <span th:text="*{#calendars.format(box.s.time,'yyyy-MM-dd HH:mm:ss')}"></span>
+                    </td>
+                    <td class="col-md-1" th:text="${box.c.checkBy}"></td>
+                </tr>
+            </tbody>
         </table>
-
-        <ul class="list-group">
-            <div th:each="box : ${datas}">
-                <li class="list-group-item" style="padding: unset">
-                    <div class="panel panel-default" style="margin-bottom: 0px">
-                        <div class="panel-heading">
-                            <table>
-                                <tr>
-                                    <th class="col-md-1" th:text="${box.s.id}"></th>
-                                    <td class="col-md-1" th:text="${box.s.type}"></td>
-                                    <td class="col-md-3" >
-                                        <span th:text="${box.s.name}"></span>
-                                        <span class="badge" >new~</span>
-                                    </td>
-                                    <td class="col-md-1" th:text="${box.c eq 0 ? '缺货' : box.c}"></td>
-                                    <td class="col-md-2" th:text="${box.s.priceForMarket}"></td>
-                                    <td class="col-md-3" style="text-align: center">
-                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${box.s.id}">
-                                            <span class="if-collapsed">+</span>
-                                            <span class="if-not-collapsed">-</span>
-                                        </button>
-                                        <div class="btn-group">
-                                            <button class="btn btn-info btn-sm" th:if="${box.c gt 0}"
-                                                    data-toggle="modal" th:onclick="addCart([[${box.s.id}]])">采购</button>
-                                            <button class="btn btn-success btn-sm" data-toggle="modal"
-                                                    th:onclick="updateItem([[${box.s.id}]])">更新</button>
-                                            <button class="btn btn-danger btn-sm" th:onclick="delItem([[${box.s.id}]])">删除</button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            </table>
-                        </div>
-                    </div>
-                </li>
-            </div>
-        </ul>
         <div th:include="Pager::pager" th:remove="tag"></div>
-    </div>
-
-    <div class="modal fade" id="addGoodsModal" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal -->
     </div>
 
     <script type="text/javascript" th:inline="javascript">

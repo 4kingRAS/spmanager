@@ -5,6 +5,7 @@ import com.eking.spmanager.dao.GoodsIdxDAO;
 import com.eking.spmanager.Utils.Box;
 import com.eking.spmanager.Utils.Tools;
 import com.eking.spmanager.domain.*;
+import com.eking.spmanager.service.DepoLogService;
 import com.eking.spmanager.service.GoodsService;
 import com.eking.spmanager.service.OrderDetailService;
 import com.eking.spmanager.service.OrderService;
@@ -39,33 +40,32 @@ public class OrderController {
 
     private static final int G_PAGE = 0;
     private static final int G_SIZE = 5;
-
-    List<Orders> ordersList;
-    Role role;
-
     class Cart {
         public Integer amount;
         public double price;
         public Integer depo;
     }
 
+    class Info {
+        public String name;
+        public Integer amount;
+    }
+
     @Autowired
     GoodsService goodsService;
-
     @Autowired
     GoodsIdxDAO gIdxDAO;
-
     @Autowired
-    DepositLogDAO logDAO;
-
+    DepoLogService depoLogService;
     @Autowired
     OrderService orderService;
-
     @Autowired
     OrderDetailService detailService;
-
     @Autowired
     Tools utils;
+
+    List<Orders> ordersList;
+    Role role;
 
     /** 订单列表页面 **/
     @RequestMapping(method = RequestMethod.GET)
@@ -104,7 +104,8 @@ public class OrderController {
                     }
                     case 1 : {
                         // passed or denied
-                        ordersList = orderService.findByCreateByAndIsCheckedNot(name, "0");
+                        ordersList = orderService.findByCreateByAndIsCheckedNotAndIsActived(
+                                                        name, "0","1");
                         break;
                     }
                     case 2 : {
@@ -157,8 +158,10 @@ public class OrderController {
             List<OrderDetail> details = detailService.findByOrderId(oid);
             List<Box> list = new ArrayList<>();
             for (OrderDetail od: details) {
-                String name = goodsService.findById(od.getGoodsId()).getName();
-                list.add(new Box(od, name));
+                Info i = new Info();
+                i.amount = gIdxDAO.findByGoodsid(od.getGoodsId()).getCount();
+                i.name = goodsService.findById(od.getGoodsId()).getName();
+                list.add(new Box(od, i));
             }
             map.addAttribute("details", list);
             return "orderListPanel";
@@ -172,7 +175,7 @@ public class OrderController {
     @ResponseBody
     @RequestMapping(value = "/deal", method = RequestMethod.POST)
     public String dealOrder(@RequestParam(value = "order") Integer oid,
-                            @RequestParam(value = "opt") String opt, Principal principal, ModelMap map) {
+                            @RequestParam(value = "opt") String opt, Principal principal) {
 
         try {
             Orders order = orderService.findById(oid);
@@ -188,13 +191,37 @@ public class OrderController {
                     GoodsIndex goodsIndex = gIdxDAO.findByGoodsid(gid);
                     if (order.getType().equals("0")) {
                         goodsIndex.setCount(goodsIndex.getCount() + amount);
-                        
                     } else {
                         goodsIndex.setCount(goodsIndex.getCount() - amount);
                     }
+                    depoLogService.makeDepositLog(order, orderDetail);
                 }
-            } else {
-                order.setIsChecked("2");
+            }
+            if (opt.equals("deny")) { order.setIsChecked("2"); }
+
+            orderService.update(order);
+            return "DONE";
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            return "ERROR";
+        }
+    }
+
+    /** 取消订单 **/
+    @ResponseBody
+    @RequestMapping(value = "/cancel", method = RequestMethod.POST)
+    public String cancelOrder(@RequestParam(value = "order") Integer oid) {
+        try {
+            Orders order = orderService.findById(oid);
+            order.setCheckBy("USER CANCELED");
+            order.setCheckAt(utils.getCurrentTime());
+            order.setIsChecked("3");
+            order.setIsActived("0");
+
+            List<OrderDetail> list = detailService.findByOrderId(oid);
+            for(OrderDetail orderDetail : list) {
+                orderDetail.setIsActived("0");
+                detailService.update(orderDetail);
             }
 
             orderService.update(order);

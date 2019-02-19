@@ -18,6 +18,8 @@ public interface OrderDAO extends JpaRepository<Orders, Integer> {
     List<Orders> findByIsCheckedNot(String isChecked);
     List<Orders> findByCreateByAndIsChecked(String createBy, String isChecked);
     List<Orders> findByCreateByAndIsCheckedNot(String createBy, String isChecked);
+    List<Orders> findByCreateByAndIsCheckedNotAndIsActived(
+            String createBy, String isChecked, String isActived);
     List<Orders> findByIsActived(String isActived);
     List<Orders> findByIsActivedAndIsChecked(String isActived, String isChecked);
 }

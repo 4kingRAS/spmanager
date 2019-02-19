@@ -49,6 +49,7 @@
                                             <span th:case="'0'">Pending</span>
                                             <span th:case="'1'">Passed</span>
                                             <span th:case="'2'">Denied</span>
+                                            <span th:case="'3'">Canceled</span>
                                         </span>
                                     </td>
                                     <td class="col-md-2" style="text-align: left">
@@ -62,8 +63,10 @@
                                                     th:if="${isChecker eq 'false' and orders.isChecked eq '0'}"
                                                     th:onclick="cancel([[${orders.id}]])">取消订单</button>
                                             <div sec:authorize="hasRole('CHECKER')">
-                                                <button class="btn btn-success btn-sm" th:onclick="pass([[${orders.id}]])">批准</button>
-                                                <button class="btn btn-danger btn-sm" th:onclick="deny([[${orders.id}]])">拒绝</button>
+                                                <button class="btn btn-success btn-sm" th:if="${orders.isChecked eq '0'}"
+                                                        th:onclick="pass([[${orders.id}]])">批准</button>
+                                                <button class="btn btn-danger btn-sm" th:if="${orders.isChecked eq '0'}"
+                                                        th:onclick="deny([[${orders.id}]])">拒绝</button>
                                             </div>
                                         </div>
                                     </td>
@@ -118,6 +121,19 @@
                 url: "/order/deal",
                 type: 'post',
                 data: {"order": id, "opt": "deny"},
+                async: false,
+                success: function () {
+                    $("#orderTable").load("/order");
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function cancel(id){
+            $.ajax({
+                url: "/order/cancel",
+                type: 'post',
+                data: {"order": id},
                 async: false,
                 success: function () {
                     $("#orderTable").load("/order");

@@ -37,4 +37,10 @@ public class OrderDetailServiceImpl implements OrderDetailService {
         return orderDetailDAO.findByOrderId(id);
     }
 
+    @Transactional
+    public void update(OrderDetail order) {
+        orderDetailDAO.save(order);
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "UPDATE ", order.toString());
+    }
+
 }

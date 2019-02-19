@@ -21,5 +21,7 @@ public interface OrderService {
     List<Orders> findByIsCheckedNot(String isChecked);
     List<Orders> findByCreateByAndIsChecked(String createBy, String isChecked);
     List<Orders> findByCreateByAndIsCheckedNot(String createBy, String isChecked);
+    List<Orders> findByCreateByAndIsCheckedNotAndIsActived(
+            String createBy, String isChecked, String isActived);
     List<Orders> findByIsActived(String isActived);
 }

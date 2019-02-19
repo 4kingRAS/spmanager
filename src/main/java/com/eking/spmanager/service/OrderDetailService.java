@@ -13,4 +13,5 @@ import java.util.List;
 public interface OrderDetailService {
     void addOrderDetail(OrderDetail od);
     List<OrderDetail> findByOrderId(Integer id);
+    void update(OrderDetail order);
 }

@@ -73,6 +73,12 @@ public class OrderServiceImpl implements OrderService {
         return orderDAO.findByCreateByAndIsCheckedNot(createBy, isChecked);
     }
 
+    public List<Orders> findByCreateByAndIsCheckedNotAndIsActived(
+                        String createBy, String isChecked, String isActived) {
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND DONE and cby", createBy);
+        return orderDAO.findByCreateByAndIsCheckedNotAndIsActived(createBy, isChecked, isActived);
+    }
+
     public List<Orders> findByCreateByAndIsChecked(String createBy, String isChecked){
         LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND PENDING and cby", createBy);
         return orderDAO.findByCreateByAndIsChecked(createBy, isChecked);
