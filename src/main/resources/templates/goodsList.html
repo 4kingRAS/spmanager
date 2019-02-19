@@ -17,7 +17,8 @@
                         <input id="search" class="form-control" name="search"
                                type="text" placeholder="想要什么？">
                         <span class="input-group-btn">
-                            <button type="button"  class="btn btn-default">搜索</button>
+                            <button type="button" onclick="searchGoods()"
+                                    class="btn btn-default">搜索</button>
                         </span>
                     </div><!-- /input-group -->
                 </div>
@@ -228,6 +229,21 @@
                 }
                 // TRUE 异步 FALSE 同步
             });
+        }
+
+        function searchGoods() {
+            var data = $("#search").val();
+            $.ajax({
+                url: "/goods/search",
+                type: 'post',
+                data: {keyword: data},
+                async: false,
+                success: function () {
+                    getPage(0);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+
         }
 
         $(".nav a").on("click", function(){

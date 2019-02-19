@@ -48,6 +48,10 @@ public class DepoLogServiceImpl implements DepoLogService {
         return depositLogDAO.findById(id).get();
     }
 
+    public List<DepositLog> findByType(String type) {
+        return depositLogDAO.findByType(type);
+    }
+
     public List<DepositLog> findAllLog() {
         LOGGER.info("[eKing log]: {}  : - {}", entity, "FIND ALL");
         return depositLogDAO.findAll();

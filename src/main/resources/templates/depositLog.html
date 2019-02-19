@@ -68,7 +68,7 @@
 
         function getByType(type){
             $.ajax({
-                url: "/goods/bytype",
+                url: "/depository/type",
                 type: 'post',
                 data: {"type": type},
                 async: false,
@@ -81,12 +81,12 @@
 
         function getPage(p){
             $.ajax({
-                url: "/goods/list",
+                url: "/depository",
                 type: 'post',
                 data: {"page": p},
                 async: false,
                 success: function (data) {
-                    $("#goodsTable").html(data);
+                    $("#depositLog").html(data);
                 }
                 // TRUE 异步 FALSE 同步
             });

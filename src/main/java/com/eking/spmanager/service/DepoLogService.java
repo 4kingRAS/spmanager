@@ -16,6 +16,7 @@ public interface DepoLogService {
     Integer addLog(DepositLog log);
     void update(DepositLog log);
     DepositLog findById(Integer id);
+    List<DepositLog> findByType(String type);
     List<DepositLog> findAllLog();
     DepositLog makeDepositLog(Orders order, OrderDetail detail);
 }
