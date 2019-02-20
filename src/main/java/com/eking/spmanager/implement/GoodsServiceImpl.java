@@ -62,6 +62,11 @@ public class GoodsServiceImpl implements GoodsService {
         return goodsDAO.findByType(type);
     }
 
+    public List<Goods> findByNameIsLike(String name) {
+        LOGGER.info("[eKing log]: {}  {}: - {}", entity, "FIND LIKE: ", name);
+        return goodsDAO.findByNameIsLike("%"+name+"%");
+    }
+
     @Override
     public List<Goods> findAllGoods() {
         LOGGER.info("[eKing log]: {}  : - {}", entity, "FIND ALL");

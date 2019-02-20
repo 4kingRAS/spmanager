@@ -16,6 +16,7 @@ public interface GoodsService {
     Goods findByName(String name);
     Goods findById(Integer id);
     List<Goods> findByType(String type);
+    List<Goods> findByNameIsLike(String name);
     List<Goods> findAllGoods();
     Page<Goods> findGoodsNoCondition(Integer page, Integer size);
     Page<Goods> findGoodsWithCondition(Integer page, Integer size, final Goods goods);

@@ -8,8 +8,10 @@ import com.eking.spmanager.domain.Goods;
 import com.eking.spmanager.domain.GoodsIndex;
 import com.eking.spmanager.domain.GoodsType;
 import com.eking.spmanager.service.GoodsService;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -18,7 +20,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -98,6 +99,14 @@ public class GoodsController {
                                 @RequestParam(value = "type", defaultValue = "-1") Integer type) {
         gType = type;
         return "Success";
+    }
+
+    /** 模糊搜索商品 **/
+    @ResponseBody
+    @RequestMapping(value = "/search", method = RequestMethod.POST)
+    public String searchGoods(ModelMap map, @RequestParam(value = "keyword") String key) {
+
+        return "ok";
     }
 
     @RequestMapping(value = "/addGM", method = RequestMethod.GET)

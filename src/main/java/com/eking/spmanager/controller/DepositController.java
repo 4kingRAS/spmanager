@@ -63,6 +63,7 @@ public class DepositController {
         try {
             gType = -1; // all
             makeList(gType);
+            Collections.reverse(list);
             map.addAttribute("datas", utils.convertPage(G_PAGE, G_SIZE, list));
 
             return "depositLog";
@@ -77,6 +78,7 @@ public class DepositController {
     public String postList(ModelMap map, @RequestParam(value = "page", defaultValue = "0") Integer page) {
         try {
             makeList(gType);
+            Collections.reverse(list);
             map.addAttribute("datas", utils.convertPage(page, G_SIZE, list));
 
             return "depositLog::depositLog";

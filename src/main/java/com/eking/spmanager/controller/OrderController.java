@@ -192,6 +192,9 @@ public class OrderController {
                     if (order.getType().equals("0")) {
                         goodsIndex.setCount(goodsIndex.getCount() + amount);
                     } else {
+                        if (goodsIndex.getCount() - amount < 0) {
+                            return "failed";
+                        }
                         goodsIndex.setCount(goodsIndex.getCount() - amount);
                     }
                     depoLogService.makeDepositLog(order, orderDetail);

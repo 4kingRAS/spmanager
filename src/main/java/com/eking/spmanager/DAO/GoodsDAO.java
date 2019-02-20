@@ -21,5 +21,6 @@ public interface GoodsDAO extends JpaRepository<Goods, Integer> {
      * 在实体类中声明@NamedQuery注解，findByName方法会使用@NamedQuery注解标注的查询语句去查询
      * */
     List<Goods> findByType(String type);
+    List<Goods> findByNameIsLike(String name);
     Page<Goods> findAll(Specification<Goods> name, Pageable pageable);
 }

@@ -109,8 +109,12 @@
                 type: 'post',
                 data: {"order": id, "opt": "pass"},
                 async: false,
-                success: function () {
-                    $("#orderTable").load("/order");
+                success: function (data) {
+                    if (data == "failed") {
+                        alert("库存不足！");
+                    } else {
+                        $("#orderTable").load("/order");
+                    }
                 }
                 // TRUE 异步 FALSE 同步
             });
