@@ -13,15 +13,15 @@
         <table>
             <thead>
             <tr>
-                <th class="col-md-1" >订单编号</th>
-                <th class="col-md-1" >订单类别</th>
+                <th class="col-xs-1" >订单编号</th>
+                <th class="col-xs-1" >订单类别</th>
                 <th class="col-md-1" >成交总价(元)</th>
-                <th class="col-md-1" >商品种数</th>
+                <th class="col-xs-1" >商品种数</th>
                 <th class="col-md-2" >创建时间</th>
                 <th class="col-md-2" >成交时间
                 <th class="col-md-1" th:text="${isChecker eq 'true' ? '来源' : '审核员'}" ></th>
                 <th class="col-md-1" >状态</th>
-                <th class="col-md-2" style="text-align: left" >操作</th>
+                <th class="col-xs-2" style="text-align: left" >操作</th>
             </tr>
             </thead>
         </table>
@@ -32,10 +32,10 @@
                         <div class="panel-heading">
                             <table>
                                 <tr>
-                                    <th class="col-md-1" th:text="${orders.id}"></th>
-                                    <td class="col-md-1" th:text="${orders.type eq '1' ? '销售' : '采购'}"></td>
+                                    <th class="col-xs-1" th:text="${orders.id}"></th>
+                                    <td class="col-xs-1" th:text="${orders.type eq '1' ? '销售' : '采购'}"></td>
                                     <td class="col-md-1" th:text="${orders.price}"></td>
-                                    <td class="col-md-1" th:text="${orders.amount}"></td>
+                                    <td class="col-xs-2" style="text-align: center" th:text="${orders.amount}"></td>
                                     <td class="col-md-2" >
                                         <span th:text="*{#calendars.format(orders.createAt,'yyyy-MM-dd HH:mm:ss')}"></span>
                                     </td>
@@ -52,7 +52,7 @@
                                             <span th:case="'3'">Canceled</span>
                                         </span>
                                     </td>
-                                    <td class="col-md-2" style="text-align: left">
+                                    <td class="col-xs-2" style="text-align: left">
                                         <button class="btn btn-default btn-sm collapsed" data-toggle="collapse"
                                                 th:onclick="getDetail([[${orders.id}]])" th:href="'#pn'+${orders.id}">
                                             <span th:id="'col'+${orders.id}" class="if-collapsed">+</span>

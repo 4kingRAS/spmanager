@@ -6,7 +6,6 @@ import com.eking.spmanager.domain.DepositLog;
 import com.eking.spmanager.domain.Orders;
 import com.eking.spmanager.service.DepoLogService;
 import com.eking.spmanager.service.OrderService;
-import org.hibernate.criterion.Order;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -15,7 +14,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.security.Principal;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -31,6 +29,8 @@ import java.util.List;
 public class DepositController {
     private static final int G_PAGE = 0;
     private static final int G_SIZE = 15;
+    private Integer gType = -1;
+    private List<Box> list;
 
     @Autowired
     DepoLogService logService;
@@ -39,12 +39,11 @@ public class DepositController {
     @Autowired
     Tools utils;
 
-    private List<Box> list;
-    private Integer gType = -1;
 
     public void makeList(Integer type) {
         list = new ArrayList<>();
         List<DepositLog> logList;
+
         if (type != -1) {
             logList = logService.findByType(type.toString());
         } else {

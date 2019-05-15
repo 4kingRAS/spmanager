@@ -41,12 +41,12 @@
         <table>
             <thead>
                 <tr>
-                    <th class="col-md-1" >商品编号</th>
+                    <th class="col-xs-1" >商品编号</th>
                     <th class="col-md-1" >商品类别</th>
                     <th class="col-md-3" >商品名称</th>
-                    <th class="col-md-1" >库存数量</th>
+                    <th class="col-md-2" >库存数量</th>
                     <th class="col-md-2" >市场单价(元)</th>
-                    <th class="col-md-3" style="text-align: center" >操作</th>
+                    <th class="col-md-2" style="text-align: center" >操作</th>
                 </tr>
             </thead>
         </table>
@@ -64,9 +64,9 @@
                                         <span th:text="${box.s.name}"></span>
                                         <span class="badge" >new~</span>
                                     </td>
-                                    <td class="col-md-1" th:text="${box.c eq 0 ? '缺货' : box.c}"></td>
+                                    <td class="col-md-2" th:text="${box.c eq 0 ? '缺货' : box.c}"></td>
                                     <td class="col-md-2" th:text="${box.s.priceForMarket}"></td>
-                                    <td class="col-md-3" style="text-align: center">
+                                    <td class="col-md-2" style="text-align: center">
                                         <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${box.s.id}">
                                             <span class="if-collapsed">+</span>
                                             <span class="if-not-collapsed">-</span>
