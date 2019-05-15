@@ -1,0 +1,155 @@
+<div class="contentDiv">
+    <div id="userTable" th:fragment="userTable">
+        <table class="table table-hover table-condensed">
+            <legend>
+                <strong>总览</strong>
+            </legend>
+
+            <button style="margin-right: 30px" class="btn btn-primary" data-toggle="modal" href="#add1user">添加用户</button>
+        </table>
+        <table class="table table-hover table-condensed">
+            <legend>
+                <strong><p class="text">用户列表</p></strong>
+            </legend>
+            <thead>
+                <tr>
+                    <th>用户编号</th>
+                    <th>用户名</th>
+                    <th>密码</th>
+                    <th>所在公司</th>
+                    <th>用户群组</th>
+                    <th>是否在线</th>
+                    <th>最后登录时间</th>
+                    <th>是否有效</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="box : ${datas}">
+                    <th scope="row" th:text="${box.s.id}"></th>
+                    <td th:text="${box.s.username}"></td>
+                    <td th:text="${box.s.password}"></td>
+                    <td th:text="${box.s.corpname}"></td>
+                    <td th:text="${box.c}"></td>
+                    <td>
+                        <span class="badge" th:text="${box.s.isOnline eq '1' ? '是' : '否'}"></span>
+                    </td>
+                    <td th:text="${box.s.lastLogin}"></td>
+                    <td>
+                        <span class="badge" th:text="${box.s.isActived eq '1' ? '有效' : '封禁'}"></span>
+                    </td>
+                    <td class="col-lg-1">
+                        <div class="btn-group">
+                            <button class="btn btn-danger btn-sm" th:onclick="'javascript:dealUser('+${box.s.id}+')'" th:text="${box.s.isActived eq '1' ? '封禁' : '解封'}"></button>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <div th:include="Pager::pager" th:remove="tag"></div>
+    </div>
+    <div class="modal fade" id="add1user" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title" id="my">添加用户</h4>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-hover table-condensed">
+                        <legend>
+                            <strong>
+                                <span text="添加用户"></span>
+                            </strong>
+                        </legend>
+                        <thead>
+                        <tr>
+                            <th>用户名</th>
+                            <th>公司名</th>
+                            <th>用户群组</th>
+                            <th>密码</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <input type="hidden" id="aduId" />
+                            <td>
+                                <input type="text" id="aduName" placeholder="用户名限20字符以内"/>
+                            </td>
+                            <td>
+                                <input type="text" id="aduCorp" placeholder="请输入公司名"/>
+                            </td>
+                            <td>
+                                <select id="aduGroup" class="selectpicker show-tick" data-live-search="true" th:field="*{groupList}">
+                                    <option th:each="userGroup : ${groupList}" th:value="${userGroup.id}" th:text="${userGroup.name}"></option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="password" id="aduPsw" placeholder="请输入密码" />
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" >关闭</button>
+                        <button type="button" class="btn btn-primary" onclick="addUser()" >
+                            提交
+                        </button>
+                    </div>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+
+        /*<![CDATA[*/
+        function addUser(){
+            var un = $("#aduName").val();
+            var up = $("#aduPsw").val();
+            var uc = $("#aduCorp").val();
+            var ug = $("#aduGroup").val();
+
+            $.ajax({
+                url: "/user?add",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({username: un, password: up, corpname: uc, group: ug}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+            $("#add1user").on('hidden.bs.modal', function (e) {
+                $('#userTable').load("/user/fresh");
+            }).modal('hide');
+        }
+
+        function getPage(p){
+            $.ajax({
+                url: "/user/fresh",
+                type: 'post',
+                data: {"page": p},
+                async: false,
+                success: function (data) {
+                    $("#userTable").html(data);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function dealUser(id){
+
+            $.ajax({
+                url: "/user?deal",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id: id}),
+                async: false
+            });
+
+            $('#userTable').load("/user/fresh");
+        }
+
+        /*]]>*/
+    </script>
+</div>

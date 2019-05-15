@@ -1,0 +1,242 @@
+<div id="makeOrder" th:fragment="makeOrder" >
+    <div class="contentDiv">
+        <div class="row">
+            <div class="col-sm-2 col-md-2">
+                <h4>订单列表</h4>
+            </div>
+        </div>
+        <legend></legend>
+        <div th:if="${isEmptyCart eq 'false'}">
+            <table >
+                <thead>
+                <tr>
+                    <th class="col-md-1" >确认选择</th>
+                    <th class="col-md-1" >商品类别</th>
+                    <th class="col-md-2" >商品名称</th>
+                    <th class="col-md-2" >参考价格(元)</th>
+                    <th class="col-md-1" >库存</th>
+                    <th class="col-md-2" >提交价格(元)</th>
+                    <th class="col-md-1" >购买数量</th>
+                    <th class="col-md-2" style="text-align: center" >操作</th>
+                </tr>
+                </thead>
+            </table>
+            <ul class="list-group">
+                <div th:each="box : ${order}">
+                <li class="list-group-item" style="padding: unset">
+                    <div class="panel panel-default" style="margin-bottom: 0px">
+                        <div class="panel-heading">
+                            <table>
+                                <tr>
+                                    <td class="col-md-1">
+                                        <input type="checkbox" th:id="'gck'+${box.s.id}" th:value="${box.s.id}"
+                                               th:onclick="checkStat([[${box.s.id}]])" checked="checked">
+                                    </td>
+                                    <td class="col-md-1" th:text="${box.s.type}"></td>
+                                    <td class="col-md-2" >
+                                        <span th:text="${box.s.name}"></span>
+                                    </td>
+                                    <td class="col-md-2"
+                                        th:text="${isBuyer eq 'true' ? box.s.priceForBuy : box.s.priceForSell}">
+
+                                    </td>
+                                    <td class="col-md-1" th:text="${box.c.depo}" th:id="'dp'+${box.s.id}">
+                                    </td>
+                                    <td class="col-md-2" >
+                                        <span th:id="'pr'+${box.s.id}" th:text="${box.c.price}"></span>
+                                    </td>
+                                    <td class="col-md-1" >
+                                        <span th:id="'am'+${box.s.id}" th:text="${box.c.amount}"></span>
+                                        <span class="badge" th:id="'ck'+${box.s.id}" th:if="${isBuyer eq 'false'}"
+                                              th:style="${box.c.amount gt box.c.depo ? 'display:inline' : 'display:none'}">超出库存</span>
+                                    </td>
+                                    <td class="col-md-2" style="text-align: right">
+                                        <div class="btn-group">
+                                            <button type="button" class="btn btn-success btn-sm" th:id="'edit'+${box.s.id}"
+                                                    th:onclick="GEdit([[${box.s.id}]])">修改</button>
+                                            <button type="button" class="btn btn-danger btn-sm"
+                                                    th:onclick="delItem([[${box.s.id}]])">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </li>
+            </div>
+            </ul>
+            <div class="alert alert-info">
+                共<span id="statAm" th:text="${amount}"></span>个商品
+                &nbsp;&nbsp;总价:<sapn id="statPr" th:text="${sumPrice}"></sapn>（元）
+            </div>
+            <div style="margin-right: 10px; float: right!important;">
+                <button class="btn btn-primary" onclick="checkInput()">提交订单</button>
+            </div>
+        </div>
+
+        <h3 th:if="${isEmptyCart eq 'true'}" style="text-align: center">
+            您的购物车空空如也
+        </h3>
+
+        <div class="modal fade" id="modalTips" tabindex="-1" role="dialog" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                        <h3 class="modal-title">请确认订单!</h3>
+                    </div>
+                    <legend></legend>
+                    <div class="modal-body">
+                        <div class="alert alert-info">
+                            共<span id="tpAm" ></span>个商品
+                            &nbsp;&nbsp;总价:<sapn id="tpPr"></sapn>（元）
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" onclick="postOrder()" >
+                            确定
+                        </button>
+                    </div>
+
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal -->
+        </div>
+        <div id="isbuyer" th:value="${isBuyer eq 'true' ? true : false}" style="display: none"></div>
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+
+        var amount = parseInt($("#statAm").text());
+        var sum = parseFloat($("#statPr").text());
+
+        function checkStat(id) {
+            //TODO: checkbox could unavailable when editing.
+
+            var am = $("#am"+id);
+            if ($("#gck" + id).is(":checked")) {
+                amount = amount + 1;
+                sum = sum + parseInt(am.text()) * parseFloat($("#pr"+id).text());
+            }
+            else {
+                amount = amount - 1;
+                sum = sum - parseInt(am.text()) * parseFloat($("#pr"+id).text());
+            }
+
+            $("#statAm").text(amount);
+            $("#statPr").text(sum.toFixed(2));
+        }
+
+        function GEdit(id){
+            var b = $("#edit"+id);
+            var isBuyer = $("#isbuyer").val();
+
+            if (b.html() == "修改") {
+                var p = $("#pr" + id).text();
+                var a = $("#am" + id).text();
+                sum = sum -  parseInt(a) * parseFloat(p);
+                console.log(sum);
+
+                $("#pr" + id).html("<input type=\"text\" style=\"width: 100px\" id=\"pri"+ id +"\"\n" +
+                    "value=\"" + p + "\">");
+                $("#am" + id).html("<input type=\"text\" style=\"width: 60px\" id=\"ami"+ id +"\"\n" +
+                    "value=\"" + a + "\">");
+                b.html("保存");
+            }
+            else {
+                var am = $("#ami" + id).val();
+                sum = sum + am * $("#pri" + id).val();
+
+                $("#pr" + id).html("<span>"+ $("#pri" + id).val() +"</span>");
+                $("#am" + id).html("<span>"+ am +"</span>");
+                b.html("修改");
+                if (!isBuyer) {
+                    if (am <= parseInt($("#dp" + id).text())) {
+                        $("#ck" + id).hide();
+                    } else {
+                        $("#ck" + id).show();
+                    }
+                }
+                $("#statPr").text(sum.toFixed(2));
+            }
+        }
+
+        function checkInput() {
+            var flag = true; /* validate input form */
+            $("#cartSign").hide();
+
+            $("span.badge").each(function () {
+                if ( !($(this).is(":hidden")) ) {
+                    flag = false;
+                }
+            });
+            if (!flag) {
+                alert("库存不足，请修改！");
+                return;
+            }
+            if($("input").length > ($("[checked]").length + 1)) {
+                alert("请保存修改！");
+                return;
+            }
+
+            $("#tpAm").text(amount);
+            $("#tpPr").text(sum.toFixed(2));
+            $("#modalTips").modal('show');
+        }
+
+        function postOrder() {
+            $.ajax({
+                url: "/order/orderMaker?make",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({price: sum.toFixed(2), amount: amount}),
+                async: false,
+                success: function (id) {
+                    dealSubOrder(id);
+                }
+            });
+            $("#modalTips").on('hidden.bs.modal', function () {
+                $('#makeOrder').load("/order/orderMaker");
+            }).modal('hide');
+        }
+
+        function dealSubOrder(oid) {
+            var dataArray = [];
+            var i = 0;
+            $("[checked]").each(function(){
+                if($(this).is(":checked")) {
+                    var gid = $(this).val();
+                    var amount = $("#am" + gid).text();
+                    var price = $("#pr" + gid).text();
+                    var data = {OrderDetail: {orderId: oid, goodsId: gid, count: amount, price: price}};
+                    dataArray.push(data);
+                    i++;
+                }
+            });
+            dataArray.push({Amount: i}); /* must be string for JAVA MAPPER */
+            postSubOrder(dataArray);
+        }
+
+        function postSubOrder(dataArray) {
+            $.ajax({
+                url: "/order/orderMaker?makeSub",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify(dataArray),
+                async: false
+            });
+        }
+
+        function delItem(id) {
+            $.ajax({
+                url: "/order/orderMaker/clear",
+                type: 'post',
+                data: {"gid": id},
+                async: false
+            });
+            $('#makeOrder').load("/order/orderMaker");
+        }
+
+    </script>
+</div><!-- fragment end -->

@@ -1,0 +1,55 @@
+
+<div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+    <h4 class="modal-title" id="my">添加商品</h4>
+</div>
+<div class="modal-body">
+    <strong>
+        <span text="添加商品"></span>
+    </strong>
+    <form class="form-horizontal" role="form">
+        <input type="hidden" id="gsId" />
+        <div class="form-group">
+            <label for="gsName" class="col-sm-2 control-label">商品名称</label>
+            <div class="col-sm-5">
+                <input type="text" class="form-control" id="gsName" placeholder="请输入名字">
+            </div>
+            <label for="gsType" class="col-sm-2 control-label">商品类别</label>
+            <div class="col-sm-2">
+                <select id="gsType" class="selectpicker show-tick" data-live-search="true" th:field="*{gtList}">
+                    <option th:each="goodsType : ${gtList}" th:value="${goodsType.id}" th:text="${goodsType.name}"></option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="gsPB" class="col-sm-3 control-label">成本价（元）</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="gsPB" placeholder="111.00">
+            </div>
+            <label for="gsPS" class="col-sm-3 control-label"> 代理价（元）</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="gsPS" placeholder="111.00">
+            </div>
+            <label for="gsPM" class="col-sm-3 control-label">市场价（元）</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="gsPM" placeholder="111.00">
+            </div>
+            <label for="gsAM" class="col-sm-3 control-label">库存数量</label>
+            <div class="col-sm-2">
+                <input type="text" class="form-control" id="gsAM" placeholder="0">
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="gsDscp" class="col-sm-2 control-label">商品描述</label>
+            <div class="col-sm-8">
+                <input type="text" class="form-control" id="gsDscp" placeholder="请输入描述">
+            </div>
+        </div>
+</div>
+</form>
+</div>
+<div class="modal-footer">
+    <button type="button" class="btn btn-primary" onclick="updateGoods()" >
+        提交
+    </button>
+</div>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/all.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/bootstrap.min.css}" />
+    <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/all.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap-select.js}"></script>
+    <script type="text/javascript" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <script>
+        $(function (){
+            $("[data-toggle='popover']").popover({
+                trigger: 'hover', //等于data-trigger="hover"
+                html: true,
+            });
+        });
+
+        function localRefresh(url) {
+            // 装载局部刷新返回的页面
+            $('#refresh').load(url);
+        }
+
+        function offline(){
+            $.ajax({
+                url: "?off",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({name: 1}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+
+            var temp = document.createElement("form");
+            temp.action = '/logout';
+            temp.method = "post";
+            temp.style.display = "none";
+            document.body.appendChild(temp);
+            temp.submit();
+        }
+    </script>
+    <style>
+        body {
+            overflow-x:hidden;
+        }
+        [data-toggle="collapse"].collapsed .if-not-collapsed {
+            display: none;
+        }
+        [data-toggle="collapse"]:not(.collapsed) .if-collapsed {
+            display: none;
+        }
+    </style>
+
+    <title>供销系统</title>
+</head>
+<body>
+<div class="top">
+    <div class="logo"></div>
+    <!-- <div class="m_tit">元数据信息列表 <i class="d_arrow m_l10"></i></div> -->
+    <div class="t_aciton">
+        <ul>
+            <li>
+                <a>
+                    <input type="submit" class="btn btn-default btn-sm" value="注销" onclick="offline()"/>
+                </a>
+            </li>
+            <li>
+                <span th:text="${info}" th:title="${dscp}"
+                      data-trigger="hover" data-toggle="popover" data-placement="bottom">
+                </span>
+            </li>
+            <li>
+                <span th:field="*{user}" style="margin-right: 10px" th:text="${user.username}" th:title="'用户状态：'+${user.isActived eq '1' ? '有效':'无效'}"
+                      data-trigger="hover" data-toggle="popover" data-placement="bottom"></span>
+                <i class="u_pic m_r10" ><img src="images/JAVA.jpg"></i>
+            </li>
+        </ul>
+    </div>
+    <div class="meau_btn icon20" id="meau_btn"></div>
+</div>
+<div class="m_left" id="m_left">
+    <div class="meau" id="meau">
+        <ul>
+            <li data-tit="1"><a class="on" data-role="root" data-level="1"><i class="icon30 m01"></i>总览</a></li>
+            <div sec:authorize="!hasRole('CHECKER')">
+                <li data-tit="1">
+                    <a data-role="root" data-level="1" th:onclick="localRefresh([['/order/orderMaker']])">
+                        <i class="icon30 m04"></i>
+                        购物车 <span class="badge" id="cartSign" style="display: none;background-color: red">!</span>
+                    </a>
+                </li>
+            </div>
+            <li data-tit="1">
+                <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m02"></i>订单管理</a>
+                <div class="sub_meau" data-role="tree_action" data-con="1">
+                    <dl>
+                        <dd><a data-role="root" data-level="2" th:onclick="localRefresh([['/order']])">
+                                <em class="s_arrow"></em>全部订单
+                            </a>
+                        </dd>
+                        <div sec:authorize="hasRole('CHECKER')">
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=1']])">
+                                    <em class="s_arrow"></em>已审核
+                                </a>
+                            </dd>
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=0']])">
+                                    <em class="s_arrow"></em>未审核
+                                </a>
+                            </dd>
+                        </div>
+                        <div sec:authorize="!hasRole('CHECKER')">
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=1']])">
+                                    <em class="s_arrow"></em>已完成
+                                </a>
+                            </dd>
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=2']])">
+                                    <em class="s_arrow"></em>审核中
+                                </a>
+                            </dd>
+                            <dd>
+                                <a data-role="root" data-level="2" th:onclick="localRefresh([['/order?type=0']])">
+                                    <em class="s_arrow"></em>已取消
+                                </a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </li>
+            <li data-tit="1">
+                <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m03"></i>仓库管理</a>
+                <div class="sub_meau" data-role="tree_action" data-con="1">
+                    <dl>
+                        <dd data-tit="2" th:onclick="localRefresh([['/goods/test']])">
+                            <a data-role="root" data-level="2">
+                                <em class="s_arrow"></em>
+                                仓库总览
+                            </a>
+                        </dd>
+                        <dd data-tit="2" th:onclick="localRefresh([['/goods']])">
+                            <a data-role="root" data-level="2" >
+                                <em class="s_arrow"></em>
+                                商品目录
+                            </a>
+                        </dd>
+                        <div sec:authorize="!hasRole('AGENT')">
+                            <dd data-tit="2" th:onclick="localRefresh([['/depository']])">
+                                <a data-role="root" data-level="2">
+                                    <em class="s_arrow"></em>
+                                    出入库记录
+                                </a>
+                            </dd>
+                        </div>
+                    </dl>
+                </div>
+            </li>
+            <div sec:authorize="hasRole('HNA')">
+                <li data-tit="1">
+                <a data-role="root" data-level="1"><em class="m_arrow"></em><i class="icon30 m05"></i>系统管理</a>
+                <div class="sub_meau" data-role="tree_action" data-con="1">
+                    <dl>
+                        <dd data-tit="2" th:onclick="localRefresh([['/user']])">
+                            <a data-role="root" data-level="2">
+                                <em class="s_arrow"></em>
+                                用户管理
+                            </a>
+                        </dd>
+                        <dd data-tit="2" th:onclick="localRefresh([['/manager']])">
+                            <a data-role="root" data-level="2">
+                                <em class="s_arrow"></em>
+                                群组管理
+                            </a>
+                        </dd>
+                    </dl>
+                </div>
+            </li>
+            <div>
+        </ul>
+    </div>
+</div>
+<div class="main sub_main">
+    <h4>
+        <p class="bg-primary">  STACK | Springboot + hibernate + thymeleaf + bootstrap |</p>
+    </h4>
+    <div id="refresh" th:fragment="refresh" style="padding: 5px">
+        <!--content-->
+    </div>
+</div>
+
+</body>
+</html>

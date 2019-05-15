@@ -1,0 +1,255 @@
+<div class="contentDiv">
+    <nav class="navbar navbar-default" role="navigation">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a class="navbar-brand" href="#">商品类别： </a>
+            </div>
+            <div>
+                <ul class="nav navbar-nav" >
+                    <li th:each="goodsType : ${gtList}" >
+                        <a href="#" th:onclick="getByType([[${goodsType.id}]])"
+                           th:id="'type'+${goodsType.id}" th:text="${goodsType.name}"></a>
+                    </li>
+                    <!--<li><button class="btn btn-default navbar-btn">+</button></li>-->
+                </ul>
+                <div class="navbar-form navbar-right" role="search">
+                    <div class="input-group">
+                        <input id="search" class="form-control" name="search"
+                               type="text" placeholder="想要什么？">
+                        <span class="input-group-btn">
+                            <button type="button" onclick="searchGoods()"
+                                    class="btn btn-default">搜索</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+            </div>
+        </div>
+    </nav>
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <h4>商品列表</h4>
+        </div>
+        <div sec:authorize="hasAnyRole('HNA','BUYER')">
+            <div style="margin-right: 20px; float: right!important;">
+                <button id="addGoods"  class="btn btn-primary">添加商品</button>
+            </div>
+        </div>
+    </div>
+    <legend></legend>
+    <div id="goodsTable" th:fragment="goodsTable">
+
+        <table>
+            <thead>
+                <tr>
+                    <th class="col-xs-1" >商品编号</th>
+                    <th class="col-md-1" >商品类别</th>
+                    <th class="col-md-3" >商品名称</th>
+                    <th class="col-md-2" >库存数量</th>
+                    <th class="col-md-2" >市场单价(元)</th>
+                    <th class="col-md-2" style="text-align: center" >操作</th>
+                </tr>
+            </thead>
+        </table>
+
+        <ul class="list-group">
+            <div th:each="box : ${datas}">
+                <li class="list-group-item" style="padding: unset">
+                    <div class="panel panel-default" style="margin-bottom: 0px">
+                        <div class="panel-heading">
+                            <table>
+                                <tr>
+                                    <th class="col-md-1" th:text="${box.s.id}"></th>
+                                    <td class="col-md-1" th:text="${box.s.type}"></td>
+                                    <td class="col-md-3" >
+                                        <span th:text="${box.s.name}"></span>
+                                        <span class="badge" >new~</span>
+                                    </td>
+                                    <td class="col-md-2" th:text="${box.c eq 0 ? '缺货' : box.c}"></td>
+                                    <td class="col-md-2" th:text="${box.s.priceForMarket}"></td>
+                                    <td class="col-md-2" style="text-align: center">
+                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse" th:href="'#pn'+${box.s.id}">
+                                            <span class="if-collapsed">+</span>
+                                            <span class="if-not-collapsed">-</span>
+                                        </button>
+                                        <div class="btn-group">
+                                            <button sec:authorize="hasAnyRole('AGENT','BUYER')"
+                                                    class="btn btn-info btn-sm" th:if="${box.c gt 0}"
+                                                    data-toggle="modal" th:onclick="addCart([[${box.s.id}]])">采购</button>
+                                            <button sec:authorize="hasRole('BUYER')" class="btn btn-success btn-sm"
+                                                    th:if="${box.c eq 0}" th:onclick="addCart([[${box.s.id}]])">补货</button>
+                                            <button sec:authorize="hasRole('BUYER')" class="btn btn-success btn-sm"
+                                                    data-toggle="modal" th:onclick="updateItem([[${box.s.id}]])">更新</button>
+                                            <button sec:authorize="hasRole('HNA')" class="btn btn-danger btn-sm"
+                                                    th:onclick="delItem([[${box.s.id}]])">删除</button>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div th:id="'pn'+${box.s.id}" class="panel-collapse collapse">
+                            <div class="panel-body" style="padding: 5px">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <h5>商品信息：</h5>
+                                        <div class="alert alert-info"  style="text-align: left">
+                                            进货价(元):<span th:text="${box.s.priceForBuy}"></span>
+                                            &nbsp;&nbsp;建议零售价(元):<sapn th:text="${box.s.priceForSell}"></sapn>
+                                        </div>
+                                        <legend></legend>
+                                        <blockquote style="margin: 0px">
+                                            <h5 th:text="${box.s.description}"></h5>
+                                        </blockquote>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="#" class="thumbnail" style="margin-bottom: 0px">
+                                            <img th:src="@{'/images/goods/'+${box.s.id}+'.jpg'}">
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </ul>
+        <div th:include="Pager::pager" th:remove="tag"></div>
+    </div>
+
+    <div class="modal fade" id="addGoodsModal" tabindex="-1" role="dialog" aria-labelledby="my" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="modal fade" id="addCartModal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">请确认订单</h4>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="postCart()" >
+                        提交
+                    </button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+
+        $("#addGoods").click(function(){
+            $("#addGoodsModal").modal({
+                backdrop: 'static',     // 点击空白不关闭
+                keyboard: false,        // 按键盘esc也不会关闭
+                remote: '/goods/addGM'
+            });
+        });
+
+        function addCart(id) {
+            $("#addCartModal").modal({
+                backdrop: 'static',     // 点击空白不关闭
+                keyboard: false,        // 按键盘esc也不会关闭
+                remote: "/goods/addCart?gid="+id
+            }).on('hidden.bs.modal', function (e) {
+                $(this).removeData("bs.modal");
+                $(this).find(".modal-content").children().remove();
+            });
+        }
+
+        function postCart() {
+            var acn = $("#acId").val();
+            var aca = $("#acAmount").val();
+            var acp = $("#acPB").val();
+
+            $.ajax({
+                url: "/goods/addCart",
+                type: 'post',
+                data: {gid: acn, amount: aca, price: acp},
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+            $("#addCartModal").modal('hide');
+            $("#cartSign").show();
+        }
+
+        function postGoods() {
+            var gn = $("#gsName").val();
+            var gt = $("#gsType").val();
+            var gps = $("#gsPS").val();
+            var gpb = $("#gsPB").val();
+            var gpm = $("#gsPM").val();
+            var gam = $("#gsAM").val();
+            var gdp= $("#gsDscp").val();
+
+            $.ajax({
+                url: "/goods?add",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({Goods: {name: gn, type: gt, priceForSell: gps, priceForBuy: gpb,
+                    priceForMarket: gpm, description: gdp}, Amount: gam}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+            $("#addGoodsModal").on('hidden.bs.modal', function () {
+                getByType(gt);
+                $(this).removeData("bs.modal");
+                $(this).find(".modal-content").children().remove();
+            }).modal('hide');
+        }
+
+        function getByType(type){
+            $.ajax({
+                url: "/goods/bytype",
+                type: 'post',
+                data: {"type": type},
+                async: false,
+                success: function () {
+                    getPage(0);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function getPage(p){
+            $.ajax({
+                url: "/goods/list",
+                type: 'post',
+                data: {"page": p},
+                async: false,
+                success: function (data) {
+                    $("#goodsTable").html(data);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function searchGoods() {
+            var data = $("#search").val();
+            $.ajax({
+                url: "/goods/search",
+                type: 'post',
+                data: {keyword: data},
+                async: false,
+                success: function () {
+                    getPage(0);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+
+        }
+
+        $(".nav a").on("click", function(){
+            $(".nav").find(".active").removeClass("active");
+            $(this).parent().addClass("active");
+        });
+        /*]]>*/
+    </script>
+</div>

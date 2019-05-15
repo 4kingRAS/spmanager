@@ -1,0 +1,164 @@
+<div id="orderTable" th:fragment="orderTable">
+    <div class="row">
+        <div class="col-sm-2 col-md-2">
+            <h4>订单列表</h4>
+        </div>
+        <!--<div style="margin-right: 20px; float: right!important;">-->
+            <!--<button class="btn btn-primary">0O0O0O</button>-->
+        <!--</div>-->
+    </div>
+    <legend>
+    </legend>
+    <div class="contentDiv">
+        <table>
+            <thead>
+            <tr>
+                <th class="col-xs-1" >订单编号</th>
+                <th class="col-xs-1" >订单类别</th>
+                <th class="col-md-1" >成交总价(元)</th>
+                <th class="col-xs-1" >商品种数</th>
+                <th class="col-md-2" >创建时间</th>
+                <th class="col-md-2" >成交时间
+                <th class="col-md-1" th:text="${isChecker eq 'true' ? '来源' : '审核员'}" ></th>
+                <th class="col-md-1" >状态</th>
+                <th class="col-xs-2" style="text-align: left" >操作</th>
+            </tr>
+            </thead>
+        </table>
+        <ul class="list-group">
+            <div th:each="orders : ${datas}">
+                <li class="list-group-item" style="padding: unset">
+                    <div class="panel panel-default" style="margin-bottom: 0px">
+                        <div class="panel-heading">
+                            <table>
+                                <tr>
+                                    <th class="col-xs-1" th:text="${orders.id}"></th>
+                                    <td class="col-xs-1" th:text="${orders.type eq '1' ? '销售' : '采购'}"></td>
+                                    <td class="col-md-1" th:text="${orders.price}"></td>
+                                    <td class="col-xs-2" style="text-align: center" th:text="${orders.amount}"></td>
+                                    <td class="col-md-2" >
+                                        <span th:text="*{#calendars.format(orders.createAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+                                    </td>
+                                    <td class="col-md-2">
+                                        <span th:text="*{#calendars.format(orders.checkAt,'yyyy-MM-dd HH:mm:ss')}"></span>
+                                    </td>
+                                    <td class="col-md-1"
+                                        th:text="${isChecker eq 'true' ? orders.createBy : orders.checkBy}"></td>
+                                    <td class="col-md-1" >
+                                        <span class="badge" th:switch="${orders.isChecked}">
+                                            <span th:case="'0'">Pending</span>
+                                            <span th:case="'1'">Passed</span>
+                                            <span th:case="'2'">Denied</span>
+                                            <span th:case="'3'">Canceled</span>
+                                        </span>
+                                    </td>
+                                    <td class="col-xs-2" style="text-align: left">
+                                        <button class="btn btn-default btn-sm collapsed" data-toggle="collapse"
+                                                th:onclick="getDetail([[${orders.id}]])" th:href="'#pn'+${orders.id}">
+                                            <span th:id="'col'+${orders.id}" class="if-collapsed">+</span>
+                                            <span class="if-not-collapsed">-</span>
+                                        </button>
+                                        <div class="btn-group">
+                                            <button class="btn btn-danger btn-sm"
+                                                    th:if="${isChecker eq 'false' and orders.isChecked eq '0'}"
+                                                    th:onclick="cancel([[${orders.id}]])">取消订单</button>
+                                            <div sec:authorize="hasRole('CHECKER')">
+                                                <button class="btn btn-success btn-sm" th:if="${orders.isChecked eq '0'}"
+                                                        th:onclick="pass([[${orders.id}]])">批准</button>
+                                                <button class="btn btn-danger btn-sm" th:if="${orders.isChecked eq '0'}"
+                                                        th:onclick="deny([[${orders.id}]])">拒绝</button>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                        <div th:id="'pn'+${orders.id}" class="panel-collapse collapse">
+                            <div class="panel-body" style="padding: 5px">
+                                <div th:id="'pnb'+${orders.id}" th:fragment="orderPanel">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </div>
+        </ul>
+        <div th:include="Pager::pager" th:remove="tag"></div>
+        <div id="isbuyer" th:value="${isBuyer eq 'true' ? true : false}" style="display: none"></div>
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+        /*<![CDATA[*/
+
+        function getDetail(id){
+            $.ajax({
+                url: "/order/detail",
+                type: 'post',
+                data: {"order": id},
+                async: false,
+                success: function (data) {
+                    $("#pnb"+id).html(data);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function pass(id){
+            $.ajax({
+                url: "/order/deal",
+                type: 'post',
+                data: {"order": id, "opt": "pass"},
+                async: false,
+                success: function (data) {
+                    if (data == "failed") {
+                        alert("库存不足！");
+                    } else {
+                        $("#orderTable").load("/order");
+                    }
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function deny(id){
+            $.ajax({
+                url: "/order/deal",
+                type: 'post',
+                data: {"order": id, "opt": "deny"},
+                async: false,
+                success: function () {
+                    $("#orderTable").load("/order");
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function cancel(id){
+            $.ajax({
+                url: "/order/cancel",
+                type: 'post',
+                data: {"order": id},
+                async: false,
+                success: function () {
+                    $("#orderTable").load("/order");
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        function getPage(p){
+            $.ajax({
+                url: "/order",
+                type: 'post',
+                data: {"page": p},
+                async: false,
+                success: function (data) {
+                    $("#orderTable").html(data);
+                }
+                // TRUE 异步 FALSE 同步
+            });
+        }
+
+        /*]]>*/
+    </script>
+</div>

@@ -1,0 +1,177 @@
+<div class="contentDiv">
+
+    <table class="table table-hover table-condensed">
+        <tr>
+            <th>群组名</th>
+            <th>属性</th>
+            <th>采购员工</th>
+            <th>审核员工</th>
+            <th>代理商权限</th>
+            <th>操作</th>
+        </tr>
+        <tr>
+            <input type="hidden" id="gid" name="id" th:value="${ugmodel.id}"/>
+            <td><input type="text" id="gname" th:value="${ugmodel.name}" th:field="*{ugmodel.name}"/></td>
+            <td><input type="checkbox" id="gagent" >属于我司</td>
+            <td><input type="radio" id="gpm1" name="pmsType" value="2" /></td>
+            <td><input type="radio" id="gpm2" name="pmsType" value="3" /></td>
+            <td><input type="radio" id="gpm3" name="pmsType" value="4" /></td>
+            <td>
+                <input class="btn btn-primary" type="submit" value="添加群组" onclick="addGroup()" />
+            </td>
+            <label class="col-sm-2 control-label text-danger" th:if="${#fields.hasErrors('ugmodel.name')}" th:errors="*{ugmodel.name}">姓名有误!</label>
+        </tr>
+    </table>
+
+    <div id="groupTable" th:fragment="groupTable">
+        <table class="table table-hover table-condensed">
+            <legend>
+                <strong><p class="text">群组列表</p></strong>
+            </legend>
+
+            <thead>
+                <tr>
+                    <th>群组编号</th>
+                    <th>群组名</th>
+                    <th>群组人数</th>
+                    <th>是否我司员工</th>
+                    <th>管理员权限</th>
+                    <th>采购员工</th>
+                    <th>审核员工</th>
+                    <th>代理商</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="box : ${groupList}">
+                    <th scope="row"  th:text="${box.s.id}"></th>
+                    <td th:text="${box.s.name}"></td>
+                    <td th:text="${box.s.count}"></td>
+                    <td>
+                        <span th:text="${box.s.isAgent eq '0' ? '是' : '否'}"></span>
+                    </td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_HNA'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_BUYER'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_CHECKER'}" onclick="return false;" checked="checked"></td>
+                    <td><input type="checkbox" th:checked="${box.c.name eq 'ROLE_AGENT'}" onclick="return false;" checked="checked"></td>
+                    <td class="col-lg-2">
+                        <div class="btn-group">
+                            <button class="btn btn-primary btn-sm" data-toggle="modal" th:href="'#'+${box.s.id}">编辑</button>
+                            <button class="btn btn-danger btn-sm" th:if="${box.c.name != 'ROLE_HNA'}"
+                                    th:onclick="'javascript:deleteGroup('+${box.s.id}+')'">删除</button>
+                        </div>
+                        <!-- MODAL -->
+                        <div class="modal fade" th:id="${box.s.id}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                        <h4 class="modal-title" id="myModalLabel">修改群组信息</h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <table class="table table-hover table-condensed">
+                                            <legend>
+                                                <strong>
+                                                    <span th:text="'群组ID：'+${box.s.id}"></span>
+                                                </strong>
+                                            </legend>
+                                            <thead>
+                                            <tr>
+                                                <th>群组名</th>
+                                                <th>是否我司员工</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <input type="hidden" th:id="'ug'+${box.s.id}" th:value="${box.s.id}"/>
+                                                    <td>
+                                                        <input type="text" th:id="'ugn'+${box.s.id}" th:value="${box.s.name}"/>
+                                                    </td>
+                                                    <td>
+                                                        <input type="checkbox" th:id="'uga'+${box.s.id}" th:checked="${box.s.isAgent}">
+                                                        属于我司
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-default btn-sm" data-dismiss="modal">关闭</button>
+                                            <button type="button" class="btn btn-primary btn-sm" th:onclick="'javascript:updateGroup('+${box.s.id}+')'">
+                                                提交更改
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div><!-- /.modal-content -->
+                            </div><!-- /.modal -->
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <script type="text/javascript" th:inline="javascript">
+
+        /*<![CDATA[*/
+        function addGroup(){
+            // 装载局部刷新返回的页面
+            var gName = $("#gname").val();
+            var ga = "1";
+            var gpm = $("input[name='pmsType']:checked").val();
+            //is checked?
+            if($("#gagent").is(":checked")){
+                ga = "0";
+            }
+
+            $.ajax({
+                url: "/manager?add",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({UserGroup: {name: gName, isAgent: ga}, role: gpm}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+
+            $('#groupTable').load("/manager/fresh");
+        }
+
+        function deleteGroup(gid){
+
+            $.ajax({
+                url: "/manager?delete",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id: gid}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+
+            $('#groupTable').load("/manager/fresh");
+        }
+
+        function updateGroup(gi){
+
+            var gid = $("#ug"+gi).val();
+            var gname = $("#ugn"+gi).val();
+            var gag = "1";
+            if($("#uga"+gi).is(":checked")) {
+                gag = "0";
+            }
+
+            $.ajax({
+                url: "/manager?update",
+                type: 'post',
+                dataType: 'json',
+                contentType: 'application/json',
+                data: JSON.stringify({id: gid, name: gname, isAgent: gag}),
+                async: false
+                // TRUE 异步 FALSE 同步
+            });
+            $("#"+gi).on('hidden.bs.modal', function (e) {
+                $('#groupTable').load("/manager/fresh");
+            }).modal('hide');
+        }
+        /*]]>*/
+    </script>
+</div>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/base.css}" />
+    <link rel="stylesheet" type="text/css" th:href="@{/css/all.css}" />
+    <script type="text/javascript" th:src="@{/js/jquery-2.2.0.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/all.js}"></script>
+    <link th:href="@{https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css}" rel="stylesheet"/>
+    <style type="text/css">
+        body {
+            padding-top: 50px;
+        }
+        .starter-template {
+            padding: 40px 15px;
+            text-align: center;
+        }
+    </style>
+    <title>已注销</title>
+</head>
+<body>
+<div class="top">
+    <div class="logo"></div>
+    <!-- <div class="m_tit">元数据信息列表 <i class="d_arrow m_l10"></i></div> -->
+    <div class="t_aciton">
+        <ul>
+            <li><a></a></li>
+            <li><a><i class="icon20 ask_icon m_r5"></i>帮助</a></li>
+            <li><i class="u_pic m_r10"><img src="images/HNA.jpg"></i>请登录</li>
+        </ul>
+    </div>
+    <div class="meau_btn icon20" id="meau_btn"></div>
+</div>
+<div class="main sub_main">
+    <div class="contentDiv">
+        <div class="starter-template">
+            <p class="bg-warning">已成功注销</p>
+            <p th:if="${param.error}" class="bg-danger">有错误，请重试</p> <!-- 2 -->
+            <legend>
+                <strong>
+                    <p class="text">[欢迎使用供销管理系统]</p>
+                </strong>
+            </legend>
+            <h5>使用账号密码登录</h5>
+
+            <form name="form" th:action="@{/login}" method="POST"> <!-- 3 -->
+                <label for="username">用户名:</label>
+                <input type="text" id="username" name="username" autofocus="autofocus" /> <br />
+                <label for="password">密码：</label>:
+                <input type="password" id="password" name="password" /> <br />
+                <input class="btn btn-primary" type="submit" value="登录" style="margin-top: 20px" />
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>
