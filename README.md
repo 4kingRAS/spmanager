@@ -1,8 +1,13 @@
 # SupplyManager
 
 供销管理系统
-
+本人在寒假实习期间完成的一个小项目，一个仓库供销管理后台。
 springboot 2.1.3 搭建，数据库MySQL, ORM hibernate, Thymeleaf + bootstrap 构建前端页面。
+用spring security实现了简单的权限管理，spring data实现分页器。都是一些CRUD的东西，就是练练工程能力。
+
+![demo1](/demo1.png "demo")
+![demo2](/demo2.png "demo")
+![demo2](/demo3.png "demo")
 
 ---
 
