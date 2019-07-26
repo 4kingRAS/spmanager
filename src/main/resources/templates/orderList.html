@@ -15,7 +15,7 @@
             <tr>
                 <th class="col-xs-1" >订单编号</th>
                 <th class="col-xs-1" >订单类别</th>
-                <th class="col-md-1" >成交总价(元)</th>
+                <th class="col-xs-1" >成交总价(元)</th>
                 <th class="col-xs-1" >商品种数</th>
                 <th class="col-md-2" >创建时间</th>
                 <th class="col-md-2" >成交时间
@@ -34,8 +34,8 @@
                                 <tr>
                                     <th class="col-xs-1" th:text="${orders.id}"></th>
                                     <td class="col-xs-1" th:text="${orders.type eq '1' ? '销售' : '采购'}"></td>
-                                    <td class="col-md-1" th:text="${orders.price}"></td>
-                                    <td class="col-xs-2" style="text-align: center" th:text="${orders.amount}"></td>
+                                    <td class="col-xs-1" th:text="${orders.price}"></td>
+                                    <td class="col-xs-1" style="text-align: center" th:text="${orders.amount}"></td>
                                     <td class="col-md-2" >
                                         <span th:text="*{#calendars.format(orders.createAt,'yyyy-MM-dd HH:mm:ss')}"></span>
                                     </td>

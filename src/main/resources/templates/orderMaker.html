@@ -10,13 +10,13 @@
             <table >
                 <thead>
                 <tr>
-                    <th class="col-md-1" >确认选择</th>
-                    <th class="col-md-1" >商品类别</th>
+                    <th class="col-xs-1" >确认选择</th>
+                    <th class="col-xs-1" >商品类别</th>
                     <th class="col-md-2" >商品名称</th>
                     <th class="col-md-2" >参考价格(元)</th>
-                    <th class="col-md-1" >库存</th>
+                    <th class="col-xs-1" >库存</th>
                     <th class="col-md-2" >提交价格(元)</th>
-                    <th class="col-md-1" >购买数量</th>
+                    <th class="col-xs-1" >购买数量</th>
                     <th class="col-md-2" style="text-align: center" >操作</th>
                 </tr>
                 </thead>
@@ -28,11 +28,11 @@
                         <div class="panel-heading">
                             <table>
                                 <tr>
-                                    <td class="col-md-1">
+                                    <td class="col-xs-1">
                                         <input type="checkbox" th:id="'gck'+${box.s.id}" th:value="${box.s.id}"
                                                th:onclick="checkStat([[${box.s.id}]])" checked="checked">
                                     </td>
-                                    <td class="col-md-1" th:text="${box.s.type}"></td>
+                                    <td class="col-xs-1" th:text="${box.s.type}"></td>
                                     <td class="col-md-2" >
                                         <span th:text="${box.s.name}"></span>
                                     </td>
@@ -40,12 +40,12 @@
                                         th:text="${isBuyer eq 'true' ? box.s.priceForBuy : box.s.priceForSell}">
 
                                     </td>
-                                    <td class="col-md-1" th:text="${box.c.depo}" th:id="'dp'+${box.s.id}">
+                                    <td class="col-xs-1" th:text="${box.c.depo}" th:id="'dp'+${box.s.id}">
                                     </td>
                                     <td class="col-md-2" >
                                         <span th:id="'pr'+${box.s.id}" th:text="${box.c.price}"></span>
                                     </td>
-                                    <td class="col-md-1" >
+                                    <td class="col-xs-1" >
                                         <span th:id="'am'+${box.s.id}" th:text="${box.c.amount}"></span>
                                         <span class="badge" th:id="'ck'+${box.s.id}" th:if="${isBuyer eq 'false'}"
                                               th:style="${box.c.amount gt box.c.depo ? 'display:inline' : 'display:none'}">超出库存</span>
