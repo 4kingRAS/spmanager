@@ -1,2 +1,8 @@
 .DS_Store
 */.DS_Store
+mvnw
+/.idea/
+/.mvn/
+mvnw.cmd
+pom.xml
+spmanager.iml
